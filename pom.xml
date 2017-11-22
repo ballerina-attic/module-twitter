@@ -23,7 +23,7 @@
     <groupId>org.ballerinalang</groupId>
     <artifactId>twitter-connector-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.93.1-SNAPSHOT</version>
+    <version>0.95.1-SNAPSHOT</version>
     <name>Ballerina - Twitter Connector ParentParent</name>
 
     <url>http://ballerinalang.org</url>
@@ -225,13 +225,26 @@
             <plugin><!-- Overridden from parent pom to exclude generated sources -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
                         <configuration>
+                            <configLocation>
+                                https://raw.githubusercontent.com/wso2/code-quality-tools/master/checkstyle/checkstyle.xml
+                            </configLocation>
+                            <suppressionsLocation>
+                                https://raw.githubusercontent.com/wso2/code-quality-tools/master/checkstyle/suppressions.xml
+                            </suppressionsLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <!--Exclude generated sources-->
-                            <excludes>**/${native.constructs.provider.class}.java</excludes>
+                            <excludes>
+                                **/generated/**
+                            </excludes>
                         </configuration>
                         <goals>
                             <goal>check</goal>
@@ -242,7 +255,7 @@
         </plugins>
     </build>
     <properties>
-        <ballerina.version>0.94.0-SNAPSHOT</ballerina.version>
+        <ballerina.version>0.95.1-SNAPSHOT</ballerina.version>
         <maven.findbugsplugin.version.exclude>findbugs-exclude.xml</maven.findbugsplugin.version.exclude>
         <docerina.version>${ballerina.version}</docerina.version>
         <mvn.processor.plugin.version>2.2.4</mvn.processor.plugin.version>
