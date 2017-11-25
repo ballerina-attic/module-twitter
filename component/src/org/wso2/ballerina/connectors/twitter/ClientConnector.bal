@@ -15,33 +15,34 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
     endpoint<http:HttpClient> twitterEP {
              create http:HttpClient("https://api.twitter.com", {});
     }
+    http:HttpConnectorError e;
 
     @Description{ value : "Update the authenticated user's current status."}
     @Param{ value : "status: The text of status update"}
     @Return{ value : "Response object."}
-    action tweet(string status) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action tweet(string status) (http:Response, http:HttpConnectorError) {
         http:Request request = {};
         http:Response response = {};
         map parameters = {};
-        string urlParams;
         string tweetPath = "/1.1/statuses/update.json";
         status = uri:encode(status);
         parameters["status"] = status;
-        urlParams = "status=" + status;
+        string urlParams = "status=" + status;
 
         constructRequestHeaders(request, "POST", tweetPath, consumerKey, consumerSecret, accessToken,
                             accessTokenSecret, parameters);
         tweetPath = tweetPath + "?" + urlParams;
 
-        response, _ = twitterEP.post(tweetPath, request);
-
-        return response;
+        response, e = twitterEP.post(tweetPath, request);
+        return response, e;
     }
 
     @Description{ value : "Retweet a tweet."}
     @Param{ value : "id: The numerical ID of the desired status."}
     @Return{ value : "Response object."}
-    action retweet(string id) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action retweet(string id) (http:Response, http:HttpConnectorError) {
         http:Request request = {};
         http:Response response = {};
         map parameters = {};
@@ -50,15 +51,16 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
         constructRequestHeaders(request, "POST", tweetPath, consumerKey, consumerSecret, accessToken,
                             accessTokenSecret, parameters);
 
-        response, _ = twitterEP.post(tweetPath, request);
+        response, e = twitterEP.post(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 
     @Description{ value : "Untweet a retweeted status."}
     @Param{ value : "id: The numerical ID of the desired status."}
     @Return{ value : "Response object."}
-    action unretweet(string id) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action unretweet(string id) (http:Response, http:HttpConnectorError) {
         http:Request request = {};
         http:Response response = {};
         map parameters = {};
@@ -67,15 +69,16 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
         constructRequestHeaders(request, "POST", tweetPath, consumerKey, consumerSecret, accessToken,
                             accessTokenSecret, parameters);
 
-        response, _ = twitterEP.post(tweetPath, request);
+        response, e = twitterEP.post(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 
     @Description{ value : "Search for tweets."}
     @Param{ value : "query: Query string to retrieve the related tweets."}
     @Return{ value : "Response object."}
-    action search(string query) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action search(string query) (http:Response, http:HttpConnectorError) {
         http:Request request = {};
         http:Response response = {};
         map parameters = {};
@@ -88,15 +91,16 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
                             accessTokenSecret, parameters);
         tweetPath = tweetPath + "?" + urlParams;
 
-        response, _ = twitterEP.get(tweetPath, request);
+        response, e = twitterEP.get(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 
     @Description{ value : "Retrive a single status."}
     @Param{ value : "id: The numerical ID of the desired status."}
     @Return{ value : "Response object."}
-    action showStatus(string id) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action showStatus(string id) (http:Response, http:HttpConnectorError) {
         string urlParams;
         http:Request request = {};
         http:Response response = {};
@@ -109,15 +113,16 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
                             accessTokenSecret, parameters);
         tweetPath = tweetPath + "?" + urlParams;
 
-        response, _ = twitterEP.get(tweetPath, request);
+        response, e = twitterEP.get(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 
     @Description{ value : "Distroy a status."}
     @Param{ value : "id: The numerical ID of the desired status."}
     @Return{ value : "Response object."}
-    action destroyStatus(string id) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action destroyStatus(string id) (http:Response, http:HttpConnectorError) {
         http:Request request = {};
         http:Response response = {};
         map parameters = {};
@@ -126,16 +131,17 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
         constructRequestHeaders(request, "POST", tweetPath, consumerKey, consumerSecret, accessToken,
                             accessTokenSecret, parameters);
 
-        response, _ = twitterEP.post(tweetPath, request);
+        response, e = twitterEP.post(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 
     @Description{ value : "Retrive closest trend locations."}
     @Param{ value : "lat: Latitude of the location."}
     @Param{ value : "long: Longitude of the location"}
     @Return{ value : "Response object."}
-    action getClosestTrendLocations(string lat, string long) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action getClosestTrendLocations(string lat, string long) (http:Response, http:HttpConnectorError) {
         string urlParams;
         http:Request request = {};
         http:Response response = {};
@@ -150,15 +156,16 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
                             accessTokenSecret, parameters);
         tweetPath = tweetPath + "?" + urlParams.subString(1, urlParams.length());
 
-        response, _ = twitterEP.get(tweetPath, request);
+        response, e = twitterEP.get(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 
     @Description{ value : "Retrive top trends by place."}
     @Param{ value : "locationId: The Yahoo! Where On Earth ID of the location to return trending information for."}
     @Return{ value : "Response object."}
-    action getTopTrendsByPlace(string locationId) (http:Response) {
+    @Return { value:"Error occured during HTTP client invocation." }
+    action getTopTrendsByPlace(string locationId) (http:Response, http:HttpConnectorError) {
         string urlParams;
         http:Request request = {};
         http:Response response = {};
@@ -171,9 +178,9 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
                             accessTokenSecret, parameters);
         tweetPath = tweetPath + "?" + urlParams;
 
-        response, _ = twitterEP.get(tweetPath, request);
+        response, e = twitterEP.get(tweetPath, request);
 
-        return response;
+        return response, e;
     }
 }
 
@@ -184,10 +191,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string key;
     string value;
 
-
     string timeStamp = <string>(currentTime().time/1000);
-    println(timeStamp);
-
     string nonceString = util:uuid();
     serviceEP = "https://api.twitter.com" + serviceEP;
 
@@ -209,11 +213,11 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     paramStr = paramStr.subString(0, paramStr.length() - 1);
     string baseString = httpMethod + "&" + uri:encode(serviceEP) + "&" + uri:encode(paramStr);
     string keyStr = uri:encode(consumerSecret) + "&" + uri:encode(accessTokenSecret);
-    string signature = util:getHmac(baseString, keyStr, "SHA1");
+    string signature = util:base16ToBase64Encode(util:getHmac(baseString, keyStr, "SHA1"));
     string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
                 "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
                 "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
                 uri:encode(signature) + "\",oauth_token=\"" + uri:encode(accessToken) + "\"";
-    println(oauthHeaderString);
+
     request.setHeader("Authorization", oauthHeaderString.unescape());
 }
