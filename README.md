@@ -1,7 +1,8 @@
-# Twitter Connector
+# Ballerina Twitter Connector
 
-The Twitter connector allows you to access the Twitter REST API through ballerina. And the actions are being invoked
-with a ballerina main function. The following section provide you the details on connector operations.
+The Twitter connector allows you to access the Twitter REST API through ballerina. And the Twitter connector actions 
+are being invoked with a ballerina main function. The following section provide you the details on how to use Ballerina 
+Twitter connector.
 
 ## Getting started
 
