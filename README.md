@@ -107,8 +107,8 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
 
 ##### Invoke the actions
 
-- Place `connector-twitter/component/samples/twitter/samples.bal` into `<ballerina-tools>/bin` folder
-- Run the following commands to execute the relevant connector action.
+- Copy `connector-twitter/component/samples/twitter/samples.bal` file and paste it into `<ballerina-tools>/bin` folder.
+- Run the following commands to execute the relevant Twitter connector actions.
 
   1. **tweet:**
   
