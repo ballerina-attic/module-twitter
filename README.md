@@ -142,3 +142,11 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
   8. **getTopTrendsByPlace:**
   
   `bin$ ./ballerina run samples.bal getTopTrendsByPlace <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <locationId>`
+  
+  
+  
+  
+
+| Ballerina Version | Twitter Connector Version |
+| ----------------- | ---------------------- |
+| 0.95.2 | 0.95.2 |
