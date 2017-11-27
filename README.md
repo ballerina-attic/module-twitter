@@ -10,7 +10,7 @@ Twitter connector.
 2. Build Twitter connector from the source code
       * Get a clone or download the source from this repository (https://github.com/ballerinalang/connector-twitter).
       * Run the Maven command `mvn clean install` from the `connector-twitter` root directory.
-      * Copy the `ballerina-twitter-0.95.1-SNAPSHOT.jar` created at `connector-twitter/component/target` and paste it 
+      * Copy the `ballerina-twitter-0.95.2.jar` created at `connector-twitter/component/target` and paste it 
         into the `<ballerina-tools>/bre/lib` folder.
 
 ##### Prerequisites
