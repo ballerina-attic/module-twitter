@@ -13,77 +13,143 @@ function main (string[] args) {
 
     if (args[0] == "tweet") {
         tweetResponse, e = twitterConnector.tweet (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "search") {
         tweetResponse, e = twitterConnector.search (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "retweet") {
         tweetResponse, e = twitterConnector.retweet (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "unretweet") {
         tweetResponse, e = twitterConnector.unretweet (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "showStatus") {
         tweetResponse, e = twitterConnector.showStatus (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "destroyStatus") {
         tweetResponse, e = twitterConnector.destroyStatus (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "getClosestTrendLocations") {
         tweetResponse, e = twitterConnector.getClosestTrendLocations (args[5], args[6]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else if (args[0] == "getTopTrendsByPlace") {
         tweetResponse, e = twitterConnector.getTopTrendsByPlace (args[5]);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     } else {
         println("====== Update Status =====");
         tweetResponse, e = twitterConnector.tweet ("Tweet messages");
-        tweetJSONResponse = tweetResponse.getJsonPayload();
         string tweetId;
-        tweetId, _ = (string)tweetJSONResponse["$.id_str"];
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+            tweetId, _ = (string)tweetJSONResponse["$.id_str"];
+        } else {
+            println(e);
+        }
 
         println("====== search =====");
         tweetResponse, e = twitterConnector.search ("Tweet messages");
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
 
-        println("====== Retweet a tweet =====");
-        tweetResponse, e = twitterConnector.retweet (tweetId);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(tweetId != "") {
+            println("====== Retweet a tweet =====");
+            tweetResponse, e = twitterConnector.retweet (tweetId);
+            if(e == null) {
+                tweetJSONResponse = tweetResponse.getJsonPayload();
+                println(tweetJSONResponse.toString());
+            } else {
+                println(e);
+            }
 
-        println("====== Untweet a retweeted status =====");
-        tweetResponse, e = twitterConnector.unretweet (tweetId);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+            println("====== Untweet a retweeted status =====");
+            tweetResponse, e = twitterConnector.unretweet (tweetId);
+            if(e == null) {
+                tweetJSONResponse = tweetResponse.getJsonPayload();
+                println(tweetJSONResponse.toString());
+            } else {
+                println(e);
+            }
 
-        println("====== Retrive a single status =====");
-        tweetResponse, e = twitterConnector.showStatus (tweetId);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+            println("====== Retrive a single status =====");
+            tweetResponse, e = twitterConnector.showStatus (tweetId);
+            if(e == null) {
+                tweetJSONResponse = tweetResponse.getJsonPayload();
+                println(tweetJSONResponse.toString());
+            } else {
+                println(e);
+            }
 
-        println("====== Distroy a status =====");
-        tweetResponse, e = twitterConnector.destroyStatus (tweetId);
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+            println("====== Distroy a status =====");
+            tweetResponse, e = twitterConnector.destroyStatus (tweetId);
+            if(e == null) {
+                tweetJSONResponse = tweetResponse.getJsonPayload();
+                println(tweetJSONResponse.toString());
+            } else {
+                println(e);
+            }
+        }
 
         println("====== Retrive closest trend locations =====");
         tweetResponse, e = twitterConnector.getClosestTrendLocations ("37.781157", "-122.400612831116");
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
 
         println("====== Retrieve top trends by place =====");
         tweetResponse, e = twitterConnector.getTopTrendsByPlace ("1");
-        tweetJSONResponse = tweetResponse.getJsonPayload();
-        println(tweetJSONResponse.toString());
+        if(e == null) {
+            tweetJSONResponse = tweetResponse.getJsonPayload();
+            println(tweetJSONResponse.toString());
+        } else {
+            println(e);
+        }
     }
 }
