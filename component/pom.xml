@@ -120,45 +120,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.ballerinalang</groupId>-->
-                <!--<artifactId>docerina-maven-plugin</artifactId>-->
-                <!--<version>${docerina.maven.plugin.version}</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>docerina</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDir>${project.build.directory}/api-docs</outputDir>-->
-                            <!--<sourceDir>-->
-                                <!--${basedir}/target/classes/META-INF/natives-->
-                            <!--</sourceDir>-->
-                            <!--<nativeCode>true</nativeCode>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<descriptors>-->
-                        <!--<descriptor>src/main/assembly/dist.xml</descriptor>-->
-                    <!--</descriptors>-->
-                    <!--<finalName>distribution</finalName>-->
-                    <!--<appendAssemblyId>false</appendAssemblyId>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>make-assembly</id>-->
-                        <!--<phase>install</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>single</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 
