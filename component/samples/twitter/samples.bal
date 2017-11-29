@@ -12,7 +12,8 @@ function main (string[] args) {
     json tweetJSONResponse;
 
     if (args[0] == "tweet") {
-        tweetResponse, e = twitterConnector.tweet (args[5]);
+        string status = args[5];
+        tweetResponse, e = twitterConnector.tweet (status);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -20,7 +21,8 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "search") {
-        tweetResponse, e = twitterConnector.search (args[5]);
+        string query = args[5];
+        tweetResponse, e = twitterConnector.search (query);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -28,7 +30,8 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "retweet") {
-        tweetResponse, e = twitterConnector.retweet (args[5]);
+        string id = args[5];
+        tweetResponse, e = twitterConnector.retweet (id);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -36,7 +39,8 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "unretweet") {
-        tweetResponse, e = twitterConnector.unretweet (args[5]);
+        string id = args[5];
+        tweetResponse, e = twitterConnector.unretweet (id);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -44,7 +48,8 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "showStatus") {
-        tweetResponse, e = twitterConnector.showStatus (args[5]);
+        string id = args[5];
+        tweetResponse, e = twitterConnector.showStatus (id);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -52,7 +57,8 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "destroyStatus") {
-        tweetResponse, e = twitterConnector.destroyStatus (args[5]);
+        string id = args[5];
+        tweetResponse, e = twitterConnector.destroyStatus (id);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -60,7 +66,9 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "getClosestTrendLocations") {
-        tweetResponse, e = twitterConnector.getClosestTrendLocations (args[5], args[6]);
+        string latitude = args[5];
+        string longitude = args[6];
+        tweetResponse, e = twitterConnector.getClosestTrendLocations (latitude, longitude);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
@@ -68,7 +76,8 @@ function main (string[] args) {
             println(e);
         }
     } else if (args[0] == "getTopTrendsByPlace") {
-        tweetResponse, e = twitterConnector.getTopTrendsByPlace (args[5]);
+        string locationId = args[5];
+        tweetResponse, e = twitterConnector.getTopTrendsByPlace (locationId);
         if(e == null) {
             tweetJSONResponse = tweetResponse.getJsonPayload();
             println(tweetJSONResponse.toString());
