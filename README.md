@@ -7,7 +7,7 @@ Twitter connector.
 ## Getting started
 
 1. Download the Ballerina tool distribution by navigating https://ballerinalang.org/downloads/
-2. Extract ballerina-twitter-0.95.2.zip and copy ballerina-twitter-0.95.2.jar into the `<ballerina-tools>/bre/lib` folder.
+2. Extract ballerina-twitter-0.95.3.zip and copy ballerina-twitter-0.95.3.jar into the `<ballerina-tools>/bre/lib` folder.
 
 ##### Prerequisites
 1. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/)
@@ -145,4 +145,4 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
 
 | Ballerina Version | Twitter Connector Version |
 | ----------------- | ---------------------- |
-| 0.95.2 | 0.95.2 |
+| 0.95.3 | 0.95.3 |

@@ -105,7 +105,7 @@ function main (string[] args) {
             println(e);
         }
 
-        if(tweetId != "") {
+        if(tweetId != null) {
             println("====== Retweet a tweet =====");
             tweetResponse, e = twitterConnector.retweet (tweetId);
             if(e == null) {
