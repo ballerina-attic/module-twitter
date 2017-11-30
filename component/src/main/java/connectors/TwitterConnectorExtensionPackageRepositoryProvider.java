@@ -28,7 +28,7 @@ import org.ballerinalang.spi.ExtensionPackageRepositoryProvider;
  * @since 0.94
  */
 @JavaSPIService("org.ballerinalang.spi.ExtensionPackageRepositoryProvider")
-public class ConnectorExtensionPackageRepositoryProvider implements ExtensionPackageRepositoryProvider {
+public class TwitterConnectorExtensionPackageRepositoryProvider implements ExtensionPackageRepositoryProvider {
 
     private static final String JAR_SYSTEM_LIB_LOCATION = "/META-INF/natives/";
 
