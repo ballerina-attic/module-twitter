@@ -142,7 +142,7 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
     @Return{ value : "Response object."}
     @Return { value:"Error occured during HTTP client invocation." }
     action getClosestTrendLocations(string lat, string long) (http:Response, http:HttpConnectorError) {
-        string urlParams;
+        string urlParams = "";
         http:Request request = {};
         http:Response response = {};
         map parameters = {};
@@ -187,7 +187,7 @@ public connector ClientConnector (string consumerKey, string consumerSecret, str
 function constructRequestHeaders(http:Request request, string httpMethod, string serviceEP, string consumerKey,
                                  string consumerSecret, string accessToken, string accessTokenSecret, map parameters) {
     int index;
-    string paramStr;
+    string paramStr = "";
     string key;
     string value;
 
