@@ -33,6 +33,9 @@
         <connection>scm:git:https://github.com/ballerinalang/connector-twitter.git</connection>
         <tag>HEAD</tag>
     </scm>
+    <modules>
+        <module>component</module>
+    </modules>
     <profiles>
         <profile>
             <id>default</id>
