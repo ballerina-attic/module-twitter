@@ -301,7 +301,7 @@
         </snapshotRepository>
     </distributionManagement>
     <properties>
-        <ballerina.version>0.95.3</ballerina.version>
+        <ballerina.version>0.95.4</ballerina.version>
         <maven.findbugsplugin.version.exclude>findbugs-exclude.xml</maven.findbugsplugin.version.exclude>
         <docerina.version>${ballerina.version}</docerina.version>
         <mvn.processor.plugin.version>2.2.4</mvn.processor.plugin.version>

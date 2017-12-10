@@ -4,6 +4,7 @@ import ballerina.util.arrays;
 import ballerina.net.http;
 import ballerina.net.uri;
 import ballerina.util;
+import ballerina.security.crypto;
 
 @Description{ value : "Twitter client connector."}
 @Param{ value : "consumerKey: The consumer key of the Twitter account."}
@@ -213,7 +214,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     paramStr = paramStr.subString(0, paramStr.length() - 1);
     string baseString = httpMethod + "&" + uri:encode(serviceEP) + "&" + uri:encode(paramStr);
     string keyStr = uri:encode(consumerSecret) + "&" + uri:encode(accessTokenSecret);
-    string signature = util:base16ToBase64Encode(util:getHmac(baseString, keyStr, "SHA1"));
+    string signature = util:base16ToBase64Encode(crypto:getHmac(baseString, keyStr, crypto:Algorithm.SHA1));
     string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
                 "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
                 "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
