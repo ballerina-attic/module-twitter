@@ -4,11 +4,6 @@ The Twitter connector allows you to access the Twitter REST API through ballerin
 are being invoked with a ballerina main function. The following section provide you the details on how to use Ballerina 
 Twitter connector.
 
-## Getting started
-
-1. Download the Ballerina tool distribution by navigating https://ballerinalang.org/downloads/
-2. Extract ballerina-twitter-0.95.0.zip and copy ballerina-twitter-0.95.0.jar into the `<ballerina-tools>/bre/lib` folder.
-
 ##### Prerequisites
 1. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/)
 2. Obtain the following parameters:
@@ -102,42 +97,41 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
 
 ## Running samples
 
-##### Invoke the actions
+##### Invoke the connector methods
 
-- Copy `connector-twitter/component/samples/twitter/samples.bal` file and paste it into `<ballerina-tools>/bin` folder.
-- Run the following commands to execute the relevant Twitter connector actions.
+- Run the following commands to execute the relevant Twitter connector methods.
 
   1. **tweet:**
   
-  `bin$ ./ballerina run samples.bal tweet <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <status>`
+  `ballerina run tests/ tweet <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <status>`
   
   2. **search:**
   
-  `bin$ ./ballerina run samples.bal search <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <query>`
+  `ballerina run tests/ search <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <query>`
   
   3. **retweet:** 
   
-  `bin$ ./ballerina run samples.bal retweet <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
+  `ballerina run tests/ retweet <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
   
   4. **unretweet:** 
   
-  `bin$ ./ballerina run samples.bal unretweet <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
+  `ballerina run tests/ unretweet <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
   
   5. **showStatus:** 
   
-  `bin$ ./ballerina run samples.bal showStatus <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
+  `ballerina run tests/ showStatus <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
   
   6. **destroyStatus:**
   
-  `bin$ ./ballerina run samples.bal destroyStatus <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
+  `ballerina run tests/ destroyStatus <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <id>`
   
   7. **getClosestTrendLocations:**
   
-  `bin$ ./ballerina run samples.bal getClosestTrendLocations <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <latitude> <longitude>`
+  `ballerina run tests/ getClosestTrendLocations <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <latitude> <longitude>`
   
   8. **getTopTrendsByPlace:**
   
-  `bin$ ./ballerina run samples.bal getTopTrendsByPlace <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <locationId>`
+  `ballerina run tests/ getTopTrendsByPlace <consumerKey> <consumerSecret> <accessToken> <accessTokenSecret> <locationId>`
   
   
   
@@ -145,4 +139,4 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
 
 | Ballerina Version | Twitter Connector Version |
 | ----------------- | ---------------------- |
-| 0.95.3 | 0.95.0 |
+| 0.964.1 | 0.95.2 |
