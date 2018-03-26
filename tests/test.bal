@@ -75,14 +75,8 @@ public function main (string[] args) {
         var tweetResponse = twitter.search (queryStr);
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
-            }
-            http:HttpConnectorError err => io:println(err);
+            twitter:Status[] response => io:println(response);
+            twitter:TwitterError err => io:println(err);
         }
     } else if (args[0] == "showStatus") {
         io:println("--------------Calling showStatus----------------");
@@ -121,14 +115,8 @@ public function main (string[] args) {
         var tweetResponse = twitter.getClosestTrendLocations (latitude, longitude);
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
-            }
-            http:HttpConnectorError err => io:println(err);
+            twitter:Location[] response => io:println(response);
+            twitter:TwitterError err => io:println(err);
         }
     } else if (args[0] == "getTopTrendsByPlace") {
         io:println("--------------Calling getTopTrendsByPlace----------------");
@@ -136,14 +124,8 @@ public function main (string[] args) {
         var tweetResponse = twitter.getTopTrendsByPlace (locationId);
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
-            }
-            http:HttpConnectorError err => io:println(err);
+            twitter:Trends [] response => io:println(response);
+            twitter:TwitterError err => io:println(err);
         }
     }
 }
