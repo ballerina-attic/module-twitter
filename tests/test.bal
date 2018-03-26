@@ -28,46 +28,46 @@ public function main (string[] args) {
         io:println("--------------Calling tweet----------------");
         string status = args[5];
         var tweetResponse = twitter.tweet(status);
+        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
+            twitter:Status response => {
+                twitterStatus = response;
+                io:println("Tweet id : " + twitterStatus.id);
+                io:println("Tweet message : " + twitterStatus.text);
+                io:println("Tweet language : " + twitterStatus.lang);
             }
-            http:HttpConnectorError err => io:println(err);
+            twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "retweet") {
         io:println("--------------Calling retweet----------------");
         string id = args[5];
         var tweetResponse = twitter.retweet (id);
+        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
+            twitter:Status response => {
+                twitterStatus = response;
+                io:println("Tweet id : " + twitterStatus.id);
+                io:println("Tweet message : " + twitterStatus.text);
+                io:println("Tweet language : " + twitterStatus.lang);
             }
-            http:HttpConnectorError err => io:println(err);
+            twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "unretweet") {
         io:println("--------------Calling unretweet----------------");
         string id = args[5];
         var tweetResponse = twitter.unretweet (id);
+        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
+            twitter:Status response => {
+                twitterStatus = response;
+                io:println("Tweet id : " + twitterStatus.id);
+                io:println("Tweet message : " + twitterStatus.text);
+                io:println("Tweet language : " + twitterStatus.lang);
             }
-            http:HttpConnectorError err => io:println(err);
+            twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "search") {
         io:println("--------------Calling search----------------");
@@ -88,31 +88,31 @@ public function main (string[] args) {
         io:println("--------------Calling showStatus----------------");
         string id = args[5];
         var tweetResponse = twitter.showStatus (id);
+        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
+            twitter:Status response => {
+                twitterStatus = response;
+                io:println("Tweet id : " + twitterStatus.id);
+                io:println("Tweet message : " + twitterStatus.text);
+                io:println("Tweet language : " + twitterStatus.lang);
             }
-            http:HttpConnectorError err => io:println(err);
+            twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "destroyStatus") {
         io:println("--------------Calling destroyStatus----------------");
         string id = args[5];
         var tweetResponse = twitter.destroyStatus (id);
+        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            http:Response response => {
-                var jsonPayload = response.getJsonPayload();
-                match jsonPayload {
-                    json j => io:println(j);
-                    mime:EntityError err => io:println(err);
-                }
+            twitter:Status response => {
+                twitterStatus = response;
+                io:println("Tweet id : " + twitterStatus.id);
+                io:println("Tweet message : " + twitterStatus.text);
+                io:println("Tweet language : " + twitterStatus.lang);
             }
-            http:HttpConnectorError err => io:println(err);
+            twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "getClosestTrendLocations") {
         io:println("--------------Calling getClosestTrendLocations----------------");
