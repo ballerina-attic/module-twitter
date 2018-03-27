@@ -114,6 +114,6 @@ transformer <json jsonTrend, Trend trend> convertToTrend() {
     trend.name = jsonTrend.name != null ? jsonTrend.name.toString() : "";
     trend.url = jsonTrend.url != null ? jsonTrend.url.toString() : "";
     trend.promotedContent = jsonTrend.promoted_content != null ? jsonTrend.promoted_content.toString() : "";
-    //trend.trendQuery = jsonTrend.query != null ? jsonTrend.query.toString() : "";
+    trend.trendQuery = jsonTrend["query"] != null ? jsonTrend["query"].toString() : "";
     trend.tweetVolume = jsonTrend.tweet_volume != null ? <int, convertToInt()> jsonTrend.tweet_volume : 0;
 }

@@ -50,7 +50,6 @@ public function <TwitterConnector twitterConnector> init (string clientId, strin
 public function <TwitterConnector twitterConnector> tweet (string status) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
-    Status twitterResponse = {};
     string tweetPath = "/1.1/statuses/update.json";
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
@@ -85,7 +84,7 @@ public function <TwitterConnector twitterConnector> tweet (string status) return
                                    }
                                    json jsonResponse => {
                                        if (statusCode == 200) {
-                                           twitterResponse = <Status , convertToStatus()> jsonResponse;
+                                           Status twitterResponse = <Status , convertToStatus()> jsonResponse;
                                            return twitterResponse;
                                        } else {
                                            twitterError.errorMessage = jsonResponse.errors[0].message.toString();
@@ -101,7 +100,6 @@ public function <TwitterConnector twitterConnector> tweet (string status) return
 public function <TwitterConnector twitterConnector> retweet (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
-    Status twitterResponse = {};
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
@@ -131,7 +129,7 @@ public function <TwitterConnector twitterConnector> retweet (string id) returns 
                                         }
                                         json jsonResponse => {
                                             if (statusCode == 200) {
-                                                twitterResponse = <Status , convertToStatus()> jsonResponse;
+                                                Status twitterResponse = <Status , convertToStatus()> jsonResponse;
                                                 return twitterResponse;
                                             } else {
                                                 twitterError.errorMessage = jsonResponse.errors[0].message.toString();
@@ -147,7 +145,6 @@ public function <TwitterConnector twitterConnector> retweet (string id) returns 
 public function <TwitterConnector twitterConnector> unretweet (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
-    Status twitterResponse = {};
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
@@ -177,7 +174,7 @@ public function <TwitterConnector twitterConnector> unretweet (string id) return
                                         }
                                         json jsonResponse => {
                                             if (statusCode == 200) {
-                                                twitterResponse = <Status , convertToStatus()> jsonResponse;
+                                                Status twitterResponse = <Status , convertToStatus()> jsonResponse;
                                                 return twitterResponse;
                                             } else {
                                                 twitterError.errorMessage = jsonResponse.errors[0].message.toString();
@@ -242,16 +239,14 @@ public function <TwitterConnector twitterConnector> search (string queryStr) ret
 }
 
 public function <TwitterConnector twitterConnector> showStatus (string id) returns Status | TwitterError {
-    string urlParams;
     http:Request request = {};
     TwitterError twitterError = {};
-    Status twitterResponse = {};
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
     string tweetPath = "/1.1/statuses/show.json";
-    urlParams = "id=" + id;
+    string urlParams = "id=" + id;
     string oauthStr = urlParams + "&" + constructOAuthParams(twitterConnector.oAuthConfig.clientId,
                                                              twitterConnector.oAuthConfig.accessToken);
 
@@ -277,7 +272,7 @@ public function <TwitterConnector twitterConnector> showStatus (string id) retur
                                         }
                                         json jsonResponse => {
                                             if (statusCode == 200) {
-                                                twitterResponse = <Status , convertToStatus()> jsonResponse;
+                                                Status twitterResponse = <Status , convertToStatus()> jsonResponse;
                                                 return twitterResponse;
                                             } else {
                                                 twitterError.errorMessage = jsonResponse.errors[0].message.toString();
@@ -293,7 +288,6 @@ public function <TwitterConnector twitterConnector> showStatus (string id) retur
 public function <TwitterConnector twitterConnector> destroyStatus (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
-    Status twitterResponse = {};
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
@@ -323,7 +317,7 @@ public function <TwitterConnector twitterConnector> destroyStatus (string id) re
                                         }
                                         json jsonResponse => {
                                             if (statusCode == 200) {
-                                                twitterResponse = <Status , convertToStatus()> jsonResponse;
+                                                Status twitterResponse = <Status , convertToStatus()> jsonResponse;
                                                 return twitterResponse;
                                             } else {
                                                 twitterError.errorMessage = jsonResponse.errors[0].message.toString();
@@ -338,15 +332,13 @@ public function <TwitterConnector twitterConnector> destroyStatus (string id) re
 
 public function <TwitterConnector twitterConnector> getClosestTrendLocations (string lat, string long)
                                                                     returns Location [] | TwitterError {
-    string urlParams = "";
     TwitterError twitterError = {};
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
     string tweetPath = "/1.1/trends/closest.json";
-    urlParams = urlParams + "&lat=" + lat;
-    urlParams = urlParams + "&long=" + long;
+    string urlParams =  "&lat=" + lat + "&long=" + long;
     string oauthStr = urlParams.subString(1, urlParams.length()) + "&" +
                       constructOAuthParams(twitterConnector.oAuthConfig.clientId,
                                            twitterConnector.oAuthConfig.accessToken);
@@ -388,14 +380,13 @@ public function <TwitterConnector twitterConnector> getClosestTrendLocations (st
 
 public function <TwitterConnector twitterConnector> getTopTrendsByPlace (string locationId)
                                                                     returns Trends[] | TwitterError {
-    string urlParams;
     TwitterError twitterError = {};
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
     string tweetPath = "/1.1/trends/place.json";
-    urlParams = "id=" + locationId;
+    string urlParams = "id=" + locationId;
     string oauthStr = urlParams + "&" + constructOAuthParams(twitterConnector.oAuthConfig.clientId,
     twitterConnector.oAuthConfig.accessToken);
 

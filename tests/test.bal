@@ -28,45 +28,27 @@ public function main (string[] args) {
         io:println("--------------Calling tweet----------------");
         string status = args[5];
         var tweetResponse = twitter.tweet(status);
-        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            twitter:Status response => {
-                twitterStatus = response;
-                io:println("Tweet id : " + twitterStatus.id);
-                io:println("Tweet message : " + twitterStatus.text);
-                io:println("Tweet language : " + twitterStatus.lang);
-            }
+            twitter:Status response => io:println(response);
             twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "retweet") {
         io:println("--------------Calling retweet----------------");
         string id = args[5];
         var tweetResponse = twitter.retweet (id);
-        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            twitter:Status response => {
-                twitterStatus = response;
-                io:println("Tweet id : " + twitterStatus.id);
-                io:println("Tweet message : " + twitterStatus.text);
-                io:println("Tweet language : " + twitterStatus.lang);
-            }
+            twitter:Status response => io:println(response);
             twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "unretweet") {
         io:println("--------------Calling unretweet----------------");
         string id = args[5];
         var tweetResponse = twitter.unretweet (id);
-        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            twitter:Status response => {
-                twitterStatus = response;
-                io:println("Tweet id : " + twitterStatus.id);
-                io:println("Tweet message : " + twitterStatus.text);
-                io:println("Tweet language : " + twitterStatus.lang);
-            }
+            twitter:Status response => io:println(response);
             twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "search") {
@@ -82,30 +64,18 @@ public function main (string[] args) {
         io:println("--------------Calling showStatus----------------");
         string id = args[5];
         var tweetResponse = twitter.showStatus (id);
-        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            twitter:Status response => {
-                twitterStatus = response;
-                io:println("Tweet id : " + twitterStatus.id);
-                io:println("Tweet message : " + twitterStatus.text);
-                io:println("Tweet language : " + twitterStatus.lang);
-            }
+            twitter:Status response => io:println(response);
             twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "destroyStatus") {
         io:println("--------------Calling destroyStatus----------------");
         string id = args[5];
         var tweetResponse = twitter.destroyStatus (id);
-        twitter:Status twitterStatus = {};
 
         match tweetResponse {
-            twitter:Status response => {
-                twitterStatus = response;
-                io:println("Tweet id : " + twitterStatus.id);
-                io:println("Tweet message : " + twitterStatus.text);
-                io:println("Tweet language : " + twitterStatus.lang);
-            }
+            twitter:Status response => io:println(response);
             twitter:TwitterError err => io:println("Error message : " + err.errorMessage);
         }
     } else if (args[0] == "getClosestTrendLocations") {
