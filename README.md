@@ -4,9 +4,16 @@ The Twitter connector allows you to access the Twitter REST API through ballerin
 are being invoked with a ballerina main function. The following section provide you the details on how to use Ballerina 
 Twitter connector.
 
+##### Getting started
+1. Clone the repository by running the following command
+    
+    `git clone https://github.com/wso2-ballerina/package-twitter`
+2. Import the package to your ballerina project.
+
 ##### Prerequisites
-1. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/)
-2. Obtain the following parameters:
+1. Download the ballerina [distribution](https://ballerinalang.org/downloads/).
+2. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/)
+3. Obtain the following parameters:
     * Consumer Key (API Key)
     * Consumer Secret (API Secret)
     * Access Token
@@ -139,4 +146,4 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
 
 | Ballerina Version | Twitter Connector Version |
 | ----------------- | ---------------------- |
-| 0.970.0-alpha0 | V1 |                    
+| 0.970.0-alpha1-SNAPSHOT | 0.2 |                    
