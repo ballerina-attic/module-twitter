@@ -41,6 +41,38 @@ public struct GeoLocation {
     float longitude;
 }
 
+@Description {value: "Struct to define the location details."}
+public struct Location {
+    int woeid;
+    string countryName;
+    string countryCode;
+    string name;
+    PlaceType placeType;
+    string url;
+}
+
+@Description {value: "Struct to define the place type."}
+public struct PlaceType {
+    string name;
+    int code;
+}
+
+@Description {value: "Struct to define the trends type."}
+public struct Trends {
+    Trend[] trends;
+    Location[] locations;
+    string createdAt;
+}
+
+@Description {value: "Struct to define the trend type."}
+public struct Trend {
+    string name;
+    string url;
+    string trendQuery;
+    string promotedContent;
+    int tweetVolume;
+}
+
 @Description {value: "Struct to define the error."}
 public struct TwitterError {
     int statusCode;

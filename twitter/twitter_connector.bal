@@ -187,27 +187,54 @@ public function <TwitterConnector twitterConnector> unretweet (string id) return
     }
 }
 
-public function <TwitterConnector twitterConnector> search (string queryStr) returns http:Response |
-                                                                                     http:HttpConnectorError {
-    http:Request request = {};
-    string urlParams;
+public function <TwitterConnector twitterConnector> search (string queryStr) returns Status[] | TwitterError {
     string tweetPath = "/1.1/search/tweets.json";
     string encodedQueryValue =? uri:encode(queryStr, "UTF-8");
+    TwitterError twitterError = {};
 
-    urlParams = "q=" + encodedQueryValue + "&";
+    if (!isConnectorInitialized) {
+        twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
+        return twitterError;
+    }
+    string urlParams = "q=" + encodedQueryValue + "&";
     string oauthStr = constructOAuthParams(twitterConnector.oAuthConfig.clientId,
                                            twitterConnector.oAuthConfig.accessToken) + urlParams;
 
+    http:Request request = {};
     constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
                             twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
                             twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var response = twitterHttpClientEP -> get(tweetPath, request);
+    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
 
-    match response {
-      http:Response res => return res;
-      http:HttpConnectorError err => return err;
+    Status[] searchResponse = [];
+    match httpResponse {
+        http:HttpConnectorError err => { twitterError.errorMessage = err.message;
+                                         twitterError.statusCode = err.statusCode;
+                                         return twitterError;
+        }
+        http:Response response => { int statusCode = response.statusCode;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        mime:EntityError err => {
+                                            twitterError.errorMessage = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                if (jsonResponse.statuses != null) {
+                                                    searchResponse = convertToStatuses(jsonResponse.statuses);
+                                                }
+                                                return searchResponse;
+                                            } else {
+                                                twitterError.errorMessage = jsonResponse.error.message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
+                                    }
+        }
     }
 }
 
@@ -304,49 +331,98 @@ public function <TwitterConnector twitterConnector> destroyStatus (string id) re
 }
 
 public function <TwitterConnector twitterConnector> getClosestTrendLocations (string lat, string long)
-                                                                    returns http:Response | http:HttpConnectorError {
-    string urlParams = "";
-    http:Request request = {};
-
+                                                                    returns Location [] | TwitterError {
+    TwitterError twitterError = {};
+    if (!isConnectorInitialized) {
+        twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
+        return twitterError;
+    }
     string tweetPath = "/1.1/trends/closest.json";
-    urlParams = urlParams + "&lat=" + lat;
-    urlParams = urlParams + "&long=" + long;
+    string urlParams =  "&lat=" + lat + "&long=" + long;
     string oauthStr = urlParams.subString(1, urlParams.length()) + "&" +
                       constructOAuthParams(twitterConnector.oAuthConfig.clientId,
                                            twitterConnector.oAuthConfig.accessToken);
-
+    http:Request request = {};
     constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
                             twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
                             twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams.subString(1, urlParams.length());
 
-    var response = twitterHttpClientEP -> get(tweetPath, request);
-
-    match response {
-        http:Response res => return res;
-        http:HttpConnectorError err => return err;
+    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
+    Location[] locations = [];
+    match httpResponse {
+        http:HttpConnectorError err => {
+            twitterError.errorMessage = err.message;
+            twitterError.statusCode = err.statusCode;
+            return twitterError;
+        }
+        http:Response response => { int statusCode = response.statusCode;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        mime:EntityError err => {
+                                            twitterError.errorMessage = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                locations = convertToLocations(jsonResponse);
+                                                return locations;
+                                            } else {
+                                                twitterError.errorMessage = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
+                                    }
+        }
     }
 }
 
 public function <TwitterConnector twitterConnector> getTopTrendsByPlace (string locationId)
-                                                                    returns http:Response | http:HttpConnectorError {
-    string urlParams;
-    http:Request request = {};
-
+                                                                    returns Trends[] | TwitterError {
+    TwitterError twitterError = {};
+    if (!isConnectorInitialized) {
+        twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
+        return twitterError;
+    }
     string tweetPath = "/1.1/trends/place.json";
-    urlParams = "id=" + locationId;
+    string urlParams = "id=" + locationId;
     string oauthStr = urlParams + "&" + constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                                             twitterConnector.oAuthConfig.accessToken);
+    twitterConnector.oAuthConfig.accessToken);
 
+    http:Request request = {};
     constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
+    twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
                             twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var response = twitterHttpClientEP -> get(tweetPath, request);
+    Trends[] trends = [];
+    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
 
-    match response {
-        http:Response res => return res;
-        http:HttpConnectorError err => return err;
+    match httpResponse {
+        http:HttpConnectorError err => {
+            twitterError.errorMessage = err.message;
+            twitterError.statusCode = err.statusCode;
+            return twitterError;
+        }
+        http:Response response => { int statusCode = response.statusCode;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        mime:EntityError err => {
+                                            twitterError.errorMessage = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                trends = convertTrends(jsonResponse);
+                                                return trends;
+                                            } else {
+                                                twitterError.errorMessage = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
+                                    }
+        }
     }
 }

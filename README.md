@@ -139,4 +139,4 @@ The getTopTrendsByPlace action allows to retrieve the top topics for a specified
 
 | Ballerina Version | Twitter Connector Version |
 | ----------------- | ---------------------- |
-| 0.964.1 | 0.95.2 |
+| 0.970.0-alpha0 | V1 |                    

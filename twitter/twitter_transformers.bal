@@ -53,3 +53,67 @@ transformer <json jsonStatus, GeoLocation geoLocation> convertToGeoLocation() {
     geoLocation.latitude = <float , convertToFloat()> jsonStatus.geo.latitude;
     geoLocation.longitude = <float , convertToFloat()> jsonStatus.geo.longitude;
 }
+
+function convertToStatuses(json jsonStatuses) returns Status[] {
+    Status[] statuses = [];
+    int i = 0;
+    foreach jsonStatus in jsonStatuses {
+        statuses[i] = <Status, convertToStatus()> jsonStatus;
+        i = i +1;
+    }
+    return statuses;
+}
+
+function convertToLocations(json jsonLocations) returns Location[] {
+    Location[] locations = [];
+    int i = 0;
+    foreach jsonLocation in jsonLocations {
+        locations[i] = <Location, convertToLocation()> jsonLocation;
+        i = i +1;
+    }
+    return locations;
+}
+
+transformer <json jsonLocation, Location location> convertToLocation() {
+    location.countryName =  jsonLocation.country != null ? jsonLocation.country.toString() : "";
+    location.countryCode =  jsonLocation.countryCode != null ? jsonLocation.countryCode.toString() : "";
+    location.name =  jsonLocation.name != null ? jsonLocation.name.toString() : "";
+    location.placeType =  jsonLocation.placeType != null ? <PlaceType, convertToPlaceType()>jsonLocation.placeType : {};
+    location.url =  jsonLocation.url != null ? jsonLocation.url.toString() : "";
+    location.woeid = <int , convertToInt()> jsonLocation.woeid;
+}
+
+transformer <json jsonPlaceType, PlaceType placeType> convertToPlaceType() {
+    placeType.code = <int , convertToInt()> jsonPlaceType.code;
+    placeType.name = jsonPlaceType.name.toString();
+}
+
+function convertTrends(json jsonTrends) returns Trends[] {
+    Trends [] trends = [];
+    trends[0] = <Trends, convertToTrends()> jsonTrends[0];
+    return trends;
+}
+
+transformer <json jsonTrends, Trends trendList> convertToTrends() {
+    trendList.trends = jsonTrends.trends != null ? convertTrendList(jsonTrends.trends) : [];
+    trendList.locations = jsonTrends.locations != null ? convertToLocations(jsonTrends.locations) : [];
+    trendList.createdAt = jsonTrends.created_at != null ? jsonTrends.created_at.toString() : "";
+}
+
+function convertTrendList(json jsonTrends) returns Trend[] {
+    Trend[] trendList = [];
+    int i = 0;
+    foreach jsonTrend in jsonTrends {
+        trendList[i] = <Trend, convertToTrend()> jsonTrend;
+        i = i +1;
+    }
+    return trendList;
+}
+
+transformer <json jsonTrend, Trend trend> convertToTrend() {
+    trend.name = jsonTrend.name != null ? jsonTrend.name.toString() : "";
+    trend.url = jsonTrend.url != null ? jsonTrend.url.toString() : "";
+    trend.promotedContent = jsonTrend.promoted_content != null ? jsonTrend.promoted_content.toString() : "";
+    trend.trendQuery = jsonTrend["query"] != null ? jsonTrend["query"].toString() : "";
+    trend.tweetVolume = jsonTrend.tweet_volume != null ? <int, convertToInt()> jsonTrend.tweet_volume : 0;
+}
