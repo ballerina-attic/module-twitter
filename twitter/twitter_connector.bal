@@ -20,36 +20,27 @@ import ballerina/io;
 import ballerina/net.uri;
 import ballerina/mime;
 
-//Creates package-global Http client endpoint for twitter REST API
-endpoint http:ClientEndpoint twitterHttpClientEP {targets:[{uri:"https://api.twitter.com"}]};
+//Global Http Client
+http:HttpClient httpClientGlobal = {};
 boolean isConnectorInitialized = false;
 
 //Twitter Connector Struct
 public struct TwitterConnector {
-    OAuthConfig oAuthConfig;
-}
-
-public struct OAuthConfig {
     string accessToken;
     string accessTokenSecret;
     string clientId;
     string clientSecret;
-}
-
-public function <TwitterConnector twitterConnector> init (string clientId, string clientSecret,
-                                                          string accessToken, string accessTokenSecret) {
-    OAuthConfig conf = {};
-    conf.clientId = clientId;
-    conf.clientSecret = clientSecret;
-    conf.accessToken = accessToken;
-    conf.accessTokenSecret = accessTokenSecret;
-    twitterConnector.oAuthConfig = conf;
-    isConnectorInitialized = true;
+    http:HttpClient httpClient;
 }
 
 public function <TwitterConnector twitterConnector> tweet (string status) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     string tweetPath = "/1.1/statuses/update.json";
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
@@ -59,15 +50,13 @@ public function <TwitterConnector twitterConnector> tweet (string status) return
 
     string urlParams = "status=" + encodedStatusValue + "&";
 
-    string oauthStr = constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                           twitterConnector.oAuthConfig.accessToken) + urlParams;
+    string oauthStr = constructOAuthParams(clientId, accessToken) + urlParams;
 
-    constructRequestHeaders(request, "POST", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = twitterHttpClientEP -> post(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.post(tweetPath, request);
 
     match httpResponse {
         http:HttpConnectorError err => {
@@ -100,19 +89,22 @@ public function <TwitterConnector twitterConnector> tweet (string status) return
 public function <TwitterConnector twitterConnector> retweet (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
-    string oauthStr = constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                           twitterConnector.oAuthConfig.accessToken);
+    string oauthStr = constructOAuthParams(clientId, accessToken);
 
     string tweetPath = "/1.1/statuses/retweet/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
 
-    var httpResponse = twitterHttpClientEP -> post(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.post(tweetPath, request);
 
     match httpResponse {
         http:HttpConnectorError err => {
@@ -145,19 +137,22 @@ public function <TwitterConnector twitterConnector> retweet (string id) returns 
 public function <TwitterConnector twitterConnector> unretweet (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
-    string oauthStr = constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                           twitterConnector.oAuthConfig.accessToken);
+    string oauthStr = constructOAuthParams(clientId, accessToken);
 
     string tweetPath = "/1.1/statuses/unretweet/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
 
-    var httpResponse = twitterHttpClientEP -> post(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.post(tweetPath, request);
 
     match httpResponse {
         http:HttpConnectorError err => {
@@ -188,25 +183,27 @@ public function <TwitterConnector twitterConnector> unretweet (string id) return
 }
 
 public function <TwitterConnector twitterConnector> search (string queryStr) returns Status[] | TwitterError {
+    TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
     string tweetPath = "/1.1/search/tweets.json";
     string encodedQueryValue =? uri:encode(queryStr, "UTF-8");
-    TwitterError twitterError = {};
 
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
     string urlParams = "q=" + encodedQueryValue + "&";
-    string oauthStr = constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                           twitterConnector.oAuthConfig.accessToken) + urlParams;
+    string oauthStr = constructOAuthParams(clientId, accessToken) + urlParams;
 
     http:Request request = {};
-    constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.get(tweetPath, request);
 
     Status[] searchResponse = [];
     match httpResponse {
@@ -241,21 +238,24 @@ public function <TwitterConnector twitterConnector> search (string queryStr) ret
 public function <TwitterConnector twitterConnector> showStatus (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
     string tweetPath = "/1.1/statuses/show.json";
     string urlParams = "id=" + id;
-    string oauthStr = urlParams + "&" + constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                                             twitterConnector.oAuthConfig.accessToken);
+    string oauthStr = urlParams + "&" + constructOAuthParams(clientId, accessToken);
 
-    constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.get(tweetPath, request);
 
     match httpResponse {
         http:HttpConnectorError err => {
@@ -288,19 +288,22 @@ public function <TwitterConnector twitterConnector> showStatus (string id) retur
 public function <TwitterConnector twitterConnector> destroyStatus (string id) returns Status | TwitterError {
     http:Request request = {};
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
-    string oauthStr = constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                           twitterConnector.oAuthConfig.accessToken);
+    string oauthStr = constructOAuthParams(clientId, accessToken);
 
     string tweetPath = "/1.1/statuses/destroy/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
 
-    var httpResponse = twitterHttpClientEP -> post(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.post(tweetPath, request);
 
     match httpResponse {
         http:HttpConnectorError err => {
@@ -333,6 +336,11 @@ public function <TwitterConnector twitterConnector> destroyStatus (string id) re
 public function <TwitterConnector twitterConnector> getClosestTrendLocations (string lat, string long)
                                                                     returns Location [] | TwitterError {
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
@@ -340,15 +348,13 @@ public function <TwitterConnector twitterConnector> getClosestTrendLocations (st
     string tweetPath = "/1.1/trends/closest.json";
     string urlParams =  "&lat=" + lat + "&long=" + long;
     string oauthStr = urlParams.subString(1, urlParams.length()) + "&" +
-                      constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-                                           twitterConnector.oAuthConfig.accessToken);
+                      constructOAuthParams(clientId, accessToken);
     http:Request request = {};
-    constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
-                            twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
     tweetPath = tweetPath + "?" + urlParams.subString(1, urlParams.length());
 
-    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.get(tweetPath, request);
     Location[] locations = [];
     match httpResponse {
         http:HttpConnectorError err => {
@@ -381,23 +387,26 @@ public function <TwitterConnector twitterConnector> getClosestTrendLocations (st
 public function <TwitterConnector twitterConnector> getTopTrendsByPlace (string locationId)
                                                                     returns Trends[] | TwitterError {
     TwitterError twitterError = {};
+    string clientId = twitterConnector.clientId;
+    string clientSecret = twitterConnector.clientSecret;
+    string accessToken = twitterConnector.accessToken;
+    string accessTokenSecret = twitterConnector.accessTokenSecret;
+
     if (!isConnectorInitialized) {
         twitterError.errorMessage = "Connector is not initalized. Invoke init method first.";
         return twitterError;
     }
     string tweetPath = "/1.1/trends/place.json";
     string urlParams = "id=" + locationId;
-    string oauthStr = urlParams + "&" + constructOAuthParams(twitterConnector.oAuthConfig.clientId,
-    twitterConnector.oAuthConfig.accessToken);
+    string oauthStr = urlParams + "&" + constructOAuthParams(clientId, accessToken);
 
     http:Request request = {};
-    constructRequestHeaders(request, "GET", tweetPath, twitterConnector.oAuthConfig.clientId,
-    twitterConnector.oAuthConfig.clientSecret, twitterConnector.oAuthConfig.accessToken,
-                            twitterConnector.oAuthConfig.accessTokenSecret, oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+                            oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
     Trends[] trends = [];
-    var httpResponse = twitterHttpClientEP -> get(tweetPath, request);
+    var httpResponse = twitterConnector.httpClient.get(tweetPath, request);
 
     match httpResponse {
         http:HttpConnectorError err => {

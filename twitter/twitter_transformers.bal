@@ -50,8 +50,8 @@ transformer <json jsonVal, float floatVal> convertToFloat() {
 }
 
 transformer <json jsonStatus, GeoLocation geoLocation> convertToGeoLocation() {
-    geoLocation.latitude = <float , convertToFloat()> jsonStatus.geo.latitude;
-    geoLocation.longitude = <float , convertToFloat()> jsonStatus.geo.longitude;
+    geoLocation.latitude = jsonStatus.geo.latitude != null ? <float , convertToFloat()> jsonStatus.geo.latitude : 0;
+    geoLocation.longitude = jsonStatus.geo.longitude != null ? <float , convertToFloat()> jsonStatus.geo.longitude : 0;
 }
 
 function convertToStatuses(json jsonStatuses) returns Status[] {

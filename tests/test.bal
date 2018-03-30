@@ -20,14 +20,22 @@ import ballerina/net.http;
 import ballerina/mime;
 
 public function main (string[] args) {
+
+    endpoint twitter:TwitterEndpoint twitterEP {
+        clientId:args[1],
+        clientSecret:args[2],
+        accessToken:args[3],
+        accessTokenSecret:args[4],
+        clientConfig:{}
+    };
+
     twitter:TwitterConnector twitter = {};
     http:HttpConnectorError e = {};
-    twitter.init(args[1], args[2], args[3], args[4]);
 
     if (args[0] == "tweet") {
         io:println("--------------Calling tweet----------------");
         string status = args[5];
-        var tweetResponse = twitter.tweet(status);
+        var tweetResponse = twitterEP -> tweet(status);
 
         match tweetResponse {
             twitter:Status response => io:println(response);
@@ -36,7 +44,7 @@ public function main (string[] args) {
     } else if (args[0] == "retweet") {
         io:println("--------------Calling retweet----------------");
         string id = args[5];
-        var tweetResponse = twitter.retweet (id);
+        var tweetResponse = twitterEP -> retweet (id);
 
         match tweetResponse {
             twitter:Status response => io:println(response);
@@ -45,7 +53,7 @@ public function main (string[] args) {
     } else if (args[0] == "unretweet") {
         io:println("--------------Calling unretweet----------------");
         string id = args[5];
-        var tweetResponse = twitter.unretweet (id);
+        var tweetResponse = twitterEP -> unretweet (id);
 
         match tweetResponse {
             twitter:Status response => io:println(response);
@@ -54,7 +62,7 @@ public function main (string[] args) {
     } else if (args[0] == "search") {
         io:println("--------------Calling search----------------");
         string queryStr = args[5];
-        var tweetResponse = twitter.search (queryStr);
+        var tweetResponse = twitterEP -> search (queryStr);
 
         match tweetResponse {
             twitter:Status[] response => io:println(response);
@@ -63,7 +71,7 @@ public function main (string[] args) {
     } else if (args[0] == "showStatus") {
         io:println("--------------Calling showStatus----------------");
         string id = args[5];
-        var tweetResponse = twitter.showStatus (id);
+        var tweetResponse = twitterEP -> showStatus (id);
 
         match tweetResponse {
             twitter:Status response => io:println(response);
@@ -72,7 +80,7 @@ public function main (string[] args) {
     } else if (args[0] == "destroyStatus") {
         io:println("--------------Calling destroyStatus----------------");
         string id = args[5];
-        var tweetResponse = twitter.destroyStatus (id);
+        var tweetResponse = twitterEP -> destroyStatus (id);
 
         match tweetResponse {
             twitter:Status response => io:println(response);
@@ -82,7 +90,7 @@ public function main (string[] args) {
         io:println("--------------Calling getClosestTrendLocations----------------");
         string latitude = args[5];
         string longitude = args[6];
-        var tweetResponse = twitter.getClosestTrendLocations (latitude, longitude);
+        var tweetResponse = twitterEP -> getClosestTrendLocations (latitude, longitude);
 
         match tweetResponse {
             twitter:Location[] response => io:println(response);
@@ -91,7 +99,7 @@ public function main (string[] args) {
     } else if (args[0] == "getTopTrendsByPlace") {
         io:println("--------------Calling getTopTrendsByPlace----------------");
         string locationId = args[5];
-        var tweetResponse = twitter.getTopTrendsByPlace (locationId);
+        var tweetResponse = twitterEP -> getTopTrendsByPlace (locationId);
 
         match tweetResponse {
             twitter:Trends [] response => io:println(response);
