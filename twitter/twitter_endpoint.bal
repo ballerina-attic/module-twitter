@@ -18,41 +18,24 @@
 
 package twitter;
 
-import ballerina/net.http;
-
-@Description {value:"Struct to set the twitter configuration."}
-public struct TwitterConfiguration {
-    string uri;
-    string accessToken;
-    string accessTokenSecret;
-    string clientId;
-    string clientSecret;
-    http:ClientEndpointConfiguration clientConfig;
-}
+import ballerina/http;
 
 @Description {value:"Set the client configuration."}
 public function <TwitterConfiguration twitterConfig> TwitterConfiguration () {
     twitterConfig.clientConfig = {};
 }
 
-@Description {value:"Twitter Endpoint struct."}
-public struct TwitterEndpoint {
-    TwitterConfiguration twitterConfig;
-    TwitterConnector twitterConnector;
-}
-
 @Description {value:"Initialize Twitter endpoint."}
 public function <TwitterEndpoint ep> init (TwitterConfiguration twitterConfig) {
     twitterConfig.uri = "https://api.twitter.com";
-    httpClientGlobal = http:createHttpClient(twitterConfig.uri, twitterConfig.clientConfig);
+    http:HttpClient httpClientGlobal = http:createHttpClient(twitterConfig.uri, twitterConfig.clientConfig);
     ep.twitterConnector = {
         accessToken:twitterConfig.accessToken,
         accessTokenSecret:twitterConfig.accessTokenSecret,
         clientId:twitterConfig.clientId,
-        clientSecret:twitterConfig.clientSecret,
-        httpClient:httpClientGlobal
+        clientSecret:twitterConfig.clientSecret
     };
-    isConnectorInitialized = true;
+    ep.twitterConnector.clientEndpoint.httpClient = httpClientGlobal;
 }
 
 public function <TwitterConnector ep> register(typedesc serviceType) {
