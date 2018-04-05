@@ -20,7 +20,7 @@ package twitter;
 
 import ballerina/time;
 import ballerina/util;
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/net.uri;
 import ballerina/security.crypto;
 import ballerina/io;
