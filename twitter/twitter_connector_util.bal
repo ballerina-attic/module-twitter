@@ -16,14 +16,10 @@
 // under the License.
 //
 
-package twitter;
-
 import ballerina/time;
 import ballerina/util;
 import ballerina/http;
-import ballerina/net.uri;
 import ballerina/security.crypto;
-import ballerina/io;
 
 string timeStamp;
 string nonceString;
@@ -44,20 +40,22 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     int index;
     string key;
     string value;
+    string serviceEndpoint;
+    string paramString;
 
-    serviceEP = "https://api.twitter.com" + serviceEP;
-    paramStr = paramStr.subString(0, paramStr.length() - 1);
-    string encodedServiceEPValue =? uri:encode(serviceEP, "UTF-8");
-    string encodedParamStrValue =? uri:encode(paramStr, "UTF-8");
-    string encodedConsumerSecretValue =? uri:encode(consumerSecret, "UTF-8");
-    string encodedAccessTokenSecretValue =? uri:encode(accessTokenSecret, "UTF-8");
+    serviceEndpoint = "https://api.twitter.com" + serviceEP;
+    paramString = paramStr.subString(0, paramStr.length() - 1);
+    string encodedServiceEPValue = check http:encode(serviceEndpoint, "UTF-8");
+    string encodedParamStrValue = check http:encode(paramString, "UTF-8");
+    string encodedConsumerSecretValue = check http:encode(consumerSecret, "UTF-8");
+    string encodedAccessTokenSecretValue = check http:encode(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
     string keyStr =  encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    string signature = util:base16ToBase64Encode(crypto:getHmac(baseString, keyStr, crypto:Algorithm.SHA1));
+    string signature = util:base16ToBase64Encode(crypto:getHmac(baseString, keyStr, crypto:SHA1));
 
-    string encodedSignatureValue =? uri:encode(signature, "UTF-8");
-    string encodedaccessTokenValue =? uri:encode(accessToken, "UTF-8");
+    string encodedSignatureValue = check http:encode(signature, "UTF-8");
+    string encodedaccessTokenValue = check http:encode(accessToken, "UTF-8");
 
     string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
                                "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +

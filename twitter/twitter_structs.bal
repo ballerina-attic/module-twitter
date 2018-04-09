@@ -14,36 +14,72 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
-package twitter;
-
 @Description {value: "Struct to define the Twitter connector."}
-public struct TwitterConnector {
-    string accessToken;
-    string accessTokenSecret;
-    string clientId;
-    string clientSecret;
-    http:ClientEndpoint clientEndpoint;
-}
+public type TwitterConnector object {
+    public {
+        string accessToken;
+        string accessTokenSecret;
+        string clientId;
+        string clientSecret;
+        http:ClientEndpoint clientEndpoint = new;
+    }
+
+    public function tweet (string status) returns Status | TwitterError;
+    public function retweet (string id) returns Status | TwitterError;
+    public function unretweet (string id) returns Status | TwitterError;
+    public function search (string queryStr) returns Status[] | TwitterError;
+    public function showStatus (string id) returns Status | TwitterError;
+    public function destroyStatus (string id) returns Status | TwitterError;
+    public function getClosestTrendLocations (string lat, string long) returns Location [] | TwitterError;
+    public function getTopTrendsByPlace (string locationId) returns Trends[] | TwitterError;
+};
 
 @Description {value:"Twitter Endpoint struct."}
-public struct TwitterEndpoint {
-    TwitterConfiguration twitterConfig;
-    TwitterConnector twitterConnector;
-}
+@Field {value: "twitterConfig: Twitter connector configurations"}
+@Field {value: "twitterConnector: Twitter Connector object"}
+public type TwitterClient object {
+    public {
+        TwitterConfiguration twitterConfig = {};
+        TwitterConnector twitterConnector = new;
+    }
 
-@Description {value:"Struct to set the twitter configuration."}
-public struct TwitterConfiguration {
+    @Description {value: "Twitter connector endpoint initialization function"}
+    @Param {value: "TwitterConfiguration: Twitter connector configuration"}
+    public function init (TwitterConfiguration twitterConfig);
+
+    @Description {value: "Register Twitter connector endpoint"}
+    @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+    public function register (typedesc serviceType);
+
+    @Description {value: "Start Twitter connector endpoint"}
+    public function start ();
+
+    @Description {value: "Return the Twitter connector client"}
+    @Return {value: "Twitter connector client"}
+    public function getClient () returns TwitterConnector;
+
+    @Description {value: "Stop Twitter connector client"}
+    public function stop ();
+};
+
+@Description {value:"Twitter connector configurations can be setup here"}
+@Field {value: "uri: The Twitter API URL"}
+@Field {value: "accessToken: The access token of the Twitter account"}
+@Field {value: "accessTokenSecret: The access token secret of the Twitter account"}
+@Field {value: "clientId: The consumer key of the Twitter account"}
+@Field {value: "clientSecret: The consumer secret of the Twitter account"}
+@Field {value: "clientConfig: Client endpoint configurations provided by the user"}
+public type TwitterConfiguration {
     string uri;
     string accessToken;
     string accessTokenSecret;
     string clientId;
     string clientSecret;
-    http:ClientEndpointConfiguration clientConfig;
-}
+    http:ClientEndpointConfiguration clientConfig = {};
+};
 
 @Description {value: "Struct to define the status."}
-public struct Status {
+public type Status {
     string createdAt;
     int id;
     string text;
@@ -58,48 +94,48 @@ public struct Status {
     int favouritesCount;
     int retweetCount;
     string lang;
-}
+};
 
 @Description {value: "Struct to define the geo location details."}
-public struct GeoLocation {
+public type GeoLocation {
     float latitude;
     float longitude;
-}
+};
 
 @Description {value: "Struct to define the location details."}
-public struct Location {
+public type Location {
     int woeid;
     string countryName;
     string countryCode;
     string name;
     PlaceType placeType;
     string url;
-}
+};
 
 @Description {value: "Struct to define the place type."}
-public struct PlaceType {
+public type PlaceType {
     string name;
     int code;
-}
+};
 
 @Description {value: "Struct to define the trends type."}
-public struct Trends {
+public type Trends {
     Trend[] trends;
     Location[] locations;
     string createdAt;
-}
+};
 
 @Description {value: "Struct to define the trend type."}
-public struct Trend {
+public type Trend {
     string name;
     string url;
     string trendQuery;
     string promotedContent;
     int tweetVolume;
-}
+};
 
 @Description {value: "Struct to define the error."}
-public struct TwitterError {
+public type TwitterError {
     int statusCode;
     string errorMessage;
-}
+};

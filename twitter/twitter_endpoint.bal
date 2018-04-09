@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package twitter;
-
 import ballerina/http;
 
 @Description {value:"Set the client configuration."}
@@ -25,35 +23,30 @@ public function <TwitterConfiguration twitterConfig> TwitterConfiguration () {
     twitterConfig.clientConfig = {};
 }
 
-@Description {value:"Initialize Twitter endpoint."}
-public function <TwitterEndpoint ep> init (TwitterConfiguration twitterConfig) {
+@Description {value: "Twitter connector endpoint initialization function"}
+@Param {value: "TwitterConfiguration: Twitter connector configuration"}
+public function TwitterClient::init (TwitterConfiguration twitterConfig) {
     twitterConfig.uri = "https://api.twitter.com";
-    http:HttpClient httpClientGlobal = http:createHttpClient(twitterConfig.uri, twitterConfig.clientConfig);
-    ep.twitterConnector = {
-        accessToken:twitterConfig.accessToken,
-        accessTokenSecret:twitterConfig.accessTokenSecret,
-        clientId:twitterConfig.clientId,
-        clientSecret:twitterConfig.clientSecret
-    };
-    ep.twitterConnector.clientEndpoint.httpClient = httpClientGlobal;
+    twitterConnector.accessToken = twitterConfig.accessToken;
+    twitterConnector.accessTokenSecret = twitterConfig.accessTokenSecret;
+    twitterConnector.clientId = twitterConfig.clientId;
+    twitterConnector.clientSecret = twitterConfig.clientSecret;
+    twitterConfig.clientConfig.targets = [{url:twitterConfig.uri}];
+    twitterConnector.clientEndpoint.init(twitterConfig.clientConfig);
 }
 
-public function <TwitterConnector ep> register(typedesc serviceType) {
+@Description {value: "Register Twitter connector endpoint"}
+@Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+public function TwitterClient::register(typedesc serviceType) {}
 
-}
-
-public function <TwitterConnector ep> start() {
-
-}
+@Description {value: "Start Twitter connector endpoint"}
+public function TwitterClient::start() {}
 
 @Description {value:"Returns the connector that client code uses."}
 @Return {value:"The connector that client code uses."}
-public function <TwitterEndpoint ep> getClient() returns TwitterConnector {
-    return ep.twitterConnector;
+public function TwitterClient::getClient() returns TwitterConnector {
+    return twitterConnector;
 }
 
 @Description {value:"Stops the registered service"}
-@Return {value:"Error occured during registration"}
-public function <TwitterEndpoint ep> stop() {
-
-}
+public function TwitterClient::stop() {}

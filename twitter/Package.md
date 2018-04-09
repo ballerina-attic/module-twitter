@@ -36,7 +36,7 @@ The following sections provide you with information on how to use the Ballerina 
 1. Create a Twitter endpoint.
 
 ```ballerina
-   endpoint twitter:TwitterEndpoint twitterEP {
+   endpoint twitter:TwitterClient twitterEP {
        clientId:"your_clientId",
        clientSecret:"your_clientSecret",
        accessToken:"your_access_token",
@@ -143,6 +143,16 @@ The following sections provide you with information on how to use the Ballerina 
     }
 ```
 
-9. Provide values for the variables (CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET) in `ballerina.conf`.
 
-10. Run ```ballerina test tests``` from your connector directory.
+###### Running twitter tests
+Create `ballerina.conf` file in `package-twitter`, with following keys and provide values for the variables.
+
+```.conf
+CLIENT_ID=""
+CLIENT_SECRET=""
+ACCESS_TOKEN=""
+ACCESS_TOKEN_SECRET=""
+```
+
+Run tests :
+```ballerina test twitter``` from your connector directory.
