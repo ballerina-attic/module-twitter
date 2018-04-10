@@ -20,13 +20,13 @@ import ballerina/util;
 import ballerina/config;
 import ballerina/io;
 
-string clientId = getConfigparam(config:getAsString("CLIENT_ID"));
-string clientSecret = getConfigparam(config:getAsString("CLIENT_SECRET"));
-string accessToken = getConfigparam(config:getAsString("ACCESS_TOKEN"));
-string accessTokenSecret = getConfigparam(config:getAsString("ACCESS_TOKEN_SECRET"));
+string clientId = config:getAsString("CLIENT_ID") but { () => "" };
+string clientSecret = config:getAsString("CLIENT_SECRET") but { () => "" };
+string accessToken = config:getAsString("ACCESS_TOKEN") but { () => "" };
+string accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET") but { () => "" };
 string tweetId;
 
-endpoint TwitterEndpoint twitterEP {
+endpoint TwitterClient twitterClient {
     clientId:clientId,
     clientSecret:clientSecret,
     accessToken:accessToken,
@@ -42,7 +42,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    var tweetResponse = twitterEP -> tweet(status);
+    var tweetResponse = twitterClient -> tweet(status);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -61,7 +61,7 @@ function testTweet () {
 }
 function testReTweet () {
     io:println("--------------Calling retweet----------------");
-    var tweetResponse = twitterEP -> retweet (tweetId);
+    var tweetResponse = twitterClient -> retweet (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -78,8 +78,8 @@ function testReTweet () {
 }
 function testUnReTweet () {
     io:println("--------------Calling unretweet----------------");
-    var tweetResponse = twitterEP -> unretweet (tweetId);
-
+    var tweetResponse = twitterClient -> unretweet (tweetId);
+    
     match tweetResponse {
         Status twitterStatus => {
             test:assertEquals(twitterStatus.id, <int> tweetId, msg = "Failed to call unretweet()");
@@ -94,7 +94,7 @@ function testUnReTweet () {
 function testSearch () {
     io:println("--------------Calling search----------------");
     string queryStr = "twitter";
-    var tweetResponse = twitterEP -> search (queryStr);
+    var tweetResponse = twitterClient -> search (queryStr);
 
     match tweetResponse {
         Status[] twitterStatus => {
@@ -111,7 +111,7 @@ function testSearch () {
 }
 function testShowStatus () {
     io:println("--------------Calling showStatus----------------");
-    var tweetResponse = twitterEP -> showStatus (tweetId);
+    var tweetResponse = twitterClient -> showStatus (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -128,7 +128,7 @@ function testShowStatus () {
 }
 function testDestroyStatus () {
     io:println("--------------Calling destroyStatus----------------");
-    var tweetResponse = twitterEP -> destroyStatus (tweetId);
+    var tweetResponse = twitterClient -> destroyStatus (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -145,7 +145,7 @@ function testGetClosestTrendLocations () {
     io:println("--------------Calling getClosestTrendLocations----------------");
     string latitude = "34";
     string longitude = "67";
-    var tweetResponse = twitterEP -> getClosestTrendLocations (latitude, longitude);
+    var tweetResponse = twitterClient -> getClosestTrendLocations (latitude, longitude);
 
     match tweetResponse {
         Location [] response => {
@@ -161,7 +161,7 @@ function testGetClosestTrendLocations () {
 function testGetTopTrendsByPlace () {
     io:println("--------------Calling getTopTrendsByPlace----------------");
     string locationId = "23424922";
-    var tweetResponse = twitterEP -> getTopTrendsByPlace (locationId);
+    var tweetResponse = twitterClient -> getTopTrendsByPlace (locationId);
 
     match tweetResponse {
         Trends[] response => {
@@ -169,18 +169,6 @@ function testGetTopTrendsByPlace () {
         }
         TwitterError err => {
             test:assertFail(msg = err.errorMessage);
-        }
-    }
-}
-
-function getConfigparam (string|null confParam) returns (string) {
-    match confParam {
-        string param => {
-            return param;
-        }
-        null => {
-            io:println("Empty value!");
-            return "";
         }
     }
 }
