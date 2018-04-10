@@ -78,6 +78,31 @@ public type TwitterConfiguration {
     http:ClientEndpointConfiguration clientConfig = {};
 };
 
+@Description {value: "Struct to define the Twitter connector."}
+public struct TwitterConnector {
+    string accessToken;
+    string accessTokenSecret;
+    string clientId;
+    string clientSecret;
+    http:ClientEndpoint clientEndpoint;
+}
+
+@Description {value:"Twitter Endpoint struct."}
+public struct TwitterEndpoint {
+    TwitterConfiguration twitterConfig;
+    TwitterConnector twitterConnector;
+}
+
+@Description {value:"Struct to set the twitter configuration."}
+public struct TwitterConfiguration {
+    string uri;
+    string accessToken;
+    string accessTokenSecret;
+    string clientId;
+    string clientSecret;
+    http:ClientEndpointConfiguration clientConfig;
+}
+
 @Description {value: "Struct to define the status."}
 public type Status {
     string createdAt;

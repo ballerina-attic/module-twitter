@@ -79,7 +79,7 @@ function testReTweet () {
 function testUnReTweet () {
     io:println("--------------Calling unretweet----------------");
     var tweetResponse = twitterClient -> unretweet (tweetId);
-
+    
     match tweetResponse {
         Status twitterStatus => {
             test:assertEquals(twitterStatus.id, <int> tweetId, msg = "Failed to call unretweet()");
