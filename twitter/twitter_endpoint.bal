@@ -25,12 +25,12 @@ public function <TwitterConfiguration twitterConfig> TwitterConfiguration () {
 
 public function TwitterClient::init (TwitterConfiguration twitterConfig) {
     twitterConfig.uri = "https://api.twitter.com";
-    twitterConnector.accessToken = twitterConfig.accessToken;
-    twitterConnector.accessTokenSecret = twitterConfig.accessTokenSecret;
-    twitterConnector.clientId = twitterConfig.clientId;
-    twitterConnector.clientSecret = twitterConfig.clientSecret;
+    self.twitterConnector.accessToken = twitterConfig.accessToken;
+    self.twitterConnector.accessTokenSecret = twitterConfig.accessTokenSecret;
+    self.twitterConnector.clientId = twitterConfig.clientId;
+    self.twitterConnector.clientSecret = twitterConfig.clientSecret;
     twitterConfig.clientConfig.targets = [{url:twitterConfig.uri}];
-    twitterConnector.clientEndpoint.init(twitterConfig.clientConfig);
+    self.twitterConnector.clientEndpoint.init(twitterConfig.clientConfig);
 }
 
 public function TwitterClient::register(typedesc serviceType) {}
@@ -38,7 +38,7 @@ public function TwitterClient::register(typedesc serviceType) {}
 public function TwitterClient::start() {}
 
 public function TwitterClient::getClient() returns TwitterConnector {
-    return twitterConnector;
+    return self.twitterConnector;
 }
 
 public function TwitterClient::stop() {}

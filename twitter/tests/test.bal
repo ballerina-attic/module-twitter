@@ -42,12 +42,13 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    var tweetResponse = twitterClient -> tweet(status);
+    var tweetResponse = twitterClient -> tweet(status, "983958098485235713", "");
 
     match tweetResponse {
         Status twitterStatus => {
             tweetId = <string> twitterStatus.id;
-            test:assertEquals(twitterStatus.text, status, msg = "Failed to call tweet()");
+            string text = twitterStatus.text;
+            test:assertTrue(text.contains(status), msg = "Failed to call tweet()");
         }
         TwitterError err => {
             io:println(err.errorMessage);

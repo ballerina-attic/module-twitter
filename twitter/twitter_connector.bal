@@ -17,15 +17,30 @@
 import ballerina/io;
 import ballerina/mime;
 
-public function TwitterConnector::tweet (string status) returns Status | TwitterError {
+public function TwitterConnector::tweet (string status, string mediaIds, string attachmentUrl)
+    returns Status | TwitterError {
+
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
 
     string tweetPath = "/1.1/statuses/update.json";
     string encodedStatusValue = check http:encode(status, "UTF-8");
-    string urlParams = "status=" + encodedStatusValue + "&";
-    string oauthStr = constructOAuthParams(clientId, accessToken) + urlParams;
+    string urlParams =  "status=" + encodedStatusValue + "&";
+    string oauthStr;
+
+    if (attachmentUrl != "") {
+        string encodedAttachmentValue = check http:encode(attachmentUrl, "UTF-8");
+        urlParams = urlParams + "attachment_url=" + encodedAttachmentValue + "&";
+        oauthStr = "attachment_url=" + encodedAttachmentValue + "&";
+    }
+
+    if (mediaIds != "") {
+        string encodedMediaValue = check http:encode(mediaIds, "UTF-8");
+        urlParams = urlParams + "media_ids=" + encodedMediaValue + "&";
+        oauthStr = oauthStr + "media_ids=" + encodedMediaValue + "&";
+    }
+    oauthStr = oauthStr + constructOAuthParams(clientId, accessToken) + "status=" + encodedStatusValue + "&";
 
     constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
                             oauthStr);
@@ -347,4 +362,3 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
         }
     }
 }
-
