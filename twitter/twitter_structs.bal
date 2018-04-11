@@ -14,36 +14,109 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
-package twitter;
-
 @Description {value: "Struct to define the Twitter connector."}
-public struct TwitterConnector {
-    string accessToken;
-    string accessTokenSecret;
-    string clientId;
-    string clientSecret;
-    http:ClientEndpoint clientEndpoint;
-}
+public type TwitterConnector object {
+    public {
+        string accessToken;
+        string accessTokenSecret;
+        string clientId;
+        string clientSecret;
+        http:Client clientEndpoint = new;
+    }
 
-@Description {value:"Twitter Endpoint struct."}
-public struct TwitterEndpoint {
-    TwitterConfiguration twitterConfig;
-    TwitterConnector twitterConnector;
-}
+    documentation {Update the authenticated user's current status
+        P{{status}} The text of status update
+        returns Status object if successful else Error occured during HTTP client invocation.}
+    public function tweet (string status) returns Status | TwitterError;
 
-@Description {value:"Struct to set the twitter configuration."}
-public struct TwitterConfiguration {
+    documentation {Retweet a tweet
+        P{{id}} The numerical ID of the desired status
+        returns Status object if successful else Error occured during HTTP client invocation.}
+    public function retweet (string id) returns Status | TwitterError;
+
+    documentation {Untweet a retweeted status
+        P{{id}} The numerical ID of the desired status
+        returns Status object if successful else Error occured during HTTP client invocation.}
+    public function unretweet (string id) returns Status | TwitterError;
+
+    documentation {Search for tweets
+        P{{queryStr}} Query string to retrieve the related tweets
+        returns Status[] object if successful else Error occured during HTTP client invocation.}
+    public function search (string queryStr) returns Status[] | TwitterError;
+
+    documentation {Retrive a single status
+        P{{id}} The numerical ID of the desired status
+        returns Status object if successful else Error occured during HTTP client invocation.}
+    public function showStatus (string id) returns Status | TwitterError;
+
+    documentation {Distroy a status
+        P{{id}} The numerical ID of the desired status
+        returns Status object if successful else Error occured during HTTP client invocation.}
+    public function destroyStatus (string id) returns Status | TwitterError;
+
+    documentation {Retrive closest trend locations
+        P{{lat}} Latitude of the location
+        P{{long}} Longitude of the location
+        returns Location[] object if successful else Error occured during HTTP client invocation.}
+    public function getClosestTrendLocations (string lat, string long) returns Location [] | TwitterError;
+
+    documentation {Retrive top trends by place
+        P{{locationId}} Where On Earth ID of the location to return trending information for
+        returns Trends[] object if successful else Error occured during HTTP client invocation.}
+    public function getTopTrendsByPlace (string locationId) returns Trends[] | TwitterError;
+};
+
+documentation {Twitter Client object
+    F{{twitterConfig}} Twitter connector configurations
+    F{{twitterConnector}} Salesforce connectorTwitter Connector object
+}
+public type TwitterClient object {
+    public {
+        TwitterConfiguration twitterConfig = {};
+        TwitterConnector twitterConnector = new;
+    }
+
+    documentation {Twitter connector endpoint initialization function
+        P{{twitterConfig}} Twitter connector configuration
+    }
+    public function init (TwitterConfiguration twitterConfig);
+
+    documentation {Register Twitter connector endpoint
+        P{{serviceType}} Accepts types of data (int, float, string, boolean, etc)
+    }
+    public function register (typedesc serviceType);
+
+    documentation {Start Twitter connector endpoint}
+    public function start ();
+
+    documentation {Return the Twitter connector client
+        returns Twitter connector client
+    }
+    public function getClient () returns TwitterConnector;
+
+    documentation {Stop Twitter connector client}
+    public function stop ();
+};
+
+documentation {Twitter connector configurations can be setup here
+    F{{uri}} The Twitter API URL
+    F{{accessToken}} The access token of the Twitter account
+    F{{accessTokenSecret}} The access token secret of the Twitter account
+    F{{clientId}} The consumer key of the Twitter account
+    F{{clientSecret}} The consumer secret of the Twitter account
+    F{{clientConfig}} Client endpoint configurations provided by the user
+}
+public type TwitterConfiguration {
     string uri;
     string accessToken;
     string accessTokenSecret;
     string clientId;
     string clientSecret;
-    http:ClientEndpointConfiguration clientConfig;
-}
+    http:ClientEndpointConfiguration clientConfig = {};
+};
 
-@Description {value: "Struct to define the status."}
-public struct Status {
+documentation {Struct to define the status}
+public type Status {
     string createdAt;
     int id;
     string text;
@@ -58,48 +131,48 @@ public struct Status {
     int favouritesCount;
     int retweetCount;
     string lang;
-}
+};
 
-@Description {value: "Struct to define the geo location details."}
-public struct GeoLocation {
+documentation {Struct to define the geo location details}
+public type GeoLocation {
     float latitude;
     float longitude;
-}
+};
 
-@Description {value: "Struct to define the location details."}
-public struct Location {
+documentation {Struct to define the location details}
+public type Location {
     int woeid;
     string countryName;
     string countryCode;
     string name;
     PlaceType placeType;
     string url;
-}
+};
 
-@Description {value: "Struct to define the place type."}
-public struct PlaceType {
+documentation {Struct to define the place type}
+public type PlaceType {
     string name;
     int code;
-}
+};
 
-@Description {value: "Struct to define the trends type."}
-public struct Trends {
+documentation {Struct to define the trends type}
+public type Trends {
     Trend[] trends;
     Location[] locations;
     string createdAt;
-}
+};
 
-@Description {value: "Struct to define the trend type."}
-public struct Trend {
+documentation {Struct to define the trend type}
+public type Trend {
     string name;
     string url;
     string trendQuery;
     string promotedContent;
     int tweetVolume;
-}
+};
 
-@Description {value: "Struct to define the error."}
-public struct TwitterError {
+documentation {Struct to define the error}
+public type TwitterError {
     int statusCode;
     string errorMessage;
-}
+};
