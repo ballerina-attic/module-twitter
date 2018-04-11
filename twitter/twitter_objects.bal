@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-@Description {value: "Struct to define the Twitter connector."}
+documentation {Struct to define the Twitter connector}
 public type TwitterConnector object {
     public {
         string accessToken;
