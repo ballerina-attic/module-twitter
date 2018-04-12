@@ -30,50 +30,50 @@ public type TwitterConnector object {
         P{{mediaIds}} A comma-delimited list of media_ids to associate with the Tweet.
         P{{attachmentUrl}} Provide a URL as a Tweet attachment.
         returns Status object if successful else Error occured during HTTP client invocation.}
-    public function tweet (string status, string mediaIds, string attachmentUrl) returns Status | TwitterError;
+    public function tweet (string status, string mediaIds, string attachmentUrl) returns Status | error;
 
     documentation {Retweet a tweet
         P{{id}} The numerical ID of the desired status
         returns Status object if successful else Error occured during HTTP client invocation.}
-    public function retweet (string id) returns Status | TwitterError;
+    public function retweet (string id) returns Status | error;
 
     documentation {Untweet a retweeted status
         P{{id}} The numerical ID of the desired status
         returns Status object if successful else Error occured during HTTP client invocation.}
-    public function unretweet (string id) returns Status | TwitterError;
+    public function unretweet (string id) returns Status | error;
 
     documentation {Search for tweets
         P{{queryStr}} Query string to retrieve the related tweets
         returns Status[] object if successful else Error occured during HTTP client invocation.}
-    public function search (string queryStr) returns Status[] | TwitterError;
+    public function search (string queryStr) returns Status[] | error;
 
     documentation {Retrive a single status
         P{{id}} The numerical ID of the desired status
         returns Status object if successful else Error occured during HTTP client invocation.}
-    public function showStatus (string id) returns Status | TwitterError;
+    public function showStatus (string id) returns Status | error;
 
     documentation {Distroy a status
         P{{id}} The numerical ID of the desired status
         returns Status object if successful else Error occured during HTTP client invocation.}
-    public function destroyStatus (string id) returns Status | TwitterError;
+    public function destroyStatus (string id) returns Status | error;
 
     documentation {Retrive closest trend locations
         P{{lat}} Latitude of the location
         P{{long}} Longitude of the location
         returns Location[] object if successful else Error occured during HTTP client invocation.}
-    public function getClosestTrendLocations (string lat, string long) returns Location [] | TwitterError;
+    public function getClosestTrendLocations (string lat, string long) returns Location [] | error;
 
     documentation {Retrive top trends by place
         P{{locationId}} Where On Earth ID of the location to return trending information for
         returns Trends[] object if successful else Error occured during HTTP client invocation.}
-    public function getTopTrendsByPlace (string locationId) returns Trends[] | TwitterError;
+    public function getTopTrendsByPlace (string locationId) returns Trends[] | error;
 };
 
 documentation {Twitter Client object
     F{{twitterConfig}} Twitter connector configurations
-    F{{twitterConnector}} Salesforce connectorTwitter Connector object
+    F{{twitterConnector}} twitterConnector Connector object
 }
-public type TwitterClient object {
+public type Client object {
     public {
         TwitterConfiguration twitterConfig = {};
         TwitterConnector twitterConnector = new;
@@ -176,6 +176,7 @@ public type Trend {
 
 documentation {Struct to define the error}
 public type TwitterError {
+    string message;
+    error? cause;
     int statusCode;
-    string errorMessage;
 };
