@@ -71,7 +71,7 @@ public type TwitterConnector object {
 
 documentation {Twitter Client object
     F{{twitterConfig}} Twitter connector configurations
-    F{{twitterConnector}} Salesforce connectorTwitter Connector object
+    F{{twitterConnector}} twitterConnector Connector object
 }
 public type TwitterClient object {
     public {
