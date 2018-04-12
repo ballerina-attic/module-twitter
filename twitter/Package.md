@@ -36,7 +36,7 @@ The following sections provide you with information on how to use the Ballerina 
 1. Create a Twitter endpoint.
 
 ```ballerina
-   endpoint twitter:TwitterClient twitterEP {
+   endpoint twitter:Client twitterEP {
        clientId:"your_clientId",
        clientSecret:"your_clientSecret",
        accessToken:"your_access_token",
@@ -48,97 +48,60 @@ The following sections provide you with information on how to use the Ballerina 
 2. Update current status.
 
 ```ballerina
-    var tweetResponse = twitterEP -> tweet(status);
-    match tweetResponse {
-        twitter:Status twitterStatus => {
-            tweetId = <string> twitterStatus.id;
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    Status twitterStatus = check twitterClient -> tweet(status, "984337514692427776", "");
+    tweetId = <string> twitterStatus.id;
+    string text = twitterStatus.text;
 ```
 
 3. Retrieve the collection of relevant Tweets matching a specified query.
 
 ```ballerina
-    var tweetResponse = twitterEP -> search (queryStr);
-    match tweetResponse {
-        twitter:Status[] twitterStatus => {
-            io:println(twitterStatus.id);
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    string queryStr = "twitter";
+    Status[] twitterStatus = check twitterClient -> search (queryStr);
+    io:println(twitterStatus.id);
 ```
 
 4. Retweets a tweet.
 
 ```ballerina
-    var tweetResponse = twitterEP -> retweet (tweetId);
-    match tweetResponse {
-        twitter:Status twitterStatus => {
-            io:println(twitterStatus.retweeted);
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    Status twitterStatus = check twitterClient -> retweet (tweetId);
+    io:println(twitterStatus.retweeted);
 ```
 
 5. Untweets a retweeted status.
 
 ```ballerina
-    var tweetResponse = twitterEP -> unretweet (tweetId);
-    match tweetResponse {
-        twitter:Status twitterStatus => {
-            io:println(twitterStatus.id);
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    Status twitterStatus = check twitterClient -> unretweet (tweetId);
+    io:println(twitterStatus.id);
 ```
 
 6. Destroy the status specified by the required ID parameter.
 
 ```ballerina
-    var tweetResponse = twitterEP -> showStatus (tweetId);
-    match tweetResponse {
-        twitter:Status twitterStatus => {
-            io:println(twitterStatus.id);
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    Status twitterStatus = check twitterClient -> destroyStatus (tweetId);
+    io:println(twitterStatus.id);
 ```
 
-7. Retrieve the locations that Twitter has trending topic information.
+7. Retrive a single status.
 
 ```ballerina
-    var tweetResponse = twitterEP -> getClosestTrendLocations (latitude, longitude);
-    match tweetResponse {
-        twitter:Location [] response => {
-            io:println(response);
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    Status twitterStatus = check twitterClient -> showStatus (tweetId);
+    io:println(twitterStatus.id);
 ```
 
-8. Retrieve the top topics for a specified location.
+8. Retrieve the locations that Twitter has trending topic information.
 
 ```ballerina
-    var tweetResponse = twitterEP -> getTopTrendsByPlace (locationId);
-    match tweetResponse {
-        twitter:Trends[] response => {
-            io:println(response);
-        }
-        twitter:TwitterError err => {
-            io:println(err.errorMessage);
-        }
-    }
+    string latitude = "34";
+    string longitude = "67";
+    Location[] tweetResponse = check twitterClient -> getClosestTrendLocations (latitude, longitude);
+    io:println(tweetResponse);
+```
+
+9. Retrieve the top topics for a specified location.
+
+```ballerina
+    string locationId = "23424922";
+    Trends[] tweetResponse = check twitterClient -> getTopTrendsByPlace (locationId);
+    io:println(tweetResponse);
 ```
