@@ -176,6 +176,6 @@ public type Trend {
 
 documentation {Struct to define the error}
 public type TwitterError {
-    int statusCode;
-    string errorMessage;
+    string message;
+    error? cause;
 };
