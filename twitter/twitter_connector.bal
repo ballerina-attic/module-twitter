@@ -40,10 +40,10 @@ public function TwitterConnector::tweet (string status, string mediaIds, string 
         urlParams = urlParams + "media_ids=" + encodedMediaValue + "&";
         oauthStr = oauthStr + "media_ids=" + encodedMediaValue + "&";
     }
-    oauthStr = oauthStr + constructOAuthParams(clientId, accessToken) + "status=" + encodedStatusValue + "&";
+    oauthStr = oauthStr + constructOAuthParams(self.clientId, self.accessToken) + "status=" + encodedStatusValue + "&";
 
-    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint -> post(tweetPath, request);
     match httpResponse {
@@ -78,11 +78,11 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
-    string oauthStr = constructOAuthParams(clientId, accessToken);
+    string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = "/1.1/statuses/retweet/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint -> post(tweetPath, request);
     match httpResponse {
         http:HttpConnectorError err => {
@@ -117,11 +117,11 @@ public function TwitterConnector::unretweet (string id) returns Status | Twitter
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
-    string oauthStr = constructOAuthParams(clientId, accessToken);
+    string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = "/1.1/statuses/unretweet/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint -> post(tweetPath, request);
     match httpResponse {
         http:HttpConnectorError err => {
@@ -158,10 +158,10 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
     string tweetPath = "/1.1/search/tweets.json";
     string encodedQueryValue = check http:encode(queryStr, "UTF-8");
     string urlParams = "q=" + encodedQueryValue + "&";
-    string oauthStr = constructOAuthParams(clientId, accessToken) + urlParams;
+    string oauthStr = constructOAuthParams(self.clientId, self.accessToken) + urlParams;
 
     http:Request request;
-    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken, self.accessTokenSecret,
                             oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
@@ -203,9 +203,9 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
     TwitterError twitterError = {};
     string tweetPath = "/1.1/statuses/show.json";
     string urlParams = "id=" + id;
-    string oauthStr = urlParams + "&" + constructOAuthParams(clientId, accessToken);
+    string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
-    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken, self.accessTokenSecret,
                             oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint -> get(tweetPath, request);
@@ -242,10 +242,10 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
-    string oauthStr = constructOAuthParams(clientId, accessToken);
+    string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = "/1.1/statuses/destroy/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
+    constructRequestHeaders(request, "POST", tweetPath, self.clientId, self.clientSecret, self.accessToken, self.accessTokenSecret,
                             oauthStr);
     var httpResponse = clientEndpoint -> post(tweetPath, request);
     match httpResponse {
@@ -283,10 +283,10 @@ returns Location [] | TwitterError {
     TwitterError twitterError = {};
     string tweetPath = "/1.1/trends/closest.json";
     string urlParams =  "&lat=" + lat + "&long=" + long;
-    string oauthStr = urlParams.subString(1, urlParams.length()) + "&" + constructOAuthParams(clientId, accessToken);
+    string oauthStr = urlParams.subString(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId, self.accessToken);
     http:Request request;
-    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams.subString(1, urlParams.length());
 
     var httpResponse = clientEndpoint -> get(tweetPath, request);
@@ -325,11 +325,11 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
     TwitterError twitterError = {};
     string tweetPath = "/1.1/trends/place.json";
     string urlParams = "id=" + locationId;
-    string oauthStr = urlParams + "&" + constructOAuthParams(clientId, accessToken);
+    string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
     http:Request request;
-    constructRequestHeaders(request, "GET", tweetPath, clientId, clientSecret, accessToken, accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
     var httpResponse = clientEndpoint -> get(tweetPath, request);
