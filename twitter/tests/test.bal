@@ -20,10 +20,10 @@ import ballerina/util;
 import ballerina/config;
 import ballerina/io;
 
-string clientId = config:getAsString("CLIENT_ID") but { () => "" };
-string clientSecret = config:getAsString("CLIENT_SECRET") but { () => "" };
-string accessToken = config:getAsString("ACCESS_TOKEN") but { () => "" };
-string accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET") but { () => "" };
+string clientId = config:getAsString("CLIENT_ID");
+string clientSecret = config:getAsString("CLIENT_SECRET");
+string accessToken = config:getAsString("ACCESS_TOKEN");
+string accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
 string tweetId;
 
 endpoint Client twitterClient {
@@ -42,7 +42,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    Status twitterStatus = check twitterClient -> tweet(status, "984337514692427776", "");
+    Status twitterStatus = check twitterClient -> tweet(status, "985787632859856896", "");
     tweetId = <string> twitterStatus.id;
     string text = twitterStatus.text;
     test:assertTrue(text.contains(status), msg = "Failed to call tweet()");
