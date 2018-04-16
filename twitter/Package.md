@@ -7,7 +7,7 @@ Twitter connector.
 ## Compatibility
 | Language Version        | Connector Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
-| 0.970.0-alpha4 | 0.8 | 1.1 |
+| 0.970.0-beta0 | 0.9.4 | 1.1 |
 
 
 The following sections provide you with information on how to use the Ballerina Twitter connector.
