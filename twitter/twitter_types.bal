@@ -26,11 +26,8 @@ public type TwitterConnector object {
 
     documentation {Update the authenticated user's current status (If you want to provide attachment, you can use
         mediaIds or attachmentUrl)
-        P{{status}} The text of status update
-        P{{mediaIds}} A comma-delimited list of media_ids to associate with the Tweet.
-        P{{attachmentUrl}} Provide a URL as a Tweet attachment.
         returns Status object if successful else Error occured during HTTP client invocation.}
-    public function tweet (string status, string mediaIds, string attachmentUrl) returns Status | error;
+    public function tweet (string status, string... args) returns Status | error;
 
     documentation {Retweet a tweet
         P{{id}} The numerical ID of the desired status
