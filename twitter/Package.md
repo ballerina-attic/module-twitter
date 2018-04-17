@@ -7,7 +7,7 @@ Twitter connector.
 ## Compatibility
 | Language Version        | Connector Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
-| 0.970.0-beta0 | 0.9.4 | 1.1 |
+| 0.970.0-beta0 | 0.9.5 | 1.1 |
 
 
 The following sections provide you with information on how to use the Ballerina Twitter connector.
@@ -104,4 +104,28 @@ The following sections provide you with information on how to use the Ballerina 
     string locationId = "23424922";
     Trends[] tweetResponse = check twitterClient -> getTopTrendsByPlace (locationId);
     io:println(tweetResponse);
+```
+
+##### Example
+
+```ballerina
+import ballerina/io;
+import wso2/twitter;
+
+public function main(string[] args) {
+    endpoint twitter:Client twitterClient {
+        clientId:"",
+        clientSecret:"",
+        accessToken:"",
+        accessTokenSecret:"",
+        clientConfig:{}
+    };
+    string status = "Twitter connector test";
+
+    twitter:Status twitterStatus = check twitterClient -> tweet(status, "", "");
+    string tweetId = <string> twitterStatus.id;
+    string text = twitterStatus.text;
+    io:println("Tweet ID: " + tweetId);
+    io:println("Tweet: " + text);
+}
 ```

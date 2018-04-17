@@ -7,7 +7,7 @@ Twitter connector.
 ## Compatibility
 | Language Version        | Connector Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
-| 0.970.0-beta0 | 0.9.4 | 1.1 |
+| 0.970.0-beta0 | 0.9.5 | 1.1 |
 
 
 ###### Running tests
