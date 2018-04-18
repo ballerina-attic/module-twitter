@@ -30,4 +30,5 @@ target
 *.iws
 *.ipr
 .idea
-.m2
+.m2.ballerina/
+target/
