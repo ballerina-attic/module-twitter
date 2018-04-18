@@ -82,21 +82,11 @@ public type Client object {
     }
     public function init (TwitterConfiguration twitterConfig);
 
-    documentation {Register Twitter connector endpoint
-        P{{serviceType}} Accepts types of data (int, float, string, boolean, etc)
-    }
-    public function register (typedesc serviceType);
-
-    documentation {Start Twitter connector endpoint}
-    public function start ();
-
     documentation {Return the Twitter connector client
         returns Twitter connector client
     }
     public function getClient () returns TwitterConnector;
 
-    documentation {Stop Twitter connector client}
-    public function stop ();
 };
 
 documentation {Twitter connector configurations can be setup here

@@ -33,13 +33,6 @@ public function Client::init (TwitterConfiguration twitterConfig) {
     self.twitterConnector.clientEndpoint.init(twitterConfig.clientConfig);
 }
 
-public function Client::register(typedesc serviceType) {}
-
-public function Client::start() {}
-
 public function Client::getClient() returns TwitterConnector {
     return self.twitterConnector;
 }
-
-public function Client::stop() {}
-

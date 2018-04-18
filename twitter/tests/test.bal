@@ -42,7 +42,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    Status twitterStatus = check twitterClient -> tweet(status, "985787632859856896", "");
+    Status twitterStatus = check twitterClient -> tweet(status, "986498203800354816", "");
     tweetId = <string> twitterStatus.id;
     string text = twitterStatus.text;
     test:assertTrue(text.contains(status), msg = "Failed to call tweet()");

@@ -1,13 +1,15 @@
 # Ballerina Twitter Endpoint
 
-The Twitter endpoint allows you to access the Twitter REST API through ballerina. And the Twitter endpoint actions 
-are being invoked with a ballerina main function. The following section provide you the details on how to use Ballerina 
+The Twitter endpoint allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
 Twitter endpoint.
 
 ## Compatibility
 | Language Version        | Endpoint Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
-| 0.970.0-beta0 | 0.9.5 | 1.1 |
+| 0.970.0-beta1-SNAPSHOT | 0.9.6 | 1.1 |
+
+
+>> **Note :** The source code of the Twitter endpoint can be found at [package-twitter](https://github.com/wso2-ballerina/package-twitter)
 
 
 The following sections provide you with information on how to use the Ballerina Twitter endpoint.
@@ -25,10 +27,11 @@ The following sections provide you with information on how to use the Ballerina 
     * Access Token Secret
     
     **IMPORTANT:** This access token can be used to make API requests on your own account's behalf. Do not share your access token secret with anyone.
-3. Clone the repository by running the following command
-    
-    `git clone https://github.com/wso2-ballerina/package-twitter`
-4. Import the package to your ballerina project.
+3. Import the package to your ballerina project.
+    ```ballerina
+       import wso2/twitter;
+    ```
+    This will download the twitter artifacts from Ballerina central repository to your local repository.
 
 
 ### Quick Testing

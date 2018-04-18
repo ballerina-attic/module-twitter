@@ -6,7 +6,7 @@ Twitter endpoint.
 ## Compatibility
 | Language Version        | Endpoint Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
-| 0.970.0-beta0 | 0.9.5 | 1.1 |
+| 0.970.0-beta1-SNAPSHOT | 0.9.6 | 1.1 |
 
 
 ###### Running tests
