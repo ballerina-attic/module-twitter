@@ -26,6 +26,7 @@ public type TwitterConnector object {
 
     documentation {Update the authenticated user's current status (If you want to provide attachment, you can use
         mediaIds or attachmentUrl)
+        P{{status}} The text of status update
         returns Status object if successful else Error occured during HTTP client invocation.}
     public function tweet (string status, string... args) returns Status | error;
 
