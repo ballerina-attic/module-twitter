@@ -17,13 +17,27 @@
 import ballerina/io;
 import ballerina/mime;
 
-public function TwitterConnector::tweet (string status, string mediaIds, string attachmentUrl)
+public function TwitterConnector::tweet (string status, string... args)
     returns Status | TwitterError {
 
     endpoint http:Client clientEndpoint = self.clientEndpoint;
+
     http:Request request;
     TwitterError twitterError = {};
 
+    
+	string mediaIds = "";
+	string attachmentUrl = "";
+	
+    
+	if ((lengthof args) > 0) {
+		mediaIds = args[0];
+	}
+	if ((lengthof args) > 1) {
+		attachmentUrl = args[1];
+	}
+    io:println("mediaIds :"+":");
+    io:println("attachmentUrl :"+":");
     string tweetPath = "/1.1/statuses/update.json";
     string encodedStatusValue = check http:encode(status, "UTF-8");
     string urlParams =  "status=" + encodedStatusValue + "&";
