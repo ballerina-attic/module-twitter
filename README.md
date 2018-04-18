@@ -1,16 +1,16 @@
-# Ballerina Twitter Connector
+# Ballerina Twitter Endpoint
 
-The Twitter connector allows you to access the Twitter REST API through ballerina. And the Twitter connector actions 
+The Twitter endpoint allows you to access the Twitter REST API through ballerina. And the Twitter endpoint actions 
 are being invoked with a ballerina main function. The following section provide you the details on how to use Ballerina 
-Twitter connector.
+Twitter endpoint.
 
 ## Compatibility
-| Language Version        | Connector Version          | Twitter API version  |
+| Language Version        | Endpoint Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
 | 0.970.0-beta0 | 0.9.5 | 1.1 |
 
 
-The following sections provide you with information on how to use the Ballerina Twitter connector.
+The following sections provide you with information on how to use the Ballerina Twitter endpoint.
 
 - [Getting started](#getting-started)
 
@@ -44,7 +44,7 @@ public function main(string[] args) {
         accessTokenSecret:"",
         clientConfig:{}
     };
-    string status = "Twitter connector test";
+    string status = "Twitter endpoint test";
 
     twitter:Status twitterStatus = check twitterClient -> tweet(status, "", "");
     string tweetId = <string> twitterStatus.id;
