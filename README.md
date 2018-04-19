@@ -1,7 +1,6 @@
 # Ballerina Twitter Endpoint
 
-The Twitter endpoint allows you to access the Twitter REST API through ballerina. And the Twitter endpoint actions 
-are being invoked with a ballerina main function. The following section provide you the details on how to use Ballerina 
+The Twitter endpoint allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
 Twitter endpoint.
 
 ## Compatibility
