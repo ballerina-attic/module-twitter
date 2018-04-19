@@ -6,7 +6,7 @@ Twitter endpoint.
 ## Compatibility
 | Language Version        | Endpoint Version          | Twitter API version  |
 | ------------- |:-------------:| -----:|
-| 0.970.0-beta1-SNAPSHOT | 0.9.6 | 1.1 |
+| 0.970.0-beta1-SNAPSHOT | 0.9.7 | 1.1 |
 
 
 >> **Note :** The source code of the Twitter endpoint can be found at [package-twitter](https://github.com/wso2-ballerina/package-twitter)
