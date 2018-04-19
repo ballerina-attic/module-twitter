@@ -74,7 +74,7 @@ public function TwitterConnector::tweet (string status, string... args) returns 
                                                 Status twitterResponse = convertToStatus(jsonResponse);
                                                 return twitterResponse;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString() but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -112,8 +112,7 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
                                                 Status twitterResponse = convertToStatus(jsonResponse);
                                                 return twitterResponse;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -151,8 +150,7 @@ public function TwitterConnector::unretweet (string id) returns Status | Twitter
                                                 Status twitterResponse = convertToStatus(jsonResponse);
                                                 return twitterResponse;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -171,8 +169,8 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken) + urlParams;
 
     http:Request request;
-    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken, self.accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
     var httpResponse = clientEndpoint -> get(tweetPath, request);
@@ -196,8 +194,7 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
                                                 }
                                                 return searchResponse;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -215,8 +212,8 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
     string urlParams = "id=" + id;
     string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
-    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken, self.accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint -> get(tweetPath, request);
     match httpResponse {
@@ -237,8 +234,7 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
                                                 Status twitterResponse = convertToStatus(jsonResponse);
                                                 return twitterResponse;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -255,8 +251,8 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = "/1.1/statuses/destroy/" + id + ".json";
-    constructRequestHeaders(request, "POST", tweetPath, self.clientId, self.clientSecret, self.accessToken, self.accessTokenSecret,
-                            oauthStr);
+    constructRequestHeaders(request, "POST", tweetPath, self.clientId, self.clientSecret, self.accessToken,
+        self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint -> post(tweetPath, request);
     match httpResponse {
         http:HttpConnectorError err => {
@@ -276,8 +272,7 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
                                                 Status twitterResponse = convertToStatus(jsonResponse);
                                                 return twitterResponse;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -293,7 +288,8 @@ returns Location [] | TwitterError {
     TwitterError twitterError = {};
     string tweetPath = "/1.1/trends/closest.json";
     string urlParams =  "&lat=" + lat + "&long=" + long;
-    string oauthStr = urlParams.subString(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId, self.accessToken);
+    string oauthStr = urlParams.subString(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
+            self.accessToken);
     http:Request request;
     constructRequestHeaders(request, "GET", tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
@@ -319,8 +315,7 @@ returns Location [] | TwitterError {
                                                 locations = convertToLocations(jsonResponse);
                                                 return locations;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
@@ -362,8 +357,7 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
                                                 trends = convertTrends(jsonResponse);
                                                 return trends;
                                             } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString()
-                                                                            but { () => "" };
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
                                                 twitterError.statusCode = statusCode;
                                                 return twitterError;
                                             }
