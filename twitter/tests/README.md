@@ -1,12 +1,12 @@
-# Ballerina Twitter Endpoint Test
+# Ballerina Twitter Connector Test
 
-The Twitter endpoint allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
-Twitter endpoint.
+The Twitter connector allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
+Twitter connector.
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | ------------- | ----- |
-| 0.970.0-beta3 | 1.1 |
+| 0.970.0-beta4 | 1.1 |
 
 
 ###### Running tests

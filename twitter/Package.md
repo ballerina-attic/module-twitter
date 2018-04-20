@@ -1,18 +1,19 @@
-# Ballerina Twitter Endpoint
+# Ballerina Twitter Connector
 
-The Twitter endpoint allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
-Twitter endpoint.
+The Twitter connector allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
+Twitter connector.
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | ------------- | -----|
-| 0.970.0-beta3 | 1.1 |
+| 0.970.0-beta4 | 1.1 |
 
 
 ### Getting started
-1. Refer [https://ballerina.io/learn/getting-started/](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
+1. Refer the [Getting Started guide](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
+
 2. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/)
-3. To use Twitter endpoint, you need to provide the following :
+3. To use Twitter connector, you need to provide the following :
     * Consumer Key (API Key)
     * Consumer Secret (API Secret)
     * Access Token
@@ -31,10 +32,10 @@ Twitter endpoint.
     
     function main(string... args) {
         endpoint twitter:Client twitterClient {
-            clientId:"your_clientId",
-            clientSecret:"your_clientSecret",
-            accessToken:"your_access_token",
-            accessTokenSecret:"your_access_token_secret",
+            clientId:"<your_clientId>",
+            clientSecret:"<your_clientSecret>",
+            accessToken:"<your_access_token>",
+            accessTokenSecret:"<your_access_token_secret>",
             clientConfig:{}
         };
         string status = "Twitter connector test";

@@ -1,18 +1,18 @@
-# Ballerina Twitter Endpoint
+# Ballerina Twitter Connector
 
-The Twitter endpoint allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
-Twitter endpoint.
+The Twitter connector allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
+Twitter connector.
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | ------------- | ----- |
-| 0.970.0-beta3 | 1.1 |
+| 0.970.0-beta4 | 1.1 |
 
 
-The following sections provide you with information on how to use the Ballerina Twitter endpoint.
+The following sections provide you with information on how to use the Ballerina Twitter connector.
 
 - [Contribute To Develop](#contribute-to-develop)
-- [Working with Twitter Endpoint actions](#working-with-twitter-endpoint-actions)
+- [Working with Twitter Connector actions](#working-with-twitter-endpoint-actions)
 - [Example](#example)
 
 ### Contribute To develop
@@ -22,12 +22,12 @@ Clone the repository by running the following command
     git clone https://github.com/wso2-ballerina/package-twitter.git
 ```
 
-### Working with Twitter Endpoint actions
+### Working with Twitter Connector actions
 
 All the actions return valid response or TwitterError. If the action is a success, then the requested resource will 
 be returned. Else TwitterError object will be returned.
 
-In order for you to use the Twitter Endpoint, first you need to create a Twitter Client endpoint.
+In order for you to use the Twitter Connector, first you need to create a Twitter Client endpoint.
 
 ```ballerina
     endpoint twitter:Client twitterClient {
