@@ -4,9 +4,9 @@ The Twitter endpoint allows you to access the Twitter REST API through ballerina
 Twitter endpoint.
 
 ## Compatibility
-| Language Version        | Endpoint Version          | Twitter API version  |
-| ------------- |:-------------:| -----:|
-| 0.970.0-beta1-SNAPSHOT | 0.9.7 | 1.1 |
+| Ballerina Language Version | Twitter API version  |
+| ------------- | ----- |
+| 0.970.0-beta1 | 1.1 |
 
 
 The following sections provide you with information on how to use the Ballerina Twitter endpoint.
