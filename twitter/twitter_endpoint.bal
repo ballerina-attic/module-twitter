@@ -29,10 +29,10 @@ public function Client::init (TwitterConfiguration twitterConfig) {
     self.twitterConnector.accessTokenSecret = twitterConfig.accessTokenSecret;
     self.twitterConnector.clientId = twitterConfig.clientId;
     self.twitterConnector.clientSecret = twitterConfig.clientSecret;
-    twitterConfig.clientConfig.targets = [{url:twitterConfig.uri}];
+    twitterConfig.clientConfig.url = twitterConfig.uri;
     self.twitterConnector.clientEndpoint.init(twitterConfig.clientConfig);
 }
 
-public function Client::getClient() returns TwitterConnector {
+public function Client::getCallerActions() returns TwitterConnector {
     return self.twitterConnector;
 }

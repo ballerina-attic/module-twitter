@@ -6,7 +6,7 @@ Twitter endpoint.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | ------------- | ----- |
-| 0.970.0-beta1 | 1.1 |
+| 0.970.0-beta3 | 1.1 |
 
 
 ###### Running tests
@@ -25,5 +25,5 @@ Twitter endpoint.
 
     ```
     ballerina init
-    ballerina test twitter
+    ballerina test twitter --config ballerina.conf
    ```
