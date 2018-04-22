@@ -16,7 +16,7 @@
 
 import ballerina/test;
 import ballerina/time;
-import ballerina/util;
+import ballerina/system;
 import ballerina/config;
 import ballerina/io;
 
@@ -37,7 +37,7 @@ endpoint Client twitterClient {
 @test:Config
 function testTweet () {
     io:println("--------------Calling tweet----------------");
-    string nonceString = util:uuid();
+    string nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);

@@ -17,15 +17,15 @@
 //
 
 import ballerina/time;
-import ballerina/util;
 import ballerina/http;
-import ballerina/security.crypto;
+import ballerina/crypto;
+import ballerina/system;
 
 string timeStamp;
 string nonceString;
 
 function constructOAuthParams(string consumerKey, string accessToken) returns string {
-    nonceString = util:uuid();
+    nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
     timeStamp = <string> (currentTimeMills/1000);
@@ -44,7 +44,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string paramString;
 
     serviceEndpoint = "https://api.twitter.com" + serviceEP;
-    paramString = paramStr.subString(0, paramStr.length() - 1);
+    paramString = paramStr.substring(0, paramStr.length() - 1);
     string encodedServiceEPValue = check http:encode(serviceEndpoint, "UTF-8");
     string encodedParamStrValue = check http:encode(paramString, "UTF-8");
     string encodedConsumerSecretValue = check http:encode(consumerSecret, "UTF-8");
@@ -52,7 +52,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
     string keyStr =  encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    string signature = util:base16ToBase64Encode(crypto:getHmac(baseString, keyStr, crypto:SHA1));
+    string signature = crypto:hmac(baseString, keyStr, crypto:SHA1).base16ToBase64Encode();
 
     string encodedSignatureValue = check http:encode(signature, "UTF-8");
     string encodedaccessTokenValue = check http:encode(accessToken, "UTF-8");

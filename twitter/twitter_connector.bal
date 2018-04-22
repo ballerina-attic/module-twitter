@@ -55,7 +55,7 @@ public function TwitterConnector::tweet (string status, string... args) returns 
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
-    var httpResponse = clientEndpoint -> post(tweetPath, request);
+    var httpResponse = clientEndpoint -> post(tweetPath, request = request);
     match httpResponse {
         http:HttpConnectorError err => {
             twitterError.message = err.message;
@@ -93,7 +93,7 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
     string tweetPath = RETWEET_ENDPOINT + id + JSON;
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint -> post(tweetPath, request);
+    var httpResponse = clientEndpoint -> post(tweetPath, request = request);
     match httpResponse {
         http:HttpConnectorError err => {
             twitterError.message = err.message;
@@ -131,7 +131,7 @@ public function TwitterConnector::unretweet (string id) returns Status | Twitter
     string tweetPath = UN_RETWEET_ENDPOINT + id + JSON;
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint -> post(tweetPath, request);
+    var httpResponse = clientEndpoint -> post(tweetPath, request = request);
     match httpResponse {
         http:HttpConnectorError err => {
             twitterError.message = err.message;
@@ -173,7 +173,7 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = clientEndpoint -> get(tweetPath, request);
+    var httpResponse = clientEndpoint -> get(tweetPath, request = request);
     Status[] searchResponse = [];
     match httpResponse {
         http:HttpConnectorError err => { twitterError.message = err.message;
@@ -215,7 +215,7 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
     constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
-    var httpResponse = clientEndpoint -> get(tweetPath, request);
+    var httpResponse = clientEndpoint -> get(tweetPath, request = request);
     match httpResponse {
         http:HttpConnectorError err => {
             twitterError.message = err.message;
@@ -253,7 +253,7 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
     string tweetPath = DESTROY_STATUS_ENDPOINT + id + JSON;
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint -> post(tweetPath, request);
+    var httpResponse = clientEndpoint -> post(tweetPath, request = request);
     match httpResponse {
         http:HttpConnectorError err => {
             twitterError.message = err.message;
@@ -288,14 +288,14 @@ returns Location [] | TwitterError {
     TwitterError twitterError = {};
     string tweetPath = TRENDS_ENDPOINT;
     string urlParams =  LAT + lat + LONG + long;
-    string oauthStr = urlParams.subString(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
+    string oauthStr = urlParams.substring(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
             self.accessToken);
     http:Request request;
     constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    tweetPath = tweetPath + "?" + urlParams.subString(1, urlParams.length());
+    tweetPath = tweetPath + "?" + urlParams.substring(1, urlParams.length());
 
-    var httpResponse = clientEndpoint -> get(tweetPath, request);
+    var httpResponse = clientEndpoint -> get(tweetPath, request = request);
     Location[] locations = [];
     match httpResponse {
         http:HttpConnectorError err => {
@@ -337,7 +337,7 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = clientEndpoint -> get(tweetPath, request);
+    var httpResponse = clientEndpoint -> get(tweetPath, request = request);
     Trends[] trends = [];
     match httpResponse {
         http:HttpConnectorError err => {
