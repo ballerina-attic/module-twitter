@@ -9,7 +9,7 @@ retrive closest trend locations and retrive top trends by place. The following s
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
-|: ------------- :|: ----- :|
+| ------------- | ----- |
 | 0.970.0-beta12 | 1.1 |
 
 
