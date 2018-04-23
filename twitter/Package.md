@@ -1,15 +1,19 @@
 # Ballerina Twitter Connector
 
-The Twitter connector allows you to access the Twitter REST API through ballerina. The following section provide you the details on how to use Ballerina 
-Twitter connector.
+Allows you to access the Twitter REST API.
+
+Twitter connector provides a Ballerina API to access the Twitter REST API. This connector provides facility to update the current status, 
+retweet a tweet, untweet a retweeted status, search for tweets, retrive a status, distroy a status, 
+retrive closest trend locations and retrive top trends by place. The following section provide you the details on how to use Ballerina Twitter connector.
+
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
-| ------------- | -----|
-| 0.970.0-beta10 | 1.1 |
+|: ------------- :|: ----- :|
+| 0.970.0-beta12 | 1.1 |
 
 
-### Getting started
+## Getting started
 1. Refer the [Getting Started guide](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
 
 2. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/)

@@ -23,9 +23,6 @@ function convertToStatus(json jsonStatus) returns (Status) {
     status.truncated = jsonStatus.truncated != null ? convertToBoolean(jsonStatus.truncated) : false;
     status.inReplyToStatusId = 
                         jsonStatus.in_reply_to_status_id != null ? convertToInt(jsonStatus.in_reply_to_status_id) : 0;
-    status.inReplyToUserId = jsonStatus.in_reply_to_user_id != null ? convertToInt(jsonStatus.in_reply_to_user_id) : 0;
-    status.inReplyToScreenName =
-                        jsonStatus.in_reply_to_screen_name != null ? jsonStatus.in_reply_to_screen_name.toString() : "";
     status.favorited = jsonStatus.favorited != null ? convertToBoolean(jsonStatus.favorited) : false;
     status.retweeted = jsonStatus.retweeted != null ? convertToBoolean(jsonStatus.retweeted) : false;
     status.favouritesCount = jsonStatus.favourites_count != null ? convertToInt(jsonStatus.favourites_count) : 0;
