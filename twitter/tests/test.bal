@@ -42,7 +42,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    var tweetResponse = twitterClient -> tweet(status, "986870934341472258", "");
+    var tweetResponse = twitterClient->tweet(status, "987982473731555328", "");
 
     match tweetResponse {
         Status twitterStatus => {
@@ -62,7 +62,7 @@ function testTweet () {
 }
 function testReTweet () {
     io:println("--------------Calling retweet----------------");
-    var tweetResponse = twitterClient -> retweet (tweetId);
+    var tweetResponse = twitterClient->retweet (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -79,7 +79,7 @@ function testReTweet () {
 }
 function testUnReTweet () {
     io:println("--------------Calling unretweet----------------");
-    var tweetResponse = twitterClient -> unretweet (tweetId);
+    var tweetResponse = twitterClient->unretweet (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -95,7 +95,7 @@ function testUnReTweet () {
 function testSearch () {
     io:println("--------------Calling search----------------");
     string queryStr = "twitter";
-    var tweetResponse = twitterClient -> search (queryStr);
+    var tweetResponse = twitterClient->search (queryStr);
 
     match tweetResponse {
         Status[] twitterStatus => {
@@ -112,7 +112,7 @@ function testSearch () {
 }
 function testShowStatus () {
     io:println("--------------Calling showStatus----------------");
-    var tweetResponse = twitterClient -> showStatus (tweetId);
+    var tweetResponse = twitterClient->showStatus (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -129,7 +129,7 @@ function testShowStatus () {
 }
 function testDestroyStatus () {
     io:println("--------------Calling destroyStatus----------------");
-    var tweetResponse = twitterClient -> destroyStatus (tweetId);
+    var tweetResponse = twitterClient->destroyStatus (tweetId);
 
     match tweetResponse {
         Status twitterStatus => {
@@ -146,7 +146,7 @@ function testGetClosestTrendLocations () {
     io:println("--------------Calling getClosestTrendLocations----------------");
     string latitude = "34";
     string longitude = "67";
-    var tweetResponse = twitterClient -> getClosestTrendLocations (latitude, longitude);
+    var tweetResponse = twitterClient->getClosestTrendLocations (latitude, longitude);
 
     match tweetResponse {
         Location [] response => {
@@ -162,7 +162,7 @@ function testGetClosestTrendLocations () {
 function testGetTopTrendsByPlace () {
     io:println("--------------Calling getTopTrendsByPlace----------------");
     string locationId = "23424922";
-    var tweetResponse = twitterClient -> getTopTrendsByPlace (locationId);
+    var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);
 
     match tweetResponse {
         Trends[] response => {
