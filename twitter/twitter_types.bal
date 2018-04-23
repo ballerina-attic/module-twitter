@@ -33,43 +33,43 @@ public type TwitterConnector object {
     documentation {Update the authenticated user's current status (If you want to provide attachment, you can use
         mediaIds or attachmentUrl)
         P{{status}} - The text of status update
-        R{{}} - Status object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function tweet (string status, string... args) returns Status | TwitterError;
 
     documentation {Retweet a tweet
         P{{id}} - The numerical ID of the desired status
-        R{{}} - Status object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function retweet (string id) returns Status | TwitterError;
 
     documentation {Untweet a retweeted status
         P{{id}} - The numerical ID of the desired status
-        R{{}} - Status object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function unretweet (string id) returns Status | TwitterError;
 
     documentation {Search for tweets
         P{{queryStr}} - Query string to retrieve the related tweets
-        R{{}} - Status[] object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, Status[] object, else returns TwitterError object.}
     public function search (string queryStr) returns Status[] | TwitterError;
 
     documentation {Retrive a single status
         P{{id}} - The numerical ID of the desired status
-        R{{}} - Status object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function showStatus (string id) returns Status | TwitterError;
 
     documentation {Distroy a status
         P{{id}} - The numerical ID of the desired status
-        R{{}} - Status object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function destroyStatus (string id) returns Status | TwitterError;
 
     documentation {Retrive closest trend locations
         P{{lat}} - Latitude of the location
         P{{long}} - Longitude of the location
-        R{{}} - Location[] object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Location[] object, else returns TwitterError object.}
     public function getClosestTrendLocations (string lat, string long) returns Location [] | TwitterError;
 
     documentation {Retrive top trends by place
         P{{locationId}} - Where On Earth ID of the location to return trending information for
-        R{{}} - Trends[] object if successful else Error occured during HTTP client invocation.}
+        R{{}} - If success, returns Trends[] object, else returns TwitterError object.}
     public function getTopTrendsByPlace (string locationId) returns Trends[] | TwitterError;
 };
 

@@ -9,7 +9,7 @@ retrive closest trend locations and retrive top trends by place. The following s
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
-|: ------------- :|: ----- :|
+| ------------- | ----- |
 | 0.970.0-beta12 | 1.1 |
 
 
@@ -44,7 +44,7 @@ retrive closest trend locations and retrive top trends by place. The following s
         };
         string status = "Twitter connector test";
     
-        twitter:Status twitterStatus = check twitterClient -> tweet(status, "", "");
+        twitter:Status twitterStatus = check twitterClient->tweet(status, "", "");
         string tweetId = <string> twitterStatus.id;
         string text = twitterStatus.text;
         io:println("Tweet ID: " + tweetId);

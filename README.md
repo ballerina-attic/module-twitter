@@ -55,7 +55,7 @@ public function main(string[] args) {
     };
     string status = "Twitter endpoint test";
 
-    twitter:Status twitterStatus = check twitterClient -> tweet(status, "", "");
+    twitter:Status twitterStatus = check twitterClient->tweet(status, "", "");
     string tweetId = <string> twitterStatus.id;
     string text = twitterStatus.text;
     io:println("Tweet ID: " + tweetId);
