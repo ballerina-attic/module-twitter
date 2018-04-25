@@ -195,6 +195,11 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
                                                 return twitterError;
                                             }
                                         }
+                                        return searchResponse;
+                                    } else {
+                                        twitterError.message = jsonResponse.errors[0].message.toString();
+                                        twitterError.statusCode = statusCode;
+                                        return twitterError;
                                     }
         }
     }
