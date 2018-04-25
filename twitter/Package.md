@@ -1,51 +1,101 @@
-# Ballerina Twitter Connector
+Connects to Twitter from Ballerina. 
 
-Connects to Twitter from Ballerina..
+# Package Overview
 
-Twitter connector provides a Ballerina API to access the Twitter REST API. This connector provides facility to update the current status, 
-retweet a tweet, untweet a retweeted status, search for tweets, retrive a status, distroy a status, 
-retrive closest trend locations and retrive top trends by place. The following section provide you the details on how to use Ballerina Twitter connector.
+This package provides a Ballerina API for the Twitter REST API. It contains operations that update the current status, retweet a tweet, 
+untweet a retweeted status, search for tweets, retrieve a status, destroy a status, retrieve closest trend locations, and retrieve top trends by place.
+
+**Status Operations**
+
+The wso2/twitter package contains operations that work with statuses. You can update the current status, retweet a tweet, 
+untweet a retweeted status, retrieve a status, and destroy a status.
+
+**Search Operations**
+
+The wso2/twitter package contains operations that search for tweets. 
+
+**Trends Operations**
+
+The wso2/twitter package contains operations that retrieve closest trend locations and retrieve top trends by place.
+
 
 
 ## Compatibility
-| Ballerina Language Version | Twitter API version  |
-| ------------- | ----- |
-| 0.970.0-beta13 | 1.1 |
+|                    |    Version     |  
+| :-----------------:|:--------------:| 
+| Ballerina Language | 0.970.0-beta15 |
+|  Twitter API   |   1.1          |
 
 
-## Getting started
-1. To download and install Ballerina, see the [Getting Started guide](https://ballerina.io/learn/getting-started/) guide.
+## Sample
 
-2. Obtain your Twitter credentials. To access Twitter, you will need to provide the Consumer Key (API Key), Consumer Secret (API Secret), 
-   Access Token, Access Token Secret. Create a twitter app by visiting [https://apps.twitter.com/](https://apps.twitter.com/).
+First, import the `wso2/twitter` package into the Ballerina project.
+
+```ballerina
+import wso2/twitter;
+```
+    
+The Twitter connector can be instantiated using the Consumer Key (API Key), Consumer Secret (API Secret), Access Token, 
+and Access Token Secret in the Twitter client config.
+
+**Obtaining API Keys and Tokens to Run the Sample**
+
+1. Log in to https://apps.twitter.com/app/new.
+2. Click Create New App.
+3. Provide the required information about the application.
+4. Agree to the Developer Agreement and click Create your Twitter Application.
+5. After creating your Twitter application, your Consumer Key and Consumer Secret will be displayed in the Keys and Access Tokens tab of your app on Twitter.
+6. Click the Keys and Access Tokens tab, and then enable your Twitter account to use this application by clicking the Create my access token button.
+7. Copy the Consumer key (API key), Consumer Secret, Access Token, and Access Token Secret from the screen.
+
+
+You can now enter the credentials in the Twitter client config:
+```ballerina
+ endpoint twitter:Client twitterClient {
+       clientId:"<your_consumer_key>",
+       clientSecret:"<your_consumer_secret>",
+       accessToken:"<your_access_token>",
+       accessTokenSecret:"<your_access_token_secret>"
+ };
+```
+
+The `tweet` function updates the current status. `status` is the text message of the status update.
+
+   `var tweetResponse = twitterClient->tweet(status);`
    
-3. Create a new Ballerina project by executing the following command.
-    ```shell
-       $ ballerina init
-    ```
-4. Import the twitter package to your Ballerina program as follows.
+The response from the `tweet` function is either a `Status` object with the ID of the status, created time of status, etc. 
+if the status was updated successfully or a `TwitterError`. The `match` operation can be used to handle the response if an error occurs.
 
-    ```ballerina
-    import ballerina/io;
-    import wso2/twitter;
-    
-    function main(string... args) {
-        endpoint twitter:Client twitterClient {
-            clientId:"<your_clientId>",
-            clientSecret:"<your_clientSecret>",
-            accessToken:"<your_access_token>",
-            accessTokenSecret:"<your_access_token_secret>",
-            clientConfig:{}
-        };
-        string status = "Twitter connector test";
-    
-        twitter:Status twitterStatus = check twitterClient->tweet(status, "", "");
-        string tweetId = <string> twitterStatus.id;
-        string text = twitterStatus.text;
-        io:println("Tweet ID: " + tweetId);
-        io:println("Tweet: " + text);
-    }
-    ```
-    
-## Next Step
-For detailed information on functions available in this connector, see [Twitter Connector Reference](https://docs.central.ballerina.io/wso2/twitter/0.9.13)
+```ballerina
+match tweetResponse {
+   Status twitterStatus => {
+       //If successful, returns the tweet message or ID of the status.
+       string tweetId = <string> twitterStatus.id;
+       string text = twitterStatus.text;
+       io:println("Tweet ID: " + tweetId);
+       io:println("Tweet: " + text);
+   }
+   //Unsuccessful attempts return a Twitter error.
+   twitter:TwitterError e => io:println(e); 
+}
+```
+
+The `retweet` function retweets a tweet message. It returns a `Status` object if successful or `TwitterError` if unsuccessful.
+
+```ballerina
+var tweetResponse = twitterClient->retweet (tweetId);
+match tweetResponse {
+    Status twitterStatus => io:println("Retweeted: " +    twitterStatus.retweeted);
+    twitter:TwitterError e => io:println(e);
+}
+```
+
+The `search` function searches for tweets using a query string. It returns a `TwitterError` when unsuccessful.
+```ballerina
+var tweetResponse = twitterClient->search (queryStr);
+match tweetResponse {
+    Status[] twitterStatus => io:println(twitterStatus);
+    twitter:TwitterError e => io:println(e);
+}
+```
+

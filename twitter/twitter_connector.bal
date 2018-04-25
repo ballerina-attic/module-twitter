@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/io;
-import ballerina/mime;
 
 public function TwitterConnector::tweet (string status, string... args) returns Status | TwitterError {
 
@@ -57,15 +56,14 @@ public function TwitterConnector::tweet (string status, string... args) returns 
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -95,15 +93,14 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
         self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -133,15 +130,14 @@ public function TwitterConnector::unretweet (string id) returns Status | Twitter
         self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -176,14 +172,14 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     Status[] searchResponse = [];
     match httpResponse {
-        http:HttpConnectorError err => { twitterError.message = err.message;
-                                         twitterError.statusCode = err.statusCode;
-                                         return twitterError;
+        error err => {
+            twitterError.message = err.message;
+            return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -217,15 +213,14 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -255,15 +250,14 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
         self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -298,15 +292,14 @@ returns Location [] | TwitterError {
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     Location[] locations = [];
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }
@@ -340,15 +333,14 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     Trends[] trends = [];
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
                                     var twitterJSONResponse = response.getJsonPayload();
                                     match twitterJSONResponse {
-                                        mime:EntityError err => {
+                                        error err => {
                                             twitterError.message = err.message;
                                             return twitterError;
                                         }

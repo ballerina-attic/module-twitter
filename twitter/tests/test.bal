@@ -30,8 +30,7 @@ endpoint Client twitterClient {
     clientId:clientId,
     clientSecret:clientSecret,
     accessToken:accessToken,
-    accessTokenSecret:accessTokenSecret,
-    clientConfig:{}
+    accessTokenSecret:accessTokenSecret
 };
 
 @test:Config
@@ -42,7 +41,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    var tweetResponse = twitterClient->tweet(status, "987982473731555328", "");
+    var tweetResponse = twitterClient->tweet(status, "989070799100370945", "");
 
     match tweetResponse {
         Status twitterStatus => {
