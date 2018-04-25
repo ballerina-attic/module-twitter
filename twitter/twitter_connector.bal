@@ -60,24 +60,25 @@ public function TwitterConnector::tweet (string status, string... args) returns 
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                Status twitterResponse = convertToStatus(jsonResponse);
-                                                return twitterResponse;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        Status twitterResponse = convertToStatus(jsonResponse);
+                        return twitterResponse;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -97,24 +98,25 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                Status twitterResponse = convertToStatus(jsonResponse);
-                                                return twitterResponse;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        Status twitterResponse = convertToStatus(jsonResponse);
+                        return twitterResponse;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -134,24 +136,25 @@ public function TwitterConnector::unretweet (string id) returns Status | Twitter
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                Status twitterResponse = convertToStatus(jsonResponse);
-                                                return twitterResponse;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        Status twitterResponse = convertToStatus(jsonResponse);
+                        return twitterResponse;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -176,31 +179,27 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                if (jsonResponse.statuses != null) {
-                                                    searchResponse = convertToStatuses(jsonResponse.statuses);
-                                                }
-                                                return searchResponse;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                        return searchResponse;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        if (jsonResponse.statuses != null) {
+                            searchResponse = convertToStatuses(jsonResponse.statuses);
+                        }
+                        return searchResponse;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -222,24 +221,25 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                Status twitterResponse = convertToStatus(jsonResponse);
-                                                return twitterResponse;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        Status twitterResponse = convertToStatus(jsonResponse);
+                        return twitterResponse;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -259,24 +259,25 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                Status twitterResponse = convertToStatus(jsonResponse);
-                                                return twitterResponse;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        Status twitterResponse = convertToStatus(jsonResponse);
+                        return twitterResponse;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -301,24 +302,25 @@ returns Location [] | TwitterError {
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                locations = convertToLocations(jsonResponse);
-                                                return locations;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        locations = convertToLocations(jsonResponse);
+                        return locations;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
@@ -342,24 +344,25 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
             twitterError.message = err.message;
             return twitterError;
         }
-        http:Response response => { int statusCode = response.statusCode;
-                                    var twitterJSONResponse = response.getJsonPayload();
-                                    match twitterJSONResponse {
-                                        error err => {
-                                            twitterError.message = err.message;
-                                            return twitterError;
-                                        }
-                                        json jsonResponse => {
-                                            if (statusCode == 200) {
-                                                trends = convertTrends(jsonResponse);
-                                                return trends;
-                                            } else {
-                                                twitterError.message = jsonResponse.errors[0].message.toString();
-                                                twitterError.statusCode = statusCode;
-                                                return twitterError;
-                                            }
-                                        }
-                                    }
+        http:Response response => {
+            int statusCode = response.statusCode;
+            var twitterJSONResponse = response.getJsonPayload();
+            match twitterJSONResponse {
+                error err => {
+                    twitterError.message = err.message;
+                    return twitterError;
+                }
+                json jsonResponse => {
+                    if (statusCode == 200) {
+                        trends = convertTrends(jsonResponse);
+                        return trends;
+                    } else {
+                        twitterError.message = jsonResponse.errors[0].message.toString();
+                        twitterError.statusCode = statusCode;
+                        return twitterError;
+                    }
+                }
+            }
         }
     }
 }
