@@ -56,20 +56,27 @@ public function TwitterConnector::tweet (string status, string... args) returns 
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        Status twitterResponse = convertToStatus(jsonResponse);
-                                        return twitterResponse;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                Status twitterResponse = convertToStatus(jsonResponse);
+                                                return twitterResponse;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }
@@ -86,20 +93,27 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
         self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        Status twitterResponse = convertToStatus(jsonResponse);
-                                        return twitterResponse;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                Status twitterResponse = convertToStatus(jsonResponse);
+                                                return twitterResponse;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }
@@ -116,20 +130,27 @@ public function TwitterConnector::unretweet (string id) returns Status | Twitter
         self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        Status twitterResponse = convertToStatus(jsonResponse);
-                                        return twitterResponse;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                Status twitterResponse = convertToStatus(jsonResponse);
+                                                return twitterResponse;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }
@@ -151,15 +172,28 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     Status[] searchResponse = [];
     match httpResponse {
-        http:HttpConnectorError err => { twitterError.message = err.message;
-                                         twitterError.statusCode = err.statusCode;
-                                         return twitterError;
+        error err => {
+            twitterError.message = err.message;
+            return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    var jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        if (jsonResponse.statuses != null) {
-                                            searchResponse = convertToStatuses(jsonResponse.statuses);
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                if (jsonResponse.statuses != null) {
+                                                    searchResponse = convertToStatuses(jsonResponse.statuses);
+                                                }
+                                                return searchResponse;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
                                         }
                                         return searchResponse;
                                     } else {
@@ -184,20 +218,27 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
     tweetPath = tweetPath + "?" + urlParams;
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        Status twitterResponse = convertToStatus(jsonResponse);
-                                        return twitterResponse;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                Status twitterResponse = convertToStatus(jsonResponse);
+                                                return twitterResponse;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }
@@ -214,20 +255,27 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
         self.accessTokenSecret, oauthStr);
     var httpResponse = clientEndpoint->post(tweetPath, request = request);
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        Status twitterResponse = convertToStatus(jsonResponse);
-                                        return twitterResponse;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                Status twitterResponse = convertToStatus(jsonResponse);
+                                                return twitterResponse;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }
@@ -249,20 +297,27 @@ returns Location [] | TwitterError {
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     Location[] locations = [];
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        locations = convertToLocations(jsonResponse);
-                                        return locations;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                locations = convertToLocations(jsonResponse);
+                                                return locations;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }
@@ -283,20 +338,27 @@ public function TwitterConnector::getTopTrendsByPlace (string locationId) return
     var httpResponse = clientEndpoint->get(tweetPath, request = request);
     Trends[] trends = [];
     match httpResponse {
-        http:HttpConnectorError err => {
+        error err => {
             twitterError.message = err.message;
-            twitterError.statusCode = err.statusCode;
             return twitterError;
         }
         http:Response response => { int statusCode = response.statusCode;
-                                    json jsonResponse = check response.getJsonPayload();
-                                    if (statusCode == 200) {
-                                        trends = convertTrends(jsonResponse);
-                                        return trends;
-                                    } else {
-                                        twitterError.message = jsonResponse.errors[0].message.toString();
-                                        twitterError.statusCode = statusCode;
-                                        return twitterError;
+                                    var twitterJSONResponse = response.getJsonPayload();
+                                    match twitterJSONResponse {
+                                        error err => {
+                                            twitterError.message = err.message;
+                                            return twitterError;
+                                        }
+                                        json jsonResponse => {
+                                            if (statusCode == 200) {
+                                                trends = convertTrends(jsonResponse);
+                                                return trends;
+                                            } else {
+                                                twitterError.message = jsonResponse.errors[0].message.toString();
+                                                twitterError.statusCode = statusCode;
+                                                return twitterError;
+                                            }
+                                        }
                                     }
         }
     }

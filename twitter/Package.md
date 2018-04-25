@@ -1,6 +1,6 @@
-# Ballerina Twitter Connector
-
 Connects to Twitter from Ballerina. 
+
+# Package Overview
 
 This package provides a Ballerina API for the Twitter REST API. It contains operations that update the current status, retweet a tweet, 
 untweet a retweeted status, search for tweets, retrieve a status, destroy a status, retrieve closest trend locations, and retrieve top trends by place.
@@ -23,7 +23,7 @@ The wso2/twitter package contains operations that retrieve closest trend locatio
 ## Compatibility
 |                    |    Version     |  
 | :-----------------:|:--------------:| 
-| Ballerina Language | 0.970.0-beta14 |
+| Ballerina Language | 0.970.0-beta15 |
 |  Twitter API   |   1.1          |
 
 
@@ -32,7 +32,7 @@ The wso2/twitter package contains operations that retrieve closest trend locatio
 First, import the `wso2/twitter` package into the Ballerina project.
 
 ```ballerina
-    import wso2/twitter;
+import wso2/twitter;
 ```
     
 The Twitter connector can be instantiated using the Consumer Key (API Key), Consumer Secret (API Secret), Access Token, 
@@ -51,12 +51,12 @@ and Access Token Secret in the Twitter client config.
 
 You can now enter the credentials in the Twitter client config:
 ```ballerina
-     endpoint twitter:Client twitterClient {
-           clientId:"<your_consumer_key>",
-           clientSecret:"<your_consumer_secret>",
-           accessToken:"<your_access_token>",
-           accessTokenSecret:"<your_access_token_secret>"
-     };
+ endpoint twitter:Client twitterClient {
+       clientId:"<your_consumer_key>",
+       clientSecret:"<your_consumer_secret>",
+       accessToken:"<your_access_token>",
+       accessTokenSecret:"<your_access_token_secret>"
+ };
 ```
 
 The `tweet` function updates the current status. `status` is the text message of the status update.
@@ -67,35 +67,35 @@ The response from the `tweet` function is either a `Status` object with the ID o
 if the status was updated successfully or a `TwitterError`. The `match` operation can be used to handle the response if an error occurs.
 
 ```ballerina
-    match tweetResponse {
-       Status twitterStatus => {
-           //If successful, returns the tweet message or ID of the status.
-           string tweetId = <string> twitterStatus.id;
-           string text = twitterStatus.text;
-           io:println("Tweet ID: " + tweetId);
-           io:println("Tweet: " + text);
-       }
-       //Unsuccessful attempts return a Twitter error.
-       twitter:TwitterError e => io:println(e); 
-    }
+match tweetResponse {
+   Status twitterStatus => {
+       //If successful, returns the tweet message or ID of the status.
+       string tweetId = <string> twitterStatus.id;
+       string text = twitterStatus.text;
+       io:println("Tweet ID: " + tweetId);
+       io:println("Tweet: " + text);
+   }
+   //Unsuccessful attempts return a Twitter error.
+   twitter:TwitterError e => io:println(e); 
+}
 ```
 
 The `retweet` function retweets a tweet message. It returns a `Status` object if successful or `TwitterError` if unsuccessful.
 
 ```ballerina
-    var tweetResponse = twitterClient->retweet (tweetId);
-    match tweetResponse {
-        Status twitterStatus => io:println("Retweeted: " +    twitterStatus.retweeted);
-        twitter:TwitterError e => io:println(e);
-    }
+var tweetResponse = twitterClient->retweet (tweetId);
+match tweetResponse {
+    Status twitterStatus => io:println("Retweeted: " +    twitterStatus.retweeted);
+    twitter:TwitterError e => io:println(e);
+}
 ```
 
 The `search` function searches for tweets using a query string. It returns a `TwitterError` when unsuccessful.
 ```ballerina
-    var tweetResponse = twitterClient->search (queryStr);
-    match tweetResponse {
-        Status[] twitterStatus => io:println(twitterStatus);
-        twitter:TwitterError e => io:println(e);
-    }
+var tweetResponse = twitterClient->search (queryStr);
+match tweetResponse {
+    Status[] twitterStatus => io:println(twitterStatus);
+    twitter:TwitterError e => io:println(e);
+}
 ```
 
