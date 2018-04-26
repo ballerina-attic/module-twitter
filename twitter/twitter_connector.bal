@@ -83,7 +83,7 @@ public function TwitterConnector::tweet (string status, string... args) returns 
     }
 }
 
-public function TwitterConnector::retweet (string id) returns Status | TwitterError {
+public function TwitterConnector::retweet (int id) returns Status | TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -121,7 +121,7 @@ public function TwitterConnector::retweet (string id) returns Status | TwitterEr
     }
 }
 
-public function TwitterConnector::unretweet (string id) returns Status | TwitterError {
+public function TwitterConnector::unretweet (int id) returns Status | TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -204,7 +204,7 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
     }
 }
 
-public function TwitterConnector::showStatus (string id) returns Status | TwitterError {
+public function TwitterConnector::showStatus (int id) returns Status | TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -244,7 +244,7 @@ public function TwitterConnector::showStatus (string id) returns Status | Twitte
     }
 }
 
-public function TwitterConnector::destroyStatus (string id) returns Status | TwitterError {
+public function TwitterConnector::destroyStatus (int id) returns Status | TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -282,7 +282,7 @@ public function TwitterConnector::destroyStatus (string id) returns Status | Twi
     }
 }
 
-public function TwitterConnector::getClosestTrendLocations (string lat, string long)
+public function TwitterConnector::getClosestTrendLocations (float lat, float long)
 returns Location [] | TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
@@ -325,7 +325,7 @@ returns Location [] | TwitterError {
     }
 }
 
-public function TwitterConnector::getTopTrendsByPlace (string locationId) returns Trends[] | TwitterError {
+public function TwitterConnector::getTopTrendsByPlace (int locationId) returns Trends[] | TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = TRENDS_PLACE_ENDPOINT;

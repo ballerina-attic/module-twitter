@@ -24,7 +24,7 @@ string clientId = config:getAsString("CLIENT_ID");
 string clientSecret = config:getAsString("CLIENT_SECRET");
 string accessToken = config:getAsString("ACCESS_TOKEN");
 string accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
-string tweetId;
+int tweetId;
 
 endpoint Client twitterClient {
     clientId:clientId,
@@ -45,7 +45,7 @@ function testTweet () {
 
     match tweetResponse {
         Status twitterStatus => {
-            tweetId = <string> twitterStatus.id;
+            tweetId = twitterStatus.id;
             string text = twitterStatus.text;
             test:assertTrue(text.contains(status), msg = "Failed to call tweet()");
         }
@@ -82,7 +82,7 @@ function testUnReTweet () {
 
     match tweetResponse {
         Status twitterStatus => {
-            test:assertEquals(twitterStatus.id, <int> tweetId, msg = "Failed to call unretweet()");
+            test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call unretweet()");
         }
         TwitterError err => {
             test:assertFail(msg = err.message);
@@ -115,7 +115,7 @@ function testShowStatus () {
 
     match tweetResponse {
         Status twitterStatus => {
-            test:assertEquals(twitterStatus.id, <int> tweetId, msg = "Failed to call showStatus()");
+            test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call showStatus()");
         }
         TwitterError err => {
             test:assertFail(msg = err.message);
@@ -132,7 +132,7 @@ function testDestroyStatus () {
 
     match tweetResponse {
         Status twitterStatus => {
-            test:assertEquals(twitterStatus.id, <int> tweetId, msg = "Failed to call destroyStatus()");
+            test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call destroyStatus()");
         }
         TwitterError err => {
             test:assertFail(msg = err.message);
@@ -143,12 +143,13 @@ function testDestroyStatus () {
 @test:Config
 function testGetClosestTrendLocations () {
     io:println("--------------Calling getClosestTrendLocations----------------");
-    string latitude = "34";
-    string longitude = "67";
+    float latitude = 34;
+    float longitude = 67;
     var tweetResponse = twitterClient->getClosestTrendLocations (latitude, longitude);
 
     match tweetResponse {
         Location [] response => {
+            io:println(response);
             test:assertNotEquals(response, null, msg = "Failed to call getClosestTrendLocations()");
         }
         TwitterError err => {
@@ -160,7 +161,7 @@ function testGetClosestTrendLocations () {
 @test:Config
 function testGetTopTrendsByPlace () {
     io:println("--------------Calling getTopTrendsByPlace----------------");
-    string locationId = "23424922";
+    int locationId = 23424922;
     var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);
 
     match tweetResponse {
