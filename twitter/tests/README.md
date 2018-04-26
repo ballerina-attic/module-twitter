@@ -6,7 +6,7 @@ Twitter connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | ------------- | ----- |
-| 0.970.0-beta15 | 1.1 |
+| 0.970.0-beta17 | 1.1 |
 
 
 ###### Running tests

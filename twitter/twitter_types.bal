@@ -39,12 +39,12 @@ public type TwitterConnector object {
     documentation {Retweet a tweet
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function retweet (string id) returns Status | TwitterError;
+    public function retweet (int id) returns Status | TwitterError;
 
     documentation {Untweet a retweeted status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function unretweet (string id) returns Status | TwitterError;
+    public function unretweet (int id) returns Status | TwitterError;
 
     documentation {Search for tweets
         P{{queryStr}} - Query string to retrieve the related tweets
@@ -54,23 +54,23 @@ public type TwitterConnector object {
     documentation {Retrive a single status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function showStatus (string id) returns Status | TwitterError;
+    public function showStatus (int id) returns Status | TwitterError;
 
     documentation {Distroy a status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function destroyStatus (string id) returns Status | TwitterError;
+    public function destroyStatus (int id) returns Status | TwitterError;
 
     documentation {Retrive closest trend locations
         P{{lat}} - Latitude of the location
         P{{long}} - Longitude of the location
         R{{}} - If success, returns Location[] object, else returns TwitterError object.}
-    public function getClosestTrendLocations (string lat, string long) returns Location [] | TwitterError;
+    public function getClosestTrendLocations (float lat, float long) returns Location [] | TwitterError;
 
     documentation {Retrive top trends by place
         P{{locationId}} - Where On Earth ID of the location to return trending information for
         R{{}} - If success, returns Trends[] object, else returns TwitterError object.}
-    public function getTopTrendsByPlace (string locationId) returns Trends[] | TwitterError;
+    public function getTopTrendsByPlace (int locationId) returns Trends[] | TwitterError;
 };
 
 documentation {Twitter Client object
