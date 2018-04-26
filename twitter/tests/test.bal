@@ -41,7 +41,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    var tweetResponse = twitterClient->tweet(status, "989070799100370945", "");
+    var tweetResponse = twitterClient->tweet(status, "989515260129230850", "");
 
     match tweetResponse {
         Status twitterStatus => {
@@ -149,7 +149,6 @@ function testGetClosestTrendLocations () {
 
     match tweetResponse {
         Location [] response => {
-            io:println(response);
             test:assertNotEquals(response, null, msg = "Failed to call getClosestTrendLocations()");
         }
         TwitterError err => {
