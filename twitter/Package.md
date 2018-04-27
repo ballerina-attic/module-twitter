@@ -3,8 +3,7 @@ Connects to Twitter from Ballerina.
 # Package Overview
 
 The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
-You can also retrieve and destroy a status, retrieve closest trend locations,
-and top trends using the connector.
+You can also retrieve and destroy a status, and retrieve closest trend locations and top trends.
 
 **Status Operations**
 
