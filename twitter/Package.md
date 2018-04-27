@@ -2,8 +2,9 @@ Connects to Twitter from Ballerina.
 
 # Package Overview
 
-This package provides a Ballerina API for the Twitter REST API. It contains operations that update the current status, retweet a tweet, 
-untweet a retweeted status, search for tweets, retrieve a status, destroy a status, retrieve closest trend locations, and retrieve top trends by place.
+The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
+It handles OAuth 2.0 authentication. You can also retrieve and destroy a status, retrieve closest trend locations,
+and top trends using the connector.
 
 **Status Operations**
 
@@ -23,8 +24,8 @@ The `wso2/twitter` package contains operations that retrieve closest trend locat
 ## Compatibility
 |                    |    Version     |  
 | :-----------------:|:--------------:| 
-| Ballerina Language | 0.970.0-beta17 |
-|  Twitter API   |   1.1          |
+| Ballerina Language | 0.970.0-rc1    |
+| Twitter API        | 1.1            |
 
 
 ## Sample
