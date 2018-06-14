@@ -23,7 +23,7 @@ The `wso2/twitter` package contains operations that retrieve closest trend locat
 ## Compatibility
 |                    |    Version     |  
 | :-----------------:|:--------------:| 
-| Ballerina Language |   0.970.0      |
+| Ballerina Language |   0.974.1      |
 | Twitter API        |   1.1            |
 
 
