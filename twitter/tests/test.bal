@@ -41,7 +41,7 @@ function testTweet () {
     int currentTimeMills = time.time;
     string timeStamp = <string> (currentTimeMills/1000);
     string status = "Twitter connector test " + timeStamp;
-    var tweetResponse = twitterClient->tweet(status, "989789452942835713", "");
+    var tweetResponse = twitterClient->tweet(status);
 
     match tweetResponse {
         Status twitterStatus => {

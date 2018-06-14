@@ -54,7 +54,7 @@ public function TwitterConnector::tweet (string status, string... args) returns 
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
-    var httpResponse = clientEndpoint->post(tweetPath, request = request);
+    var httpResponse = clientEndpoint->post(tweetPath, request);
     match httpResponse {
         error err => {
             twitterError.message = err.message;
@@ -92,7 +92,7 @@ public function TwitterConnector::retweet (int id) returns Status | TwitterError
     string tweetPath = RETWEET_ENDPOINT + id + JSON;
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint->post(tweetPath, request = request);
+    var httpResponse = clientEndpoint->post(tweetPath, request);
     match httpResponse {
         error err => {
             twitterError.message = err.message;
@@ -130,7 +130,7 @@ public function TwitterConnector::unretweet (int id) returns Status | TwitterErr
     string tweetPath = UN_RETWEET_ENDPOINT + id + JSON;
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint->post(tweetPath, request = request);
+    var httpResponse = clientEndpoint->post(tweetPath, request);
     match httpResponse {
         error err => {
             twitterError.message = err.message;
@@ -172,7 +172,7 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = clientEndpoint->get(tweetPath, request = request);
+    var httpResponse = clientEndpoint->get(tweetPath, message = request);
     Status[] searchResponse = [];
     match httpResponse {
         error err => {
@@ -215,7 +215,7 @@ public function TwitterConnector::showStatus (int id) returns Status | TwitterEr
     constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
-    var httpResponse = clientEndpoint->get(tweetPath, request = request);
+    var httpResponse = clientEndpoint->get(tweetPath, message = request);
     match httpResponse {
         error err => {
             twitterError.message = err.message;
@@ -253,7 +253,7 @@ public function TwitterConnector::destroyStatus (int id) returns Status | Twitte
     string tweetPath = DESTROY_STATUS_ENDPOINT + id + JSON;
     constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint->post(tweetPath, request = request);
+    var httpResponse = clientEndpoint->post(tweetPath, request);
     match httpResponse {
         error err => {
             twitterError.message = err.message;
@@ -295,7 +295,7 @@ returns Location [] | TwitterError {
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams.substring(1, urlParams.length());
 
-    var httpResponse = clientEndpoint->get(tweetPath, request = request);
+    var httpResponse = clientEndpoint->get(tweetPath, message = request);
     Location[] locations = [];
     match httpResponse {
         error err => {
@@ -337,7 +337,7 @@ public function TwitterConnector::getTopTrendsByPlace (int locationId) returns T
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = clientEndpoint->get(tweetPath, request = request);
+    var httpResponse = clientEndpoint->get(tweetPath, message = request);
     Trends[] trends = [];
     match httpResponse {
         error err => {
