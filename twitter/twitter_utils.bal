@@ -28,10 +28,10 @@ function constructOAuthParams(string consumerKey, string accessToken) returns st
     nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    timeStamp = <string> (currentTimeMills/1000);
+    timeStamp = <string>(currentTimeMills / 1000);
     string paramStr = "oauth_consumer_key=" + consumerKey + "&oauth_nonce=" + nonceString +
-                      "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timeStamp + "&oauth_token=" + accessToken
-                      + "&oauth_version=1.0&";
+        "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timeStamp + "&oauth_token=" + accessToken
+        + "&oauth_version=1.0&";
     return paramStr;
 }
 
@@ -51,15 +51,15 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string encodedAccessTokenSecretValue = check http:encode(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
-    string keyStr =  encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
+    string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
     string signature = crypto:hmac(baseString, keyStr, crypto:SHA1).base16ToBase64Encode();
 
     string encodedSignatureValue = check http:encode(signature, "UTF-8");
     string encodedaccessTokenValue = check http:encode(accessToken, "UTF-8");
 
     string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
-                               "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
-                               "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
-                               encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
+        "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
+        "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
+        encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
     request.setHeader("Authorization", oauthHeaderString.unescape());
 }

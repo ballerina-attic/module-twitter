@@ -21,8 +21,8 @@ function convertToStatus(json jsonStatus) returns (Status) {
     status.text = status.text != null ? jsonStatus.text.toString() : "";
     status.source = jsonStatus.source != null ? jsonStatus.source.toString() : "";
     status.truncated = jsonStatus.truncated != null ? convertToBoolean(jsonStatus.truncated) : false;
-    status.inReplyToStatusId = 
-                        jsonStatus.in_reply_to_status_id != null ? convertToInt(jsonStatus.in_reply_to_status_id) : 0;
+    status.inReplyToStatusId =
+    jsonStatus.in_reply_to_status_id != null ? convertToInt(jsonStatus.in_reply_to_status_id) : 0;
     status.favorited = jsonStatus.favorited != null ? convertToBoolean(jsonStatus.favorited) : false;
     status.retweeted = jsonStatus.retweeted != null ? convertToBoolean(jsonStatus.retweeted) : false;
     status.favouritesCount = jsonStatus.favourites_count != null ? convertToInt(jsonStatus.favourites_count) : 0;
@@ -34,10 +34,10 @@ function convertToStatus(json jsonStatus) returns (Status) {
 }
 
 
-function convertToInt(json jsonVal) returns (int){
+function convertToInt(json jsonVal) returns (int) {
     string stringVal = jsonVal.toString();
-    if(stringVal != "") {
-       return check <int> stringVal;
+    if (stringVal != "") {
+        return check <int>stringVal;
     } else {
         return 0;
     }
@@ -45,12 +45,12 @@ function convertToInt(json jsonVal) returns (int){
 
 function convertToBoolean(json jsonVal) returns (boolean) {
     string stringVal = jsonVal.toString();
-    return <boolean> stringVal;
+    return <boolean>stringVal;
 }
 
 function convertToFloat(json jsonVal) returns (float) {
     string stringVal = jsonVal.toString();
-    return check <float> stringVal;
+    return check <float>stringVal;
 }
 
 function convertToGeoLocation(json jsonStatus) returns (GeoLocation) {
@@ -66,7 +66,7 @@ function convertToStatuses(json jsonStatuses) returns Status[] {
     int i = 0;
     foreach jsonStatus in jsonStatuses {
         statuses[i] = convertToStatus(jsonStatus);
-        i = i +1;
+        i = i + 1;
     }
     return statuses;
 }
@@ -76,7 +76,7 @@ function convertToLocations(json jsonLocations) returns Location[] {
     int i = 0;
     foreach jsonLocation in jsonLocations {
         locations[i] = convertToLocation(jsonLocation);
-        i = i +1;
+        i = i + 1;
     }
     return locations;
 }
@@ -102,7 +102,7 @@ function convertToPlaceType(json jsonPlaceType) returns (PlaceType) {
 }
 
 function convertTrends(json jsonTrends) returns Trends[] {
-    Trends [] trends = [];
+    Trends[] trends = [];
     trends[0] = convertToTrends(jsonTrends[0]);
     return trends;
 }
@@ -121,7 +121,7 @@ function convertTrendList(json jsonTrends) returns Trend[] {
     int i = 0;
     foreach jsonTrend in jsonTrends {
         trendList[i] = convertToTrend(jsonTrend);
-        i = i +1;
+        i = i + 1;
     }
     return trendList;
 }
