@@ -20,27 +20,26 @@ import ballerina/system;
 import ballerina/config;
 import ballerina/io;
 
-string clientId = config:getAsString("CLIENT_ID");
-string clientSecret = config:getAsString("CLIENT_SECRET");
-string accessToken = config:getAsString("ACCESS_TOKEN");
-string accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
+string test_clientId = config:getAsString("CLIENT_ID");
+string test_clientSecret = config:getAsString("CLIENT_SECRET");
+string test_accessToken = config:getAsString("ACCESS_TOKEN");
+string test_accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
 int tweetId;
 
 endpoint Client twitterClient {
-    clientId:clientId,
-    clientSecret:clientSecret,
-    accessToken:accessToken,
-    accessTokenSecret:accessTokenSecret
+    clientId:test_clientId,
+    clientSecret:test_clientSecret,
+    accessToken:test_accessToken,
+    accessTokenSecret:test_accessTokenSecret
 };
 
 @test:Config
 function testTweet () {
     io:println("--------------Calling tweet----------------");
-    string nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    string timeStamp = <string> (currentTimeMills/1000);
-    string status = "Twitter connector test " + timeStamp;
+    string currentTimeStamp = <string> (currentTimeMills/1000);
+    string status = "Twitter connector test " + currentTimeStamp;
     var tweetResponse = twitterClient->tweet(status);
 
     match tweetResponse {
