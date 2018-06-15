@@ -85,9 +85,9 @@ public type Client object {
     }
 
     documentation {Twitter connector endpoint initialization function
-        P{{twitterConfig}} - Twitter connector configuration
+        P{{config}} - Twitter connector configuration
     }
-    public function init (TwitterConfiguration twitterConfig);
+    public function init (TwitterConfiguration config);
 
     documentation {Return the Twitter connector client
         R{{}} - Twitter connector client

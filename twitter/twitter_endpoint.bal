@@ -18,14 +18,14 @@
 
 import ballerina/http;
 
-public function Client::init (TwitterConfiguration twitterConfig) {
-    twitterConfig.uri = "https://api.twitter.com";
-    self.twitterConnector.accessToken = twitterConfig.accessToken;
-    self.twitterConnector.accessTokenSecret = twitterConfig.accessTokenSecret;
-    self.twitterConnector.clientId = twitterConfig.clientId;
-    self.twitterConnector.clientSecret = twitterConfig.clientSecret;
-    twitterConfig.clientConfig.url = twitterConfig.uri;
-    self.twitterConnector.clientEndpoint.init(twitterConfig.clientConfig);
+public function Client::init (TwitterConfiguration config) {
+    config.uri = "https://api.twitter.com";
+    self.twitterConnector.accessToken = config.accessToken;
+    self.twitterConnector.accessTokenSecret = config.accessTokenSecret;
+    self.twitterConnector.clientId = config.clientId;
+    self.twitterConnector.clientSecret = config.clientSecret;
+    config.clientConfig.url = config.uri;
+    self.twitterConnector.clientEndpoint.init(config.clientConfig);
 }
 
 public function Client::getCallerActions() returns TwitterConnector {
