@@ -20,27 +20,26 @@ import ballerina/system;
 import ballerina/config;
 import ballerina/io;
 
-string clientId = config:getAsString("CLIENT_ID");
-string clientSecret = config:getAsString("CLIENT_SECRET");
-string accessToken = config:getAsString("ACCESS_TOKEN");
-string accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
+string testClientId = config:getAsString("CLIENT_ID");
+string testClientSecret = config:getAsString("CLIENT_SECRET");
+string testAccessToken = config:getAsString("ACCESS_TOKEN");
+string testAccessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
 int tweetId;
 
 endpoint Client twitterClient {
-    clientId:clientId,
-    clientSecret:clientSecret,
-    accessToken:accessToken,
-    accessTokenSecret:accessTokenSecret
+    clientId: testClientId,
+    clientSecret: testClientSecret,
+    accessToken: testAccessToken,
+    accessTokenSecret: testAccessTokenSecret
 };
 
 @test:Config
-function testTweet () {
+function testTweet() {
     io:println("--------------Calling tweet----------------");
-    string nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    string timeStamp = <string> (currentTimeMills/1000);
-    string status = "Twitter connector test " + timeStamp;
+    string currentTimeStamp = <string>(currentTimeMills / 1000);
+    string status = "Twitter connector test " + currentTimeStamp;
     var tweetResponse = twitterClient->tweet(status);
 
     match tweetResponse {
@@ -57,9 +56,9 @@ function testTweet () {
 }
 
 @test:Config {
-    dependsOn:["testTweet"]
+    dependsOn: ["testTweet"]
 }
-function testReTweet () {
+function testReTweet() {
     io:println("--------------Calling retweet----------------");
     var tweetResponse = twitterClient->retweet (tweetId);
 
@@ -74,9 +73,9 @@ function testReTweet () {
 }
 
 @test:Config {
-    dependsOn:["testReTweet"]
+    dependsOn: ["testReTweet"]
 }
-function testUnReTweet () {
+function testUnReTweet() {
     io:println("--------------Calling unretweet----------------");
     var tweetResponse = twitterClient->unretweet (tweetId);
 
@@ -91,7 +90,7 @@ function testUnReTweet () {
 }
 
 @test:Config
-function testSearch () {
+function testSearch() {
     io:println("--------------Calling search----------------");
     string queryStr = "twitter";
     var tweetResponse = twitterClient->search (queryStr);
@@ -107,9 +106,9 @@ function testSearch () {
 }
 
 @test:Config {
-    dependsOn:["testUnReTweet"]
+    dependsOn: ["testUnReTweet"]
 }
-function testShowStatus () {
+function testShowStatus() {
     io:println("--------------Calling showStatus----------------");
     var tweetResponse = twitterClient->showStatus (tweetId);
 
@@ -124,9 +123,9 @@ function testShowStatus () {
 }
 
 @test:Config {
-    dependsOn:["testShowStatus"]
+    dependsOn: ["testShowStatus"]
 }
-function testDestroyStatus () {
+function testDestroyStatus() {
     io:println("--------------Calling destroyStatus----------------");
     var tweetResponse = twitterClient->destroyStatus (tweetId);
 
@@ -141,14 +140,14 @@ function testDestroyStatus () {
 }
 
 @test:Config
-function testGetClosestTrendLocations () {
+function testGetClosestTrendLocations() {
     io:println("--------------Calling getClosestTrendLocations----------------");
     float latitude = 34;
     float longitude = 67;
     var tweetResponse = twitterClient->getClosestTrendLocations (latitude, longitude);
 
     match tweetResponse {
-        Location [] response => {
+        Location[] response => {
             test:assertNotEquals(response, null, msg = "Failed to call getClosestTrendLocations()");
         }
         TwitterError err => {
@@ -158,7 +157,7 @@ function testGetClosestTrendLocations () {
 }
 
 @test:Config
-function testGetTopTrendsByPlace () {
+function testGetTopTrendsByPlace() {
     io:println("--------------Calling getTopTrendsByPlace----------------");
     int locationId = 23424922;
     var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);

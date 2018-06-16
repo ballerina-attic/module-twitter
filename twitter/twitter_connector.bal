@@ -16,26 +16,26 @@
 
 import ballerina/io;
 
-public function TwitterConnector::tweet (string status, string... args) returns Status | TwitterError {
+public function TwitterConnector::tweet(string status, string... args) returns Status|TwitterError {
 
     endpoint http:Client clientEndpoint = self.clientEndpoint;
 
     http:Request request;
     TwitterError twitterError = {};
 
-	string mediaIds = "";
-	string attachmentUrl = "";
+    string mediaIds = "";
+    string attachmentUrl = "";
 
-	if ((lengthof args) > 0) {
-		mediaIds = args[0];
-	}
-	if ((lengthof args) > 1) {
-		attachmentUrl = args[1];
-	}
+    if ((lengthof args) > 0) {
+        mediaIds = args[0];
+    }
+    if ((lengthof args) > 1) {
+        attachmentUrl = args[1];
+    }
 
     string tweetPath = UPDATE_ENDPOINT;
     string encodedStatusValue = check http:encode(status, UTF_8);
-    string urlParams =  STATUS + encodedStatusValue + "&";
+    string urlParams = STATUS + encodedStatusValue + "&";
     string oauthStr;
 
     if (attachmentUrl != "") {
@@ -83,7 +83,7 @@ public function TwitterConnector::tweet (string status, string... args) returns 
     }
 }
 
-public function TwitterConnector::retweet (int id) returns Status | TwitterError {
+public function TwitterConnector::retweet(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -121,7 +121,7 @@ public function TwitterConnector::retweet (int id) returns Status | TwitterError
     }
 }
 
-public function TwitterConnector::unretweet (int id) returns Status | TwitterError {
+public function TwitterConnector::unretweet(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -159,7 +159,7 @@ public function TwitterConnector::unretweet (int id) returns Status | TwitterErr
     }
 }
 
-public function TwitterConnector::search (string queryStr) returns Status[] | TwitterError {
+public function TwitterConnector::search(string queryStr) returns Status[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = SEARCH_ENDPOINT;
@@ -204,7 +204,7 @@ public function TwitterConnector::search (string queryStr) returns Status[] | Tw
     }
 }
 
-public function TwitterConnector::showStatus (int id) returns Status | TwitterError {
+public function TwitterConnector::showStatus(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -244,7 +244,7 @@ public function TwitterConnector::showStatus (int id) returns Status | TwitterEr
     }
 }
 
-public function TwitterConnector::destroyStatus (int id) returns Status | TwitterError {
+public function TwitterConnector::destroyStatus(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -282,12 +282,12 @@ public function TwitterConnector::destroyStatus (int id) returns Status | Twitte
     }
 }
 
-public function TwitterConnector::getClosestTrendLocations (float lat, float long)
-returns Location [] | TwitterError {
+public function TwitterConnector::getClosestTrendLocations(float lat, float long)
+                                      returns Location[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = TRENDS_ENDPOINT;
-    string urlParams =  LAT + lat + LONG + long;
+    string urlParams = LAT + lat + LONG + long;
     string oauthStr = urlParams.substring(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
             self.accessToken);
     http:Request request;
@@ -325,7 +325,7 @@ returns Location [] | TwitterError {
     }
 }
 
-public function TwitterConnector::getTopTrendsByPlace (int locationId) returns Trends[] | TwitterError {
+public function TwitterConnector::getTopTrendsByPlace(int locationId) returns Trends[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = TRENDS_PLACE_ENDPOINT;

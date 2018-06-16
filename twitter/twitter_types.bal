@@ -34,43 +34,43 @@ public type TwitterConnector object {
         mediaIds or attachmentUrl)
         P{{status}} - The text of status update
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function tweet (string status, string... args) returns Status | TwitterError;
+    public function tweet(string status, string... args) returns Status|TwitterError;
 
     documentation {Retweet a tweet
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function retweet (int id) returns Status | TwitterError;
+    public function retweet(int id) returns Status|TwitterError;
 
     documentation {Untweet a retweeted status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function unretweet (int id) returns Status | TwitterError;
+    public function unretweet(int id) returns Status|TwitterError;
 
     documentation {Search for tweets
         P{{queryStr}} - Query string to retrieve the related tweets
         R{{}} - If success, Status[] object, else returns TwitterError object.}
-    public function search (string queryStr) returns Status[] | TwitterError;
+    public function search(string queryStr) returns Status[]|TwitterError;
 
     documentation {Retrive a single status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function showStatus (int id) returns Status | TwitterError;
+    public function showStatus(int id) returns Status|TwitterError;
 
     documentation {Distroy a status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
-    public function destroyStatus (int id) returns Status | TwitterError;
+    public function destroyStatus(int id) returns Status|TwitterError;
 
     documentation {Retrive closest trend locations
         P{{lat}} - Latitude of the location
         P{{long}} - Longitude of the location
         R{{}} - If success, returns Location[] object, else returns TwitterError object.}
-    public function getClosestTrendLocations (float lat, float long) returns Location [] | TwitterError;
+    public function getClosestTrendLocations(float lat, float long) returns Location[]|TwitterError;
 
     documentation {Retrive top trends by place
         P{{locationId}} - Where On Earth ID of the location to return trending information for
         R{{}} - If success, returns Trends[] object, else returns TwitterError object.}
-    public function getTopTrendsByPlace (int locationId) returns Trends[] | TwitterError;
+    public function getTopTrendsByPlace(int locationId) returns Trends[]|TwitterError;
 };
 
 documentation {Twitter Client object
@@ -85,14 +85,14 @@ public type Client object {
     }
 
     documentation {Twitter connector endpoint initialization function
-        P{{twitterConfig}} - Twitter connector configuration
+        P{{config}} - Twitter connector configuration
     }
-    public function init (TwitterConfiguration twitterConfig);
+    public function init(TwitterConfiguration config);
 
     documentation {Return the Twitter connector client
         R{{}} - Twitter connector client
     }
-    public function getCallerActions () returns TwitterConnector;
+    public function getCallerActions() returns TwitterConnector;
 
 };
 
