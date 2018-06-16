@@ -20,17 +20,17 @@ import ballerina/system;
 import ballerina/config;
 import ballerina/io;
 
-string test_clientId = config:getAsString("CLIENT_ID");
-string test_clientSecret = config:getAsString("CLIENT_SECRET");
-string test_accessToken = config:getAsString("ACCESS_TOKEN");
-string test_accessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
+string testClientId = config:getAsString("CLIENT_ID");
+string testClientSecret = config:getAsString("CLIENT_SECRET");
+string testAccessToken = config:getAsString("ACCESS_TOKEN");
+string testAccessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
 int tweetId;
 
 endpoint Client twitterClient {
-    clientId: test_clientId,
-    clientSecret: test_clientSecret,
-    accessToken: test_accessToken,
-    accessTokenSecret: test_accessTokenSecret
+    clientId: testClientId,
+    clientSecret: testClientSecret,
+    accessToken: testAccessToken,
+    accessTokenSecret: testAccessTokenSecret
 };
 
 @test:Config
