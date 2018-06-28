@@ -20,7 +20,7 @@ The following sections provide you with information on how to use the Ballerina 
 
 Clone the repository by running the following command 
 ```ballerina
-    git clone https://github.com/wso2-ballerina/package-twitter.git
+git clone https://github.com/wso2-ballerina/package-twitter.git
 ```
 
 ### Working with Twitter Connector actions
@@ -31,13 +31,13 @@ be returned. Else TwitterError object will be returned.
 In order for you to use the Twitter Connector, first you need to create a Twitter Client endpoint.
 
 ```ballerina
-    endpoint twitter:Client twitterClient {
-        clientId:"",
-        clientSecret:"",
-        accessToken:"",
-        accessTokenSecret:"",
-        clientConfig:{}
-    };
+endpoint twitter:Client twitterClient {
+    clientId:"",
+    clientSecret:"",
+    accessToken:"",
+    accessTokenSecret:"",
+    clientConfig:{}
+};
 ```
 
 ##### Example
@@ -46,7 +46,7 @@ In order for you to use the Twitter Connector, first you need to create a Twitte
 import ballerina/io;
 import wso2/twitter;
 
-public function main(string[] args) {
+function main(string... args) {
     endpoint twitter:Client twitterClient {
         clientId:"",
         clientSecret:"",
@@ -56,7 +56,7 @@ public function main(string[] args) {
     };
     string status = "Twitter endpoint test";
 
-    twitter:Status twitterStatus = check twitterClient->tweet(status, "", "");
+    twitter:Status twitterStatus = check twitterClient->tweet(status);
     string tweetId = <string> twitterStatus.id;
     string text = twitterStatus.text;
     io:println("Tweet ID: " + tweetId);
