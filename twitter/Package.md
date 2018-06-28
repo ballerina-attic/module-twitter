@@ -82,7 +82,7 @@ The `retweet` function retweets a tweet message. It returns a `Status` object if
 ```ballerina
 var tweetResponse = twitterClient->retweet(tweetId);
 match tweetResponse {
-    Status twitterStatus => io:println("Retweeted: " + twitterStatus.retweeted);
+    twitter:Status twitterStatus => io:println("Retweeted: " + twitterStatus.retweeted);
     twitter:TwitterError e => io:println(e);
 }
 ```
@@ -91,7 +91,7 @@ The `search` function searches for tweets using a query string. It returns a `Tw
 ```ballerina
 var tweetResponse = twitterClient->search (queryStr);
 match tweetResponse {
-    Status[] twitterStatus => io:println(twitterStatus);
+    twitter:Status[] twitterStatus => io:println(twitterStatus);
     twitter:TwitterError e => io:println(e);
 }
 ```
