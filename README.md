@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wso2-ballerina/package-twitter.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-twitter)
+
 # Ballerina Twitter Connector
 
 The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
