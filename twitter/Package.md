@@ -65,7 +65,7 @@ If the status was updated successfully, the response from the `tweet` function i
 
 ```ballerina
 match tweetResponse {
-    Status twitterStatus => {
+    twitter:Status twitterStatus => {
         //If successful, returns the tweet message or ID of the status.
         string tweetId = <string> twitterStatus.id;
         string text = twitterStatus.text;
