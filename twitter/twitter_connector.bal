@@ -16,7 +16,7 @@
 
 import ballerina/io;
 
-public function TwitterConnector::tweet(string status, string... args) returns Status|TwitterError {
+function TwitterConnector::tweet(string status, string... args) returns Status|TwitterError {
 
     endpoint http:Client clientEndpoint = self.clientEndpoint;
 
@@ -83,7 +83,7 @@ public function TwitterConnector::tweet(string status, string... args) returns S
     }
 }
 
-public function TwitterConnector::retweet(int id) returns Status|TwitterError {
+function TwitterConnector::retweet(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -121,7 +121,7 @@ public function TwitterConnector::retweet(int id) returns Status|TwitterError {
     }
 }
 
-public function TwitterConnector::unretweet(int id) returns Status|TwitterError {
+function TwitterConnector::unretweet(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -159,7 +159,7 @@ public function TwitterConnector::unretweet(int id) returns Status|TwitterError 
     }
 }
 
-public function TwitterConnector::search(string queryStr) returns Status[]|TwitterError {
+function TwitterConnector::search(string queryStr) returns Status[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = SEARCH_ENDPOINT;
@@ -204,7 +204,7 @@ public function TwitterConnector::search(string queryStr) returns Status[]|Twitt
     }
 }
 
-public function TwitterConnector::showStatus(int id) returns Status|TwitterError {
+function TwitterConnector::showStatus(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -244,7 +244,7 @@ public function TwitterConnector::showStatus(int id) returns Status|TwitterError
     }
 }
 
-public function TwitterConnector::destroyStatus(int id) returns Status|TwitterError {
+function TwitterConnector::destroyStatus(int id) returns Status|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     http:Request request;
     TwitterError twitterError = {};
@@ -282,7 +282,7 @@ public function TwitterConnector::destroyStatus(int id) returns Status|TwitterEr
     }
 }
 
-public function TwitterConnector::getClosestTrendLocations(float lat, float long)
+function TwitterConnector::getClosestTrendLocations(float lat, float long)
                                       returns Location[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
@@ -325,7 +325,7 @@ public function TwitterConnector::getClosestTrendLocations(float lat, float long
     }
 }
 
-public function TwitterConnector::getTopTrendsByPlace(int locationId) returns Trends[]|TwitterError {
+function TwitterConnector::getTopTrendsByPlace(int locationId) returns Trends[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = TRENDS_PLACE_ENDPOINT;

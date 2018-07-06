@@ -18,7 +18,7 @@
 
 import ballerina/http;
 
-public function Client::init(TwitterConfiguration config) {
+function Client::init(TwitterConfiguration config) {
     config.uri = "https://api.twitter.com";
     self.twitterConnector.accessToken = config.accessToken;
     self.twitterConnector.accessTokenSecret = config.accessTokenSecret;
@@ -28,6 +28,6 @@ public function Client::init(TwitterConfiguration config) {
     self.twitterConnector.clientEndpoint.init(config.clientConfig);
 }
 
-public function Client::getCallerActions() returns TwitterConnector {
+function Client::getCallerActions() returns TwitterConnector {
     return self.twitterConnector;
 }
