@@ -22,13 +22,12 @@ documentation {Struct to define the Twitter connector
     F{{clientEndpoint}} - HTTP client endpoint
 }
 public type TwitterConnector object {
-    public {
-        string accessToken;
-        string accessTokenSecret;
-        string clientId;
-        string clientSecret;
-        http:Client clientEndpoint = new;
-    }
+
+    public string accessToken;
+    public string accessTokenSecret;
+    public string clientId;
+    public string clientSecret;
+    public http:Client clientEndpoint = new;
 
     documentation {Update the authenticated user's current status (If you want to provide attachment, you can use
         mediaIds or attachmentUrl)
@@ -79,10 +78,9 @@ documentation {Twitter Client object
     F{{twitterConnector}} - TwitterConnector Connector object
 }
 public type Client object {
-    public {
-        TwitterConfiguration twitterConfig = {};
-        TwitterConnector twitterConnector = new;
-    }
+
+    public TwitterConfiguration twitterConfig = {};
+    public TwitterConnector twitterConnector = new;
 
     documentation {Twitter connector endpoint initialization function
         P{{config}} - Twitter connector configuration
@@ -104,7 +102,7 @@ documentation {Twitter connector configurations can be setup here
     F{{clientSecret}} - The consumer secret of the Twitter account
     F{{clientConfig}} - Client endpoint configurations provided by the user
 }
-public type TwitterConfiguration {
+public type TwitterConfiguration record {
     string uri;
     string accessToken;
     string accessTokenSecret;
@@ -127,7 +125,7 @@ documentation {Struct to define the status
     F{{retweetCount}} - Count of the retweeted status
     F{{lang}} - Language
 }
-public type Status {
+public type Status record {
     string createdAt;
     int id;
     string text;
@@ -146,7 +144,7 @@ documentation {Struct to define the geo location details
     F{{latitude}} - Latitude of the location
     F{{longitude}} - Longitude of the location
 }
-public type GeoLocation {
+public type GeoLocation record {
     float latitude;
     float longitude;
 };
@@ -159,7 +157,7 @@ documentation {Struct to define the location details
     F{{placeType}} - Longitude of the location
     F{{url}} - Location url
 }
-public type Location {
+public type Location record {
     int woeid;
     string countryName;
     string countryCode;
@@ -172,7 +170,7 @@ documentation {Struct to define the place type
     F{{name}} - Name of the place
     F{{code}} - Location code of the place
 }
-public type PlaceType {
+public type PlaceType record {
     string name;
     int code;
 };
@@ -182,7 +180,7 @@ documentation {Struct to define the trends type
     F{{locations}} - List of Locations object
     F{{createdAt}} - Created time
 }
-public type Trends {
+public type Trends record {
     Trend[] trends;
     Location[] locations;
     string createdAt;
@@ -195,7 +193,7 @@ documentation {Struct to define the trend type
     F{{promotedContent}} - Promoted content
     F{{tweetVolume}} - Volume of the tweet
 }
-public type Trend {
+public type Trend record {
     string name;
     string url;
     string trendQuery;
@@ -208,7 +206,7 @@ documentation {Struct to define the error
     F{{cause}} - The error which caused the Twitter error
     F{{statusCode}} - Status code of the response
 }
-public type TwitterError {
+public type TwitterError record {
     string message;
     error? cause;
     int statusCode;
