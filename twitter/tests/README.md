@@ -7,7 +7,7 @@ and top trends using the connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 0.974.1                | 1.1                  |
+| 0.980.0                    | 1.1                  |
 
 
 ###### Running tests
@@ -24,7 +24,7 @@ and top trends using the connector.
 
 3. Run tests :
 
-    ```
+    ```ballerina
     ballerina init
     ballerina test twitter --config ballerina.conf
-   ```
+    ```

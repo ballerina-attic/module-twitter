@@ -9,7 +9,7 @@ and top trends using the connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 0.975.0                    | 1.1                  |
+| 0.980.0                    | 1.1                  |
 
 
 The following sections provide you with information on how to use the Ballerina Twitter connector.
@@ -21,7 +21,7 @@ The following sections provide you with information on how to use the Ballerina 
 ### Contribute To develop
 
 Clone the repository by running the following command 
-```ballerina
+```shell
 git clone https://github.com/wso2-ballerina/package-twitter.git
 ```
 
