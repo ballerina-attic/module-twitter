@@ -159,18 +159,25 @@ function TwitterConnector::unretweet(int id) returns Status|TwitterError {
     }
 }
 
-function TwitterConnector::search(string queryStr) returns Status[]|TwitterError {
+function TwitterConnector::search(string queryStr, SearchRequest searchRequest) returns Status[]|TwitterError {
     endpoint http:Client clientEndpoint = self.clientEndpoint;
     TwitterError twitterError = {};
     string tweetPath = SEARCH_ENDPOINT;
     string encodedQueryValue = check http:encode(queryStr, UTF_8);
     string urlParams = "q=" + encodedQueryValue + "&";
+    string count = searchRequest.tweetsCount;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken) + urlParams;
+    if (count != null) {
+        oauthStr = "count=" + count + "&" + oauthStr;
+    }
 
     http:Request request;
     constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
     tweetPath = tweetPath + "?" + urlParams;
+    if (count != "") {
+        tweetPath =  tweetPath + "count=" + count;
+    }
 
     var httpResponse = clientEndpoint->get(tweetPath, message = request);
     Status[] searchResponse = [];

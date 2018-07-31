@@ -93,7 +93,10 @@ function testUnReTweet() {
 function testSearch() {
     io:println("--------------Calling search----------------");
     string queryStr = "twitter";
-    var tweetResponse = twitterClient->search (queryStr);
+    SearchRequest request = {
+        tweetsCount:"100"
+    };
+    var tweetResponse = twitterClient->search (queryStr, request);
 
     match tweetResponse {
         Status[] twitterStatus => {

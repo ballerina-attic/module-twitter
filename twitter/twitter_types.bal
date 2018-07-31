@@ -47,8 +47,9 @@ public type TwitterConnector object {
 
     documentation {Search for tweets
         P{{queryStr}} - Query string to retrieve the related tweets
+        P{{searchRequest}} - It contains optional params that is needed for search operation(tweetsCount)
         R{{}} - If success, Status[] object, else returns TwitterError object.}
-    public function search(string queryStr) returns Status[]|TwitterError;
+    public function search(string queryStr, SearchRequest searchRequest) returns Status[]|TwitterError;
 
     documentation {Retrive a single status
         P{{id}} - The numerical ID of the desired status
@@ -199,6 +200,13 @@ public type Trend record {
     string trendQuery;
     string promotedContent;
     int tweetVolume;
+};
+
+documentation {Struct to define the search request type
+    F{{tweetsCount}} - The number of tweets to return per page, up to a maximum of 100.
+}
+public type SearchRequest record {
+    string tweetsCount;
 };
 
 documentation {Struct to define the error
