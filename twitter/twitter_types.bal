@@ -14,7 +14,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-documentation {Struct to define the Twitter connector
+documentation {
+    Define the Twitter connector
     F{{accessToken}} - The access token of the Twitter account
     F{{accessTokenSecret}} - The access token secret of the Twitter account
     F{{clientId}} - The consumer key of the Twitter account
@@ -29,51 +30,60 @@ public type TwitterConnector object {
     public string clientSecret;
     public http:Client clientEndpoint = new;
 
-    documentation {Update the authenticated user's current status (If you want to provide attachment, you can use
+    documentation {
+        Update the authenticated user's current status (If you want to provide attachment, you can use
         mediaIds or attachmentUrl)
         P{{status}} - The text of status update
         R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function tweet(string status, string... args) returns Status|TwitterError;
 
-    documentation {Retweet a tweet
+    documentation {
+        Retweet a tweet
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function retweet(int id) returns Status|TwitterError;
 
-    documentation {Untweet a retweeted status
+    documentation {
+        Untweet a retweeted status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function unretweet(int id) returns Status|TwitterError;
 
-    documentation {Search for tweets
+    documentation {
+        Search for tweets
         P{{queryStr}} - Query string to retrieve the related tweets
         P{{searchRequest}} - It contains optional params that is needed for search operation(tweetsCount)
         R{{}} - If success, Status[] object, else returns TwitterError object.}
     public function search(string queryStr, SearchRequest searchRequest) returns Status[]|TwitterError;
 
-    documentation {Retrive a single status
+    documentation {
+        Retrive a single status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function showStatus(int id) returns Status|TwitterError;
 
-    documentation {Distroy a status
+    documentation {
+        Distroy a status
         P{{id}} - The numerical ID of the desired status
         R{{}} - If success, returns Status object, else returns TwitterError object.}
     public function destroyStatus(int id) returns Status|TwitterError;
 
-    documentation {Retrive closest trend locations
+    documentation {
+        Retrive closest trend locations
         P{{lat}} - Latitude of the location
         P{{long}} - Longitude of the location
         R{{}} - If success, returns Location[] object, else returns TwitterError object.}
     public function getClosestTrendLocations(float lat, float long) returns Location[]|TwitterError;
 
-    documentation {Retrive top trends by place
+    documentation {
+        Retrive top trends by place
         P{{locationId}} - Where On Earth ID of the location to return trending information for
         R{{}} - If success, returns Trends[] object, else returns TwitterError object.}
     public function getTopTrendsByPlace(int locationId) returns Trends[]|TwitterError;
 };
 
-documentation {Twitter Client object
+documentation {
+    Twitter Client object
     E{{}}
     F{{twitterConfig}} - Twitter connector configurations
     F{{twitterConnector}} - TwitterConnector Connector object
@@ -95,7 +105,8 @@ public type Client object {
 
 };
 
-documentation {Twitter connector configurations can be setup here
+documentation {
+    Twitter connector configurations can be setup here
     F{{uri}} - The Twitter API URL
     F{{accessToken}} - The access token of the Twitter account
     F{{accessTokenSecret}} - The access token secret of the Twitter account
@@ -112,7 +123,8 @@ public type TwitterConfiguration record {
     http:ClientEndpointConfig clientConfig = {};
 };
 
-documentation {Struct to define the status
+documentation {
+    Define the status
     F{{createdAt}} - Created time of the status
     F{{id}} - Id of the status
     F{{text}} - Text message of the status
@@ -141,7 +153,8 @@ public type Status record {
     string lang;
 };
 
-documentation {Struct to define the geo location details
+documentation {
+    Define the geo location details
     F{{latitude}} - Latitude of the location
     F{{longitude}} - Longitude of the location
 }
@@ -150,7 +163,8 @@ public type GeoLocation record {
     float longitude;
 };
 
-documentation {Struct to define the location details
+documentation {
+    Define the location details
     F{{woeid}} - Where On Earth IDentifier
     F{{countryName}} - Country name
     F{{countryCode}} - Country code
@@ -167,7 +181,8 @@ public type Location record {
     string url;
 };
 
-documentation {Struct to define the place type
+documentation {
+    Define the place type
     F{{name}} - Name of the place
     F{{code}} - Location code of the place
 }
@@ -176,7 +191,8 @@ public type PlaceType record {
     int code;
 };
 
-documentation {Struct to define the trends type
+documentation {
+    Define the trends type
     F{{trends}} - List of Trending object
     F{{locations}} - List of Locations object
     F{{createdAt}} - Created time
@@ -187,7 +203,8 @@ public type Trends record {
     string createdAt;
 };
 
-documentation {Struct to define the trend type
+documentation {
+    Define the trend type
     F{{name}} - Name of trend object
     F{{url}} - Url of trend object
     F{{trendQuery}} - Query of the trend object
@@ -202,14 +219,16 @@ public type Trend record {
     int tweetVolume;
 };
 
-documentation {Struct to define the search request type
+documentation {
+    Define the search request
     F{{tweetsCount}} - The number of tweets to return per page, up to a maximum of 100.
 }
 public type SearchRequest record {
     string tweetsCount;
 };
 
-documentation {Struct to define the error
+documentation {
+    Twitter Client Error
     F{{message}} - Error message of the response
     F{{cause}} - The error which caused the Twitter error
     F{{statusCode}} - Status code of the response
