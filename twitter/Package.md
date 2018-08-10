@@ -89,7 +89,7 @@ match tweetResponse {
 
 The `search` function searches for tweets using a query string. It returns a `TwitterError` when unsuccessful.
 ```ballerina
-var tweetResponse = twitterClient->search (queryStr);
+var tweetResponse = twitterClient->search(queryStr, searchRequest);
 match tweetResponse {
     twitter:Status[] twitterStatus => io:println(twitterStatus);
     twitter:TwitterError e => io:println(e);
