@@ -19,7 +19,7 @@
 # + accessTokenSecret - The access token secret of the Twitter account
 # + clientId - The consumer key of the Twitter account
 # + clientSecret - The consumer secret of the Twitter account
-# + clientEndpoint - HTTP client endpoint
+# + clientEndpoint - HTTP Client endpoint
 public type TwitterConnector object {
 
     public string accessToken;
@@ -80,8 +80,8 @@ public type Client object {
     public TwitterConfiguration twitterConfig = {};
     public TwitterConnector twitterConnector = new;
 
-    # Twitter connector endpoint initialization function.
-    # + config - Twitter connector configuration
+    # Twitter Connector endpoint initialization function.
+    # + config - Twitter Connector Configuration
     public function init(TwitterConfiguration config);
 
     # Return the Twitter connector client.
@@ -90,7 +90,7 @@ public type Client object {
 
 };
 
-# Twitter connector configurations can be setup here.
+# Twitter Connector configurations can be setup here.
 # + uri - The Twitter API URL
 # + accessToken - The access token of the Twitter account
 # + accessTokenSecret - The access token secret of the Twitter account
@@ -148,7 +148,7 @@ public type GeoLocation record {
 # + countryCode - Country code
 # + name - Name of the location
 # + placeType - Longitude of the location
-# + url - Location url
+# + url - Location URL
 public type Location record {
     int woeid;
     string countryName;
@@ -178,7 +178,7 @@ public type Trends record {
 
 # Define the trend type.
 # + name - Name of trend object
-# + url - Url of trend object
+# + url - URL of trend object
 # + trendQuery - Query of the trend object
 # + promotedContent - Promoted content
 # + tweetVolume - Volume of the tweet
