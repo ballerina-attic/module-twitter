@@ -145,8 +145,8 @@ function testDestroyStatus() {
 @test:Config
 function testGetClosestTrendLocations() {
     io:println("--------------Calling getClosestTrendLocations----------------");
-    float latitude = 34;
-    float longitude = 67;
+    float latitude = 34.0;
+    float longitude = 67.0;
     var tweetResponse = twitterClient->getClosestTrendLocations (latitude, longitude);
 
     match tweetResponse {

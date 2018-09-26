@@ -14,14 +14,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-documentation {
-    Define the Twitter connector
-    F{{accessToken}} - The access token of the Twitter account
-    F{{accessTokenSecret}} - The access token secret of the Twitter account
-    F{{clientId}} - The consumer key of the Twitter account
-    F{{clientSecret}} - The consumer secret of the Twitter account
-    F{{clientEndpoint}} - HTTP client endpoint
-}
+# Define the Twitter connector.
+# + accessToken - The access token of the Twitter account
+# + accessTokenSecret - The access token secret of the Twitter account
+# + clientId - The consumer key of the Twitter account
+# + clientSecret - The consumer secret of the Twitter account
+# + clientEndpoint - HTTP Client endpoint
 public type TwitterConnector object {
 
     public string accessToken;
@@ -30,90 +28,75 @@ public type TwitterConnector object {
     public string clientSecret;
     public http:Client clientEndpoint = new;
 
-    documentation {
-        Update the authenticated user's current status (If you want to provide attachment, you can use
-        mediaIds or attachmentUrl)
-        P{{status}} - The text of status update
-        R{{}} - If success, returns Status object, else returns TwitterError object.}
+    # Update the authenticated user's current status (If you want to provide attachment, you can use
+    # mediaIds or attachmentUrl).
+    # + status - The text of status update
+    # + return - If success, returns Status object, else returns TwitterError object.
     public function tweet(string status, string... args) returns Status|TwitterError;
 
-    documentation {
-        Retweet a tweet
-        P{{id}} - The numerical ID of the desired status
-        R{{}} - If success, returns Status object, else returns TwitterError object.}
+    # Retweet a tweet.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns TwitterError object.
     public function retweet(int id) returns Status|TwitterError;
 
-    documentation {
-        Untweet a retweeted status
-        P{{id}} - The numerical ID of the desired status
-        R{{}} - If success, returns Status object, else returns TwitterError object.}
+    # Untweet a retweeted status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns TwitterError object
     public function unretweet(int id) returns Status|TwitterError;
 
-    documentation {
-        Search for tweets
-        P{{queryStr}} - Query string to retrieve the related tweets
-        P{{searchRequest}} - It contains optional params that is needed for search operation(tweetsCount)
-        R{{}} - If success, Status[] object, else returns TwitterError object.}
+    # Search for tweets.
+    # + queryStr - Query string to retrieve the related tweets
+    # + searchRequest - It contains optional params that is needed for search operation(tweetsCount)
+    # + return - If success, Status[] object, else returns TwitterError object
     public function search(string queryStr, SearchRequest searchRequest) returns Status[]|TwitterError;
 
-    documentation {
-        Retrive a single status
-        P{{id}} - The numerical ID of the desired status
-        R{{}} - If success, returns Status object, else returns TwitterError object.}
+    # Retrive a single status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns TwitterError object
     public function showStatus(int id) returns Status|TwitterError;
 
-    documentation {
-        Distroy a status
-        P{{id}} - The numerical ID of the desired status
-        R{{}} - If success, returns Status object, else returns TwitterError object.}
+    # Distroy a status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns TwitterError object
     public function destroyStatus(int id) returns Status|TwitterError;
 
-    documentation {
-        Retrive closest trend locations
-        P{{lat}} - Latitude of the location
-        P{{long}} - Longitude of the location
-        R{{}} - If success, returns Location[] object, else returns TwitterError object.}
+    # Retrive closest trend locations.
+    # + lat - Latitude of the location
+    # + long - Longitude of the location
+    # + return - If success, returns Location[] object, else returns TwitterError object
     public function getClosestTrendLocations(float lat, float long) returns Location[]|TwitterError;
 
-    documentation {
-        Retrive top trends by place
-        P{{locationId}} - Where On Earth ID of the location to return trending information for
-        R{{}} - If success, returns Trends[] object, else returns TwitterError object.}
+    # Retrive top trends by place.
+    # + locationId - Where On Earth ID of the location to return trending information for
+    # + return - If success, returns Trends[] object, else returns TwitterError object
     public function getTopTrendsByPlace(int locationId) returns Trends[]|TwitterError;
 };
 
-documentation {
-    Twitter Client object
-    E{{}}
-    F{{twitterConfig}} - Twitter connector configurations
-    F{{twitterConnector}} - TwitterConnector Connector object
-}
+# Twitter Client object.
+# + twitterConfig - Twitter connector configurations
+# + twitterConnector - TwitterConnector Connector object
 public type Client object {
 
     public TwitterConfiguration twitterConfig = {};
     public TwitterConnector twitterConnector = new;
 
-    documentation {Twitter connector endpoint initialization function
-        P{{config}} - Twitter connector configuration
-    }
+    # Twitter Connector endpoint initialization function.
+    # + config - Twitter Connector Configuration
     public function init(TwitterConfiguration config);
 
-    documentation {Return the Twitter connector client
-        R{{}} - Twitter connector client
-    }
+    # Return the Twitter connector client.
+    # + return - Twitter connector client
     public function getCallerActions() returns TwitterConnector;
 
 };
 
-documentation {
-    Twitter connector configurations can be setup here
-    F{{uri}} - The Twitter API URL
-    F{{accessToken}} - The access token of the Twitter account
-    F{{accessTokenSecret}} - The access token secret of the Twitter account
-    F{{clientId}} - The consumer key of the Twitter account
-    F{{clientSecret}} - The consumer secret of the Twitter account
-    F{{clientConfig}} - Client endpoint configurations provided by the user
-}
+# Twitter Connector configurations can be setup here.
+# + uri - The Twitter API URL
+# + accessToken - The access token of the Twitter account
+# + accessTokenSecret - The access token secret of the Twitter account
+# + clientId - The consumer key of the Twitter account
+# + clientSecret - The consumer secret of the Twitter account
+# + clientConfig - Client endpoint configurations provided by the user
 public type TwitterConfiguration record {
     string uri;
     string accessToken;
@@ -123,21 +106,19 @@ public type TwitterConfiguration record {
     http:ClientEndpointConfig clientConfig = {};
 };
 
-documentation {
-    Define the status
-    F{{createdAt}} - Created time of the status
-    F{{id}} - Id of the status
-    F{{text}} - Text message of the status
-    F{{source}} - Source app of the status
-    F{{truncated}} - Whether the status is truncated or not
-    F{{inReplyToStatusId}} - The ID of an existing status that the update is in reply to
-    F{{geo}} - Geo location details (longitude and latitude)
-    F{{favorited}} - Whether the status is favorited or not
-    F{{retweeted}} - Whether the status is retweeted or not
-    F{{favouritesCount}} - Count of the favourites
-    F{{retweetCount}} - Count of the retweeted status
-    F{{lang}} - Language
-}
+# Define the status.
+# + createdAt - Created time of the status
+# + id - Id of the status
+# + text - Text message of the status
+# + source - Source app of the status
+# + truncated - Whether the status is truncated or not
+# + inReplyToStatusId - The ID of an existing status that the update is in reply to
+# + geo - Geo location details (longitude and latitude)
+# + favorited - Whether the status is favorited or not
+# + retweeted - Whether the status is retweeted or not
+# + favouritesCount - Count of the favourites
+# + retweetCount - Count of the retweeted status
+# + lang - Language
 public type Status record {
     string createdAt;
     int id;
@@ -153,25 +134,21 @@ public type Status record {
     string lang;
 };
 
-documentation {
-    Define the geo location details
-    F{{latitude}} - Latitude of the location
-    F{{longitude}} - Longitude of the location
-}
+# Define the geo location details.
+# + latitude - Latitude of the location
+# + longitude - Longitude of the location
 public type GeoLocation record {
     float latitude;
     float longitude;
 };
 
-documentation {
-    Define the location details
-    F{{woeid}} - Where On Earth IDentifier
-    F{{countryName}} - Country name
-    F{{countryCode}} - Country code
-    F{{name}} - Name of the location
-    F{{placeType}} - Longitude of the location
-    F{{url}} - Location url
-}
+# Define the location details.
+# + woeid - Where On Earth IDentifier
+# + countryName - Country name
+# + countryCode - Country code
+# + name - Name of the location
+# + placeType - Longitude of the location
+# + url - Location URL
 public type Location record {
     int woeid;
     string countryName;
@@ -181,36 +158,30 @@ public type Location record {
     string url;
 };
 
-documentation {
-    Define the place type
-    F{{name}} - Name of the place
-    F{{code}} - Location code of the place
-}
+# Define the place type.
+# + name - Name of the place
+# + code - Location code of the place
 public type PlaceType record {
     string name;
     int code;
 };
 
-documentation {
-    Define the trends type
-    F{{trends}} - List of Trending object
-    F{{locations}} - List of Locations object
-    F{{createdAt}} - Created time
-}
+# Define the trends type.
+# + trends - List of Trending object
+# + locations - List of Locations object
+# + createdAt - Created time
 public type Trends record {
     Trend[] trends;
     Location[] locations;
     string createdAt;
 };
 
-documentation {
-    Define the trend type
-    F{{name}} - Name of trend object
-    F{{url}} - Url of trend object
-    F{{trendQuery}} - Query of the trend object
-    F{{promotedContent}} - Promoted content
-    F{{tweetVolume}} - Volume of the tweet
-}
+# Define the trend type.
+# + name - Name of trend object
+# + url - URL of trend object
+# + trendQuery - Query of the trend object
+# + promotedContent - Promoted content
+# + tweetVolume - Volume of the tweet
 public type Trend record {
     string name;
     string url;
@@ -219,20 +190,16 @@ public type Trend record {
     int tweetVolume;
 };
 
-documentation {
-    Define the search request
-    F{{tweetsCount}} - The number of tweets to return per page, up to a maximum of 100.
-}
+# Define the search request.
+# + tweetsCount - The number of tweets to return per page, up to a maximum of 100
 public type SearchRequest record {
     string tweetsCount;
 };
 
-documentation {
-    Twitter Client Error
-    F{{message}} - Error message of the response
-    F{{cause}} - The error which caused the Twitter error
-    F{{statusCode}} - Status code of the response
-}
+# Twitter Client Error.
+# + message - Error message of the response
+# + cause - The error which caused the Twitter error
+# + statusCode - Status code of the response
 public type TwitterError record {
     string message;
     error? cause;

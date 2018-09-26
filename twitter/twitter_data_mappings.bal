@@ -55,8 +55,8 @@ function convertToFloat(json jsonVal) returns (float) {
 
 function convertToGeoLocation(json jsonStatus) returns (GeoLocation) {
     GeoLocation geoLocation = {};
-    geoLocation.latitude = jsonStatus.geo.latitude != null ? convertToFloat(jsonStatus.geo.latitude) : 0;
-    geoLocation.longitude = jsonStatus.geo.longitude != null ? convertToFloat(jsonStatus.geo.longitude) : 0;
+    geoLocation.latitude = jsonStatus.geo.latitude != null ? convertToFloat(jsonStatus.geo.latitude) : 0.0;
+    geoLocation.longitude = jsonStatus.geo.longitude != null ? convertToFloat(jsonStatus.geo.longitude) : 0.0;
 
     return geoLocation;
 }
