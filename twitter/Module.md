@@ -1,34 +1,34 @@
 Connects to Twitter from Ballerina. 
 
-# Package Overview
+# Module Overview
 
 The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
 You can also retrieve and destroy a status, and retrieve closest trend locations and top trends.
 
 **Status Operations**
 
-The `wso2/twitter` package contains operations that work with statuses. You can update the current status, retweet a tweet, 
+The `wso2/twitter` module contains operations that work with statuses. You can update the current status, retweet a tweet, 
 untweet a retweeted status, retrieve a status, and destroy a status.
 
 **Search Operations**
 
-The `wso2/twitter` package contains operations that search for tweets. 
+The `wso2/twitter` module contains operations that search for tweets. 
 
 **Trends Operations**
 
-The `wso2/twitter` package contains operations that retrieve closest trend locations and retrieve top trends by place.
+The `wso2/twitter` module contains operations that retrieve closest trend locations and retrieve top trends by place.
 
 
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |   0.982.0      |
+| Ballerina Language |   0.983.0      |
 | Twitter API        |   1.1          |
 
 
 ## Sample
 
-First, import the `wso2/twitter` package into the Ballerina project.
+First, import the `wso2/twitter` module into the Ballerina project.
 
 ```ballerina
 import wso2/twitter;
