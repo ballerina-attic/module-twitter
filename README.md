@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/package-twitter.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-twitter)
+[![Build Status](https://travis-ci.org/wso2-ballerina/module-twitter.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-twitter)
 
 # Ballerina Twitter Connector
 
@@ -9,7 +9,7 @@ and top trends using the connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 0.982.0                    | 1.1                  |
+| 0.983.0                    | 1.1                  |
 
 
 The following sections provide you with information on how to use the Ballerina Twitter connector.
@@ -22,7 +22,7 @@ The following sections provide you with information on how to use the Ballerina 
 
 Clone the repository by running the following command 
 ```shell
-git clone https://github.com/wso2-ballerina/package-twitter.git
+git clone https://github.com/wso2-ballerina/module-twitter.git
 ```
 
 ### Working with Twitter Connector actions

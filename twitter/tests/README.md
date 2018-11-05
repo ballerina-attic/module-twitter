@@ -7,12 +7,12 @@ and top trends using the connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 0.982.0                    | 1.1                  |
+| 0.983.0                    | 1.1                  |
 
 
 ###### Running tests
 
-1. Create `ballerina.conf` file in `package-twitter`, with following keys and provide values for the variables.
+1. Create `ballerina.conf` file in `module-twitter`, with following keys and provide values for the variables.
     
     ```.conf
     CLIENT_ID=""
@@ -20,7 +20,7 @@ and top trends using the connector.
     ACCESS_TOKEN=""
     ACCESS_TOKEN_SECRET=""
     ```
-2. Navigate to the folder package-twitter
+2. Navigate to the folder module-twitter
 
 3. Run tests :
 
