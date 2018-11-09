@@ -48,7 +48,7 @@ function testTweet() {
             string text = twitterStatus.text;
             test:assertTrue(text.contains(status), msg = "Failed to call tweet()");
         }
-        TwitterError err => {
+        error err => {
             io:println(err.message);
             test:assertFail(msg = err.message);
         }
@@ -66,7 +66,7 @@ function testReTweet() {
         Status twitterStatus => {
             test:assertTrue(twitterStatus.retweeted, msg = "Failed to call retweet()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -83,7 +83,7 @@ function testUnReTweet() {
         Status twitterStatus => {
             test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call unretweet()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -102,7 +102,7 @@ function testSearch() {
         Status[] twitterStatus => {
             test:assertNotEquals(twitterStatus, null, msg = "Failed to call search()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -119,7 +119,7 @@ function testShowStatus() {
         Status twitterStatus => {
             test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call showStatus()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -136,7 +136,7 @@ function testDestroyStatus() {
         Status twitterStatus => {
             test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call destroyStatus()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -153,7 +153,7 @@ function testGetClosestTrendLocations() {
         Location[] response => {
             test:assertNotEquals(response, null, msg = "Failed to call getClosestTrendLocations()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -169,7 +169,7 @@ function testGetTopTrendsByPlace() {
         Trends[] response => {
             test:assertNotEquals(response, null, msg = "Failed to call getTopTrendsByPlace()");
         }
-        TwitterError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }

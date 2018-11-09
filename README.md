@@ -27,8 +27,8 @@ git clone https://github.com/wso2-ballerina/module-twitter.git
 
 ### Working with Twitter Connector actions
 
-All the actions return valid response or TwitterError. If the action is a success, then the requested resource will 
-be returned. Else TwitterError object will be returned.
+All the actions return valid response or error. If the action is a success, then the requested resource will 
+be returned. Else error object will be returned.
 
 In order for you to use the Twitter Connector, first you need to create a Twitter Client endpoint.
 

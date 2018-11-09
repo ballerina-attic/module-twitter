@@ -1,8 +1,11 @@
 # Compiled class file
 *.class
-
+*.balx
 # Log file
 *.log
+
+#conf file
+ballerina.conf
 
 # BlueJ files
 *.ctxt
@@ -30,5 +33,10 @@ target
 *.iws
 *.ipr
 .idea
-.m2.ballerina/
+.m2
+.vscode/
+# Ignore ballerina files
+accessToken.bal
+temp.bal.ballerina/
 target/
+.DS_Store
