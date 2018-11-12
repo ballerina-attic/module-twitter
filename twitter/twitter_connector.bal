@@ -333,10 +333,3 @@ function TwitterConnector::getTopTrendsByPlace(int locationId) returns Trends[]|
         }
     }
 }
-
-function setResponseError(int statusCode, json jsonResponse) returns error {
-    error err = {};
-    err.message = jsonResponse.errors[0].message.toString();
-    err.statusCode = statusCode;
-    return err;
-}
