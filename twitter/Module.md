@@ -73,7 +73,7 @@ match tweetResponse {
         io:println("Tweet: " + text);
     }
     //Unsuccessful attempts return a Twitter error.
-    twitter:error e => io:println(e);
+    error e => io:println(e);
 }
 ```
 
@@ -83,7 +83,7 @@ The `retweet` function retweets a tweet message. It returns a `Status` object if
 var tweetResponse = twitterClient->retweet(tweetId);
 match tweetResponse {
     twitter:Status twitterStatus => io:println("Retweeted: " + twitterStatus.retweeted);
-    twitter:error e => io:println(e);
+    error e => io:println(e);
 }
 ```
 
@@ -92,6 +92,6 @@ The `search` function searches for tweets using a query string. It returns a `er
 var tweetResponse = twitterClient->search(queryStr, searchRequest);
 match tweetResponse {
     twitter:Status[] twitterStatus => io:println(twitterStatus);
-    twitter:error e => io:println(e);
+    error e => io:println(e);
 }
 ```

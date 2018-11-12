@@ -31,44 +31,44 @@ public type TwitterConnector object {
     # Update the authenticated user's current status (If you want to provide attachment, you can use
     # mediaIds or attachmentUrl).
     # + status - The text of status update
-    # + return - If success, returns Status object, else returns error object.
+    # + return - If success, returns Status object, else returns error.
     public function tweet(string status, string... args) returns Status|error;
 
     # Retweet a tweet.
     # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error object.
+    # + return - If success, returns Status object, else returns error.
     public function retweet(int id) returns Status|error;
 
     # Untweet a retweeted status.
     # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error object
+    # + return - If success, returns Status object, else returns error.
     public function unretweet(int id) returns Status|error;
 
     # Search for tweets.
     # + queryStr - Query string to retrieve the related tweets
     # + searchRequest - It contains optional params that is needed for search operation(tweetsCount)
-    # + return - If success, Status[] object, else returns error object
+    # + return - If success, Status[] object, else returns error
     public function search(string queryStr, SearchRequest searchRequest) returns Status[]|error;
 
     # Retrive a single status.
     # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error object
+    # + return - If success, returns Status object, else returns error
     public function showStatus(int id) returns Status|error;
 
     # Distroy a status.
     # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error object
+    # + return - If success, returns Status object, else returns error
     public function destroyStatus(int id) returns Status|error;
 
     # Retrive closest trend locations.
     # + lat - Latitude of the location
     # + long - Longitude of the location
-    # + return - If success, returns Location[] object, else returns error object
+    # + return - If success, returns Location[] object, else returns error
     public function getClosestTrendLocations(float lat, float long) returns Location[]|error;
 
     # Retrive top trends by place.
     # + locationId - Where On Earth ID of the location to return trending information for
-    # + return - If success, returns Trends[] object, else returns error object
+    # + return - If success, returns Trends[] object, else returns error
     public function getTopTrendsByPlace(int locationId) returns Trends[]|error;
 };
 
