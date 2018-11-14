@@ -61,7 +61,7 @@ The `tweet` function updates the current status. `status` is the text message of
 
    `var tweetResponse = twitterClient->tweet(status);`
    
-If the status was updated successfully, the response from the `tweet` function is a `Status` object with the ID of the status, created time of status, etc. If the status update was unsuccessful, the response is a `TwitterError`. The `match` operation can be used to handle the response if an error occurs.
+If the status was updated successfully, the response from the `tweet` function is a `Status` object with the ID of the status, created time of status, etc. If the status update was unsuccessful, the response is a `error`. The `match` operation can be used to handle the response if an error occurs.
 
 ```ballerina
 match tweetResponse {
@@ -73,25 +73,25 @@ match tweetResponse {
         io:println("Tweet: " + text);
     }
     //Unsuccessful attempts return a Twitter error.
-    twitter:TwitterError e => io:println(e);
+    error e => io:println(e);
 }
 ```
 
-The `retweet` function retweets a tweet message. It returns a `Status` object if successful or `TwitterError` if unsuccessful.
+The `retweet` function retweets a tweet message. It returns a `Status` object if successful or `error` if unsuccessful.
 
 ```ballerina
 var tweetResponse = twitterClient->retweet(tweetId);
 match tweetResponse {
     twitter:Status twitterStatus => io:println("Retweeted: " + twitterStatus.retweeted);
-    twitter:TwitterError e => io:println(e);
+    error e => io:println(e);
 }
 ```
 
-The `search` function searches for tweets using a query string. It returns a `TwitterError` when unsuccessful.
+The `search` function searches for tweets using a query string. It returns a `error` when unsuccessful.
 ```ballerina
 var tweetResponse = twitterClient->search(queryStr, searchRequest);
 match tweetResponse {
     twitter:Status[] twitterStatus => io:println(twitterStatus);
-    twitter:TwitterError e => io:println(e);
+    error e => io:println(e);
 }
 ```

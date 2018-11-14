@@ -63,3 +63,10 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
     request.setHeader("Authorization", oauthHeaderString.unescape());
 }
+
+function setResponseError(int statusCode, json jsonResponse) returns error {
+    error err = {};
+    err.message = jsonResponse.errors[0].message.toString();
+    err.statusCode = statusCode;
+    return err;
+}
