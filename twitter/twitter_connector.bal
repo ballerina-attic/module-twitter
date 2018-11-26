@@ -117,32 +117,30 @@ remote function TwitterConnector.tweet(string status, string[] args) returns Sta
     var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
         self.accessToken, self.accessTokenSecret, oauthStr);
     if (requestHeaders is error) {
-        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        error err = error(TWITTER_ERROR_CODE,
+            { message: "Error occurred while encoding parameters when constructing request headers" });
         return err;
     } else {
         tweetPath = tweetPath + "?" + urlParams;
         var httpResponse = httpClient->post(tweetPath, request);
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Status twitterResponse = convertToStatus(jsonPayload);
+                    return twitterResponse;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            Status twitterResponse = convertToStatus(jsonResponse);
-                            return twitterResponse;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -156,31 +154,29 @@ remote function TwitterConnector.retweet(int id) returns Status|error {
     var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
         self.accessToken, self.accessTokenSecret, oauthStr);
     if (requestHeaders is error) {
-        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        error err = error(TWITTER_ERROR_CODE,
+            { message: "Error occurred while encoding parameters when constructing request headers" });
         return err;
     } else {
         var httpResponse = httpClient->post(tweetPath, request);
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Status twitterResponse = convertToStatus(jsonPayload);
+                    return twitterResponse;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            Status twitterResponse = convertToStatus(jsonResponse);
-                            return twitterResponse;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -198,27 +194,24 @@ remote function TwitterConnector.unretweet(int id) returns Status|error {
         return err;
     } else {
         var httpResponse = httpClient->post(tweetPath, request);
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Status twitterResponse = convertToStatus(jsonPayload);
+                    return twitterResponse;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            Status twitterResponse = convertToStatus(jsonResponse);
-                            return twitterResponse;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -247,30 +240,27 @@ remote function TwitterConnector.search(string queryStr, SearchRequest searchReq
         }
 
         var httpResponse = httpClient->get(tweetPath, message = request);
-        Status[] searchResponse = [];
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Status[] searchResponse = [];
+                    if (jsonPayload.statuses != null) {
+                        searchResponse = convertToStatuses(jsonPayload.statuses);
+                    }
+                    return searchResponse;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            if (jsonResponse.statuses != null) {
-                                searchResponse = convertToStatuses(jsonResponse.statuses);
-                            }
-                            return searchResponse;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -290,27 +280,24 @@ remote function TwitterConnector.showStatus(int id) returns Status|error {
     } else {
         tweetPath = tweetPath + "?" + urlParams;
         var httpResponse = httpClient->get(tweetPath, message = request);
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Status twitterResponse = convertToStatus(jsonPayload);
+                    return twitterResponse;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            Status twitterResponse = convertToStatus(jsonResponse);
-                            return twitterResponse;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -328,27 +315,24 @@ remote function TwitterConnector.destroyStatus(int id) returns Status|error {
         return err;
     } else {
         var httpResponse = httpClient->post(tweetPath, request);
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Status twitterResponse = convertToStatus(jsonPayload);
+                    return twitterResponse;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            Status twitterResponse = convertToStatus(jsonResponse);
-                            return twitterResponse;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -369,28 +353,24 @@ remote function TwitterConnector.getClosestTrendLocations(float lat, float long)
         tweetPath = tweetPath + "?" + urlParams.substring(1, urlParams.length());
 
         var httpResponse = httpClient->get(tweetPath, message = request);
-        Location[] locations = [];
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Location[] locations = convertToLocations(jsonPayload);
+                    return locations;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            locations = convertToLocations(jsonResponse);
-                            return locations;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
@@ -411,28 +391,24 @@ remote function TwitterConnector.getTopTrendsByPlace(int locationId) returns Tre
         tweetPath = tweetPath + "?" + urlParams;
 
         var httpResponse = httpClient->get(tweetPath, message = request);
-        Trends[] trends = [];
-        match httpResponse {
-            error err => {
+        if (httpResponse is http:Response) {
+            int statusCode = httpResponse.statusCode;
+            var jsonPayload = httpResponse.getJsonPayload();
+            if (jsonPayload is json) {
+                if (statusCode == 200) {
+                    Trends[] trends = convertTrends(jsonPayload);
+                    return trends;
+                } else {
+                    return setResponseError(jsonPayload);
+                }
+            } else {
+                error err = error(TWITTER_ERROR_CODE,
+                    { message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
-            http:Response response => {
-                int statusCode = response.statusCode;
-                var twitterJSONResponse = response.getJsonPayload();
-                match twitterJSONResponse {
-                    error err => {
-                        return err;
-                    }
-                    json jsonResponse => {
-                        if (statusCode == 200) {
-                            trends = convertTrends(jsonResponse);
-                            return trends;
-                        } else {
-                            return setResponseError(jsonResponse);
-                        }
-                    }
-                }
-            }
+        } else {
+            error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while invoking the REST API" });
+            return err;
         }
     }
 }
