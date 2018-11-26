@@ -9,7 +9,7 @@ and top trends using the connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 0.983.0                    | 1.1                  |
+| 0.985.0                    | 1.1                  |
 
 
 The following sections provide you with information on how to use the Ballerina Twitter connector.
@@ -33,13 +33,14 @@ be returned. Else error will be returned.
 In order for you to use the Twitter Connector, first you need to create a Twitter Client endpoint.
 
 ```ballerina
-endpoint twitter:Client twitterClient {
-    clientId:"",
-    clientSecret:"",
-    accessToken:"",
-    accessTokenSecret:"",
-    clientConfig:{}
+twitter:TwitterConfiguration twitterConfig = {
+    clientId: testClientId,
+    clientSecret: testClientSecret,
+    accessToken: testAccessToken,
+    accessTokenSecret: testAccessTokenSecret
 };
+
+twitter:Client twitterClient = new(twitterConfig);
 ```
 
 ##### Example
@@ -48,18 +49,17 @@ endpoint twitter:Client twitterClient {
 import ballerina/io;
 import wso2/twitter;
 
-function main(string... args) {
-    endpoint twitter:Client twitterClient {
+public function main() {
+    twitter:Client twitterClient {
         clientId:"",
         clientSecret:"",
         accessToken:"",
-        accessTokenSecret:"",
-        clientConfig:{}
+        accessTokenSecret:""
     };
     string status = "Twitter endpoint test";
 
     twitter:Status twitterStatus = check twitterClient->tweet(status);
-    string tweetId = <string> twitterStatus.id;
+    string tweetId = <string>twitterStatus.id;
     string text = twitterStatus.text;
     io:println("Tweet ID: " + tweetId);
     io:println("Tweet: " + text);
