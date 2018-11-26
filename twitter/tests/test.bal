@@ -24,14 +24,16 @@ string testClientId = config:getAsString("CLIENT_ID");
 string testClientSecret = config:getAsString("CLIENT_SECRET");
 string testAccessToken = config:getAsString("ACCESS_TOKEN");
 string testAccessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
-int tweetId;
+int tweetId = 0;
 
-endpoint Client twitterClient {
+TwitterConfiguration twitterConfig = {
     clientId: testClientId,
     clientSecret: testClientSecret,
     accessToken: testAccessToken,
     accessTokenSecret: testAccessTokenSecret
 };
+
+Client twitterClient = new(twitterConfig);
 
 @test:Config
 function testTweet() {
@@ -49,8 +51,7 @@ function testTweet() {
             test:assertTrue(text.contains(status), msg = "Failed to call tweet()");
         }
         error err => {
-            io:println(err.message);
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -67,7 +68,7 @@ function testReTweet() {
             test:assertTrue(twitterStatus.retweeted, msg = "Failed to call retweet()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -84,7 +85,7 @@ function testUnReTweet() {
             test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call unretweet()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -103,7 +104,7 @@ function testSearch() {
             test:assertNotEquals(twitterStatus, null, msg = "Failed to call search()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -120,7 +121,7 @@ function testShowStatus() {
             test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call showStatus()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -137,7 +138,7 @@ function testDestroyStatus() {
             test:assertEquals(twitterStatus.id, tweetId, msg = "Failed to call destroyStatus()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -154,7 +155,7 @@ function testGetClosestTrendLocations() {
             test:assertNotEquals(response, null, msg = "Failed to call getClosestTrendLocations()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
@@ -170,8 +171,7 @@ function testGetTopTrendsByPlace() {
             test:assertNotEquals(response, null, msg = "Failed to call getTopTrendsByPlace()");
         }
         error err => {
-            test:assertFail(msg = err.message);
+            test:assertFail(msg = <string>err.detail().message);
         }
     }
 }
-

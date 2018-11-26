@@ -14,97 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Define the Twitter connector.
-# + accessToken - The access token of the Twitter account
-# + accessTokenSecret - The access token secret of the Twitter account
-# + clientId - The consumer key of the Twitter account
-# + clientSecret - The consumer secret of the Twitter account
-# + clientEndpoint - HTTP Client endpoint
-public type TwitterConnector object {
-
-    public string accessToken;
-    public string accessTokenSecret;
-    public string clientId;
-    public string clientSecret;
-    public http:Client clientEndpoint = new;
-
-    # Update the authenticated user's current status (If you want to provide attachment, you can use
-    # mediaIds or attachmentUrl).
-    # + status - The text of status update
-    # + return - If success, returns Status object, else returns error.
-    public function tweet(string status, string... args) returns Status|error;
-
-    # Retweet a tweet.
-    # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error.
-    public function retweet(int id) returns Status|error;
-
-    # Untweet a retweeted status.
-    # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error.
-    public function unretweet(int id) returns Status|error;
-
-    # Search for tweets.
-    # + queryStr - Query string to retrieve the related tweets
-    # + searchRequest - It contains optional params that is needed for search operation(tweetsCount)
-    # + return - If success, Status[] object, else returns error
-    public function search(string queryStr, SearchRequest searchRequest) returns Status[]|error;
-
-    # Retrive a single status.
-    # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error
-    public function showStatus(int id) returns Status|error;
-
-    # Distroy a status.
-    # + id - The numerical ID of the desired status
-    # + return - If success, returns Status object, else returns error
-    public function destroyStatus(int id) returns Status|error;
-
-    # Retrive closest trend locations.
-    # + lat - Latitude of the location
-    # + long - Longitude of the location
-    # + return - If success, returns Location[] object, else returns error
-    public function getClosestTrendLocations(float lat, float long) returns Location[]|error;
-
-    # Retrive top trends by place.
-    # + locationId - Where On Earth ID of the location to return trending information for
-    # + return - If success, returns Trends[] object, else returns error
-    public function getTopTrendsByPlace(int locationId) returns Trends[]|error;
-};
-
-# Twitter Client object.
-# + twitterConfig - Twitter connector configurations
-# + twitterConnector - TwitterConnector Connector object
-public type Client object {
-
-    public TwitterConfiguration twitterConfig = {};
-    public TwitterConnector twitterConnector = new;
-
-    # Twitter Connector endpoint initialization function.
-    # + config - Twitter Connector Configuration
-    public function init(TwitterConfiguration config);
-
-    # Return the Twitter connector client.
-    # + return - Twitter connector client
-    public function getCallerActions() returns TwitterConnector;
-
-};
-
-# Twitter Connector configurations can be setup here.
-# + uri - The Twitter API URL
-# + accessToken - The access token of the Twitter account
-# + accessTokenSecret - The access token secret of the Twitter account
-# + clientId - The consumer key of the Twitter account
-# + clientSecret - The consumer secret of the Twitter account
-# + clientConfig - Client endpoint configurations provided by the user
-public type TwitterConfiguration record {
-    string uri;
-    string accessToken;
-    string accessTokenSecret;
-    string clientId;
-    string clientSecret;
-    http:ClientEndpointConfig clientConfig = {};
-};
+import ballerina/http;
 
 # Define the status.
 # + createdAt - Created time of the status
@@ -120,26 +30,26 @@ public type TwitterConfiguration record {
 # + retweetCount - Count of the retweeted status
 # + lang - Language
 public type Status record {
-    string createdAt;
-    int id;
-    string text;
-    string source;
-    boolean truncated;
-    int inReplyToStatusId;
-    GeoLocation geo;
-    boolean favorited;
-    boolean retweeted;
-    int favouritesCount;
-    int retweetCount;
-    string lang;
+    string createdAt = "";
+    int id = 0;
+    string text = "";
+    string source = "";
+    boolean truncated = false;
+    int inReplyToStatusId = 0;
+    GeoLocation geo = {};
+    boolean favorited = false;
+    boolean retweeted = false;
+    int favouritesCount = 0;
+    int retweetCount = 0;
+    string lang = "";
 };
 
 # Define the geo location details.
 # + latitude - Latitude of the location
 # + longitude - Longitude of the location
 public type GeoLocation record {
-    float latitude;
-    float longitude;
+    float latitude = 0.0;
+    float longitude = 0.0;
 };
 
 # Define the location details.
@@ -150,30 +60,30 @@ public type GeoLocation record {
 # + placeType - Longitude of the location
 # + url - Location URL
 public type Location record {
-    int woeid;
-    string countryName;
-    string countryCode;
-    string name;
-    PlaceType placeType;
-    string url;
+    int woeid = 0;
+    string countryName = "";
+    string countryCode = "";
+    string name = "";
+    PlaceType placeType = {};
+    string url = "";
 };
 
 # Define the place type.
 # + name - Name of the place
 # + code - Location code of the place
 public type PlaceType record {
-    string name;
-    int code;
+    string name = "";
+    int code = 0;
 };
 
 # Define the trends type.
 # + trends - List of Trending object
-# + locations - List of Locations object
+# + location - List of Locations object
 # + createdAt - Created time
 public type Trends record {
-    Trend[] trends;
-    Location[] locations;
-    string createdAt;
+    Trend[] trends = [];
+    Location[] location = [];
+    string createdAt = "";
 };
 
 # Define the trend type.
@@ -183,16 +93,16 @@ public type Trends record {
 # + promotedContent - Promoted content
 # + tweetVolume - Volume of the tweet
 public type Trend record {
-    string name;
-    string url;
-    string trendQuery;
-    string promotedContent;
-    int tweetVolume;
+    string name = "";
+    string url = "";
+    string trendQuery = "";
+    string promotedContent = "";
+    int tweetVolume = 0;
 };
 
 # Define the search request.
 # + tweetsCount - The number of tweets to return per page, up to a maximum of 100
 public type SearchRequest record {
-    string tweetsCount;
+    string tweetsCount = "";
 };
 

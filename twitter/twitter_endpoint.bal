@@ -18,16 +18,87 @@
 
 import ballerina/http;
 
-function Client::init(TwitterConfiguration config) {
-    config.uri = "https://api.twitter.com";
-    self.twitterConnector.accessToken = config.accessToken;
-    self.twitterConnector.accessTokenSecret = config.accessTokenSecret;
-    self.twitterConnector.clientId = config.clientId;
-    self.twitterConnector.clientSecret = config.clientSecret;
-    config.clientConfig.url = config.uri;
-    self.twitterConnector.clientEndpoint.init(config.clientConfig);
-}
+# Twitter Client object.
+# + twitterConnector - TwitterConnector Connector object
+public type Client client object {
 
-function Client::getCallerActions() returns TwitterConnector {
-    return self.twitterConnector;
-}
+    public TwitterConnector twitterConnector;
+
+    public function __init(TwitterConfiguration twitterConfig) {
+        self.twitterConnector = new(TWITTER_API_URL, twitterConfig);
+    }
+
+    # Update the authenticated user's current status (If you want to provide attachment, you can use
+    # mediaIds or attachmentUrl).
+    # + status - The text of status update
+    # + args - The user parameters as args
+    # + return - If success, returns Status object, else returns error.
+    public remote function tweet(string status, string... args) returns Status|error {
+        return self.twitterConnector->tweet(status, args);
+    }
+
+    # Retweet a tweet.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error.
+    public remote function retweet(int id) returns Status|error {
+        return self.twitterConnector->retweet(id);
+    }
+
+    # Untweet a retweeted status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error.
+    public remote function unretweet(int id) returns Status|error {
+        return self.twitterConnector->unretweet(id);
+    }
+
+    # Search for tweets.
+    # + queryStr - Query string to retrieve the related tweets
+    # + searchRequest - It contains optional params that is needed for search operation(tweetsCount)
+    # + return - If success, Status[] object, else returns error
+    public remote function search(string queryStr, SearchRequest searchRequest) returns Status[]|error {
+        return self.twitterConnector->search(queryStr, searchRequest);
+    }
+
+    # Retrive a single status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error
+    public remote function showStatus(int id) returns Status|error {
+        return self.twitterConnector->showStatus(id);
+    }
+
+    # Distroy a status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error
+    public remote function destroyStatus(int id) returns Status|error {
+        return self.twitterConnector->destroyStatus(id);
+    }
+
+    # Retrive closest trend locations.
+    # + lat - Latitude of the location
+    # + long - Longitude of the location
+    # + return - If success, returns Location[] object, else returns error
+    public remote function getClosestTrendLocations(float lat, float long) returns Location[]|error {
+        return self.twitterConnector->getClosestTrendLocations(lat, long);
+    }
+
+    # Retrive top trends by place.
+    # + locationId - Where On Earth ID of the location to return trending information for
+    # + return - If success, returns Trends[] object, else returns error
+    public remote function getTopTrendsByPlace(int locationId) returns Trends[]|error {
+        return self.twitterConnector->getTopTrendsByPlace(locationId);
+    }
+};
+
+# Twitter Connector configurations can be setup here.
+# + accessToken - The access token of the Twitter account
+# + accessTokenSecret - The access token secret of the Twitter account
+# + clientId - The consumer key of the Twitter account
+# + clientSecret - The consumer secret of the Twitter account
+# + clientConfig - Client endpoint configurations provided by the user
+public type TwitterConfiguration record {
+    string accessToken;
+    string accessTokenSecret;
+    string clientId;
+    string clientSecret;
+    http:ClientEndpointConfig clientConfig = {};
+};

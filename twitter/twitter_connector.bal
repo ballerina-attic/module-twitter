@@ -16,26 +16,90 @@
 
 import ballerina/io;
 
-function TwitterConnector::tweet(string status, string... args) returns Status|error {
+# Define the Twitter connector.
+# + accessToken - The access token of the Twitter account
+# + accessTokenSecret - The access token secret of the Twitter account
+# + clientId - The consumer key of the Twitter account
+# + clientSecret - The consumer secret of the Twitter account
+# + twitterClient - HTTP Client endpoint
+public type TwitterConnector client object {
 
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
+    public string accessToken;
+    public string accessTokenSecret;
+    public string clientId;
+    public string clientSecret;
+    public http:Client twitterClient;
 
-    http:Request request;
+    public function __init(string url, TwitterConfiguration twitterConfig) {
+        self.twitterClient = new(url, config = twitterConfig.clientConfig);
+        self.accessToken = twitterConfig.accessToken;
+        self.accessTokenSecret = twitterConfig.accessTokenSecret;
+        self.clientId = twitterConfig.clientId;
+        self.clientSecret = twitterConfig.clientSecret;
+    }
+
+    # Update the authenticated user's current status (If you want to provide attachment, you can use
+    # mediaIds or attachmentUrl).
+    # + status - The text of status update
+    # + return - If success, returns Status object, else returns error.
+    remote function tweet(string status, string[] args) returns Status|error;
+
+    # Retweet a tweet.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error.
+    remote function retweet(int id) returns Status|error;
+
+    # Untweet a retweeted status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error.
+    remote function unretweet(int id) returns Status|error;
+
+    # Search for tweets.
+    # + queryStr - Query string to retrieve the related tweets
+    # + searchRequest - It contains optional params that is needed for search operation(tweetsCount)
+    # + return - If success, Status[] object, else returns error
+    remote function search(string queryStr, SearchRequest searchRequest) returns Status[]|error;
+
+    # Retrive a single status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error
+    remote function showStatus(int id) returns Status|error;
+
+    # Distroy a status.
+    # + id - The numerical ID of the desired status
+    # + return - If success, returns Status object, else returns error
+    remote function destroyStatus(int id) returns Status|error;
+
+    # Retrive closest trend locations.
+    # + lat - Latitude of the location
+    # + long - Longitude of the location
+    # + return - If success, returns Location[] object, else returns error
+    remote function getClosestTrendLocations(float lat, float long) returns Location[]|error;
+
+    # Retrive top trends by place.
+    # + locationId - Where On Earth ID of the location to return trending information for
+    # + return - If success, returns Trends[] object, else returns error
+    remote function getTopTrendsByPlace(int locationId) returns Trends[]|error;
+};
+
+remote function TwitterConnector.tweet(string status, string[] args) returns Status|error {
+    http:Client httpClient = self.twitterClient;
+    http:Request request = new;
 
     string mediaIds = "";
     string attachmentUrl = "";
 
-    if ((lengthof args) > 0) {
+    if (args.length() > 0) {
         mediaIds = args[0];
     }
-    if ((lengthof args) > 1) {
+    if (args.length() > 1) {
         attachmentUrl = args[1];
     }
 
     string tweetPath = UPDATE_ENDPOINT;
     string encodedStatusValue = check http:encode(status, UTF_8);
     string urlParams = STATUS + encodedStatusValue + "&";
-    string oauthStr;
+    string oauthStr = "";
 
     if (attachmentUrl != "") {
         string encodedAttachmentValue = check http:encode(attachmentUrl, UTF_8);
@@ -50,27 +114,32 @@ function TwitterConnector::tweet(string status, string... args) returns Status|e
     }
     oauthStr = oauthStr + constructOAuthParams(self.clientId, self.accessToken) + STATUS + encodedStatusValue + "&";
 
-    constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    tweetPath = tweetPath + "?" + urlParams;
-    var httpResponse = clientEndpoint->post(tweetPath, request);
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        Status twitterResponse = convertToStatus(jsonResponse);
-                        return twitterResponse;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+    var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        tweetPath = tweetPath + "?" + urlParams;
+        var httpResponse = httpClient->post(tweetPath, request);
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            Status twitterResponse = convertToStatus(jsonResponse);
+                            return twitterResponse;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
@@ -78,32 +147,37 @@ function TwitterConnector::tweet(string status, string... args) returns Status|e
     }
 }
 
-function TwitterConnector::retweet(int id) returns Status|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
-    http:Request request;
+remote function TwitterConnector.retweet(int id) returns Status|error {
+    http:Client httpClient = self.twitterClient;
+    http:Request request = new;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = RETWEET_ENDPOINT + id + JSON;
-    constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint->post(tweetPath, request);
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        Status twitterResponse = convertToStatus(jsonResponse);
-                        return twitterResponse;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+    var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        var httpResponse = httpClient->post(tweetPath, request);
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            Status twitterResponse = convertToStatus(jsonResponse);
+                            return twitterResponse;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
@@ -111,32 +185,37 @@ function TwitterConnector::retweet(int id) returns Status|error {
     }
 }
 
-function TwitterConnector::unretweet(int id) returns Status|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
-    http:Request request;
+remote function TwitterConnector.unretweet(int id) returns Status|error {
+    http:Client httpClient = self.twitterClient;
+    http:Request request = new;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = UN_RETWEET_ENDPOINT + id + JSON;
-    constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint->post(tweetPath, request);
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        Status twitterResponse = convertToStatus(jsonResponse);
-                        return twitterResponse;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+    var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        var httpResponse = httpClient->post(tweetPath, request);
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            Status twitterResponse = convertToStatus(jsonResponse);
+                            return twitterResponse;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
@@ -144,46 +223,51 @@ function TwitterConnector::unretweet(int id) returns Status|error {
     }
 }
 
-function TwitterConnector::search(string queryStr, SearchRequest searchRequest) returns Status[]|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
+remote function TwitterConnector.search(string queryStr, SearchRequest searchRequest) returns Status[]|error {
+    http:Client httpClient = self.twitterClient;
     string tweetPath = SEARCH_ENDPOINT;
     string encodedQueryValue = check http:encode(queryStr, UTF_8);
     string urlParams = "q=" + encodedQueryValue + "&";
     string count = searchRequest.tweetsCount;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken) + urlParams;
-    if (count != null) {
+    if (count != "") {
         oauthStr = "count=" + count + "&" + oauthStr;
     }
 
-    http:Request request;
-    constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
+    http:Request request = new;
+    var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
         self.accessTokenSecret, oauthStr);
-    tweetPath = tweetPath + "?" + urlParams;
-    if (count != "") {
-        tweetPath =  tweetPath + "count=" + count;
-    }
-
-    var httpResponse = clientEndpoint->get(tweetPath, message = request);
-    Status[] searchResponse = [];
-    match httpResponse {
-        error err => {
-            return err;
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        tweetPath = tweetPath + "?" + urlParams;
+        if (count != "") {
+            tweetPath =  tweetPath + "count=" + count;
         }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        if (jsonResponse.statuses != null) {
-                            searchResponse = convertToStatuses(jsonResponse.statuses);
+
+        var httpResponse = httpClient->get(tweetPath, message = request);
+        Status[] searchResponse = [];
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            if (jsonResponse.statuses != null) {
+                                searchResponse = convertToStatuses(jsonResponse.statuses);
+                            }
+                            return searchResponse;
+                        } else {
+                            return setResponseError(jsonResponse);
                         }
-                        return searchResponse;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
                     }
                 }
             }
@@ -191,34 +275,39 @@ function TwitterConnector::search(string queryStr, SearchRequest searchRequest) 
     }
 }
 
-function TwitterConnector::showStatus(int id) returns Status|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
-    http:Request request;
+remote function TwitterConnector.showStatus(int id) returns Status|error {
+    http:Client httpClient = self.twitterClient;
+    http:Request request = new;
     string tweetPath = SHOW_STATUS_ENDPOINT;
     string urlParams = ID + id;
     string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
-    constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    tweetPath = tweetPath + "?" + urlParams;
-    var httpResponse = clientEndpoint->get(tweetPath, message = request);
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        Status twitterResponse = convertToStatus(jsonResponse);
-                        return twitterResponse;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+    var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        tweetPath = tweetPath + "?" + urlParams;
+        var httpResponse = httpClient->get(tweetPath, message = request);
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            Status twitterResponse = convertToStatus(jsonResponse);
+                            return twitterResponse;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
@@ -226,32 +315,37 @@ function TwitterConnector::showStatus(int id) returns Status|error {
     }
 }
 
-function TwitterConnector::destroyStatus(int id) returns Status|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
-    http:Request request;
+remote function TwitterConnector.destroyStatus(int id) returns Status|error {
+    http:Client httpClient = self.twitterClient;
+    http:Request request = new;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
     string tweetPath = DESTROY_STATUS_ENDPOINT + id + JSON;
-    constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    var httpResponse = clientEndpoint->post(tweetPath, request);
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        Status twitterResponse = convertToStatus(jsonResponse);
-                        return twitterResponse;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+    var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        var httpResponse = httpClient->post(tweetPath, request);
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            Status twitterResponse = convertToStatus(jsonResponse);
+                            return twitterResponse;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
@@ -259,37 +353,41 @@ function TwitterConnector::destroyStatus(int id) returns Status|error {
     }
 }
 
-function TwitterConnector::getClosestTrendLocations(float lat, float long)
-                               returns Location[]|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
+remote function TwitterConnector.getClosestTrendLocations(float lat, float long) returns Location[]|error {
+    http:Client httpClient = self.twitterClient;
     string tweetPath = TRENDS_ENDPOINT;
     string urlParams = LAT + lat + LONG + long;
     string oauthStr = urlParams.substring(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
             self.accessToken);
-    http:Request request;
-    constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    tweetPath = tweetPath + "?" + urlParams.substring(1, urlParams.length());
+    http:Request request = new;
+    var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        tweetPath = tweetPath + "?" + urlParams.substring(1, urlParams.length());
 
-    var httpResponse = clientEndpoint->get(tweetPath, message = request);
-    Location[] locations = [];
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        locations = convertToLocations(jsonResponse);
-                        return locations;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+        var httpResponse = httpClient->get(tweetPath, message = request);
+        Location[] locations = [];
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            locations = convertToLocations(jsonResponse);
+                            return locations;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
@@ -297,36 +395,41 @@ function TwitterConnector::getClosestTrendLocations(float lat, float long)
     }
 }
 
-function TwitterConnector::getTopTrendsByPlace(int locationId) returns Trends[]|error {
-    endpoint http:Client clientEndpoint = self.clientEndpoint;
+remote function TwitterConnector.getTopTrendsByPlace(int locationId) returns Trends[]|error {
+    http:Client httpClient = self.twitterClient;
     string tweetPath = TRENDS_PLACE_ENDPOINT;
     string urlParams = ID + locationId;
     string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
-    http:Request request;
-    constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
-        self.accessTokenSecret, oauthStr);
-    tweetPath = tweetPath + "?" + urlParams;
+    http:Request request = new;
+    var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
+        self.accessToken, self.accessTokenSecret, oauthStr);
+    if (requestHeaders is error) {
+        error err = error(TWITTER_ERROR_CODE, { message: "Error occurred while encoding parameters when constructing request headers" });
+        return err;
+    } else {
+        tweetPath = tweetPath + "?" + urlParams;
 
-    var httpResponse = clientEndpoint->get(tweetPath, message = request);
-    Trends[] trends = [];
-    match httpResponse {
-        error err => {
-            return err;
-        }
-        http:Response response => {
-            int statusCode = response.statusCode;
-            var twitterJSONResponse = response.getJsonPayload();
-            match twitterJSONResponse {
-                error err => {
-                    return err;
-                }
-                json jsonResponse => {
-                    if (statusCode == 200) {
-                        trends = convertTrends(jsonResponse);
-                        return trends;
-                    } else {
-                        return setResponseError(statusCode, jsonResponse);
+        var httpResponse = httpClient->get(tweetPath, message = request);
+        Trends[] trends = [];
+        match httpResponse {
+            error err => {
+                return err;
+            }
+            http:Response response => {
+                int statusCode = response.statusCode;
+                var twitterJSONResponse = response.getJsonPayload();
+                match twitterJSONResponse {
+                    error err => {
+                        return err;
+                    }
+                    json jsonResponse => {
+                        if (statusCode == 200) {
+                            trends = convertTrends(jsonResponse);
+                            return trends;
+                        } else {
+                            return setResponseError(jsonResponse);
+                        }
                     }
                 }
             }
