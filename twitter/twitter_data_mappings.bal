@@ -35,7 +35,7 @@ function convertToStatus(json jsonStatus) returns Status {
 function convertToInt(json jsonVal) returns int {
     string stringVal = jsonVal.toString();
     if (stringVal != "") {
-        var intVal = <int>stringVal;
+        var intVal = int.create(stringVal);
         if (intVal is int) {
             return intVal;
         } else {
@@ -49,12 +49,12 @@ function convertToInt(json jsonVal) returns int {
 
 function convertToBoolean(json jsonVal) returns boolean {
     string stringVal = jsonVal.toString();
-    return <boolean>stringVal;
+    return boolean.create(stringVal);
 }
 
 function convertToFloat(json jsonVal) returns float {
     string stringVal = jsonVal.toString();
-    var floatVal = <float>stringVal;
+    var floatVal = float.create(stringVal);
     if (floatVal is float) {
         return floatVal;
     } else {

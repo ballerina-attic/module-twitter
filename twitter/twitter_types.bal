@@ -105,4 +105,3 @@ public type Trend record {
 public type SearchRequest record {
     string tweetsCount = "";
 };
-
