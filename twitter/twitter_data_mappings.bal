@@ -35,7 +35,7 @@ function convertToStatus(json jsonStatus) returns Status {
 function convertToInt(json jsonVal) returns int {
     string stringVal = jsonVal.toString();
     if (stringVal != "") {
-        var intVal = int.create(stringVal);
+        var intVal = int.convert(stringVal);
         if (intVal is int) {
             return intVal;
         } else {
@@ -49,12 +49,12 @@ function convertToInt(json jsonVal) returns int {
 
 function convertToBoolean(json jsonVal) returns boolean {
     string stringVal = jsonVal.toString();
-    return boolean.create(stringVal);
+    return boolean.convert(stringVal);
 }
 
 function convertToFloat(json jsonVal) returns float {
     string stringVal = jsonVal.toString();
-    var floatVal = float.create(stringVal);
+    var floatVal = float.convert(stringVal);
     if (floatVal is float) {
         return floatVal;
     } else {
@@ -70,20 +70,20 @@ function convertToGeoLocation(json jsonStatus) returns GeoLocation {
     return geoLocation;
 }
 
-function convertToStatuses(json jsonStatuses) returns Status[] {
+function convertToStatuses(json[] jsonStatuses) returns Status[] {
     Status[] statuses = [];
     int i = 0;
-    foreach jsonStatus in jsonStatuses {
+    foreach json jsonStatus in jsonStatuses {
         statuses[i] = convertToStatus(jsonStatus);
         i = i + 1;
     }
     return statuses;
 }
 
-function convertToLocations(json jsonLocations) returns Location[] {
+function convertToLocations(json[] jsonLocations) returns Location[] {
     Location[] locations = [];
     int i = 0;
-    foreach jsonLocation in jsonLocations {
+    foreach json jsonLocation in jsonLocations {
         locations[i] = convertToLocation(jsonLocation);
         i = i + 1;
     }
@@ -116,16 +116,16 @@ function convertTrends(json jsonTrends) returns Trends[] {
 
 function convertToTrends(json jsonTrends) returns Trends {
     Trends trendList = {};
-    trendList.trends = convertTrendList(jsonTrends.trends);
-    trendList.locations = convertToLocations(jsonTrends.locations);
+    trendList.trends = convertTrendList(<json[]>jsonTrends.trends);
+    trendList.locations = convertToLocations(<json[]>jsonTrends.locations);
     trendList.createdAt = jsonTrends.created_at != null ? jsonTrends.created_at.toString() : "";
     return trendList;
 }
 
-function convertTrendList(json jsonTrends) returns Trend[] {
+function convertTrendList(json[] jsonTrends) returns Trend[] {
     Trend[] trendList = [];
     int i = 0;
-    foreach jsonTrend in jsonTrends {
+    foreach json jsonTrend in jsonTrends {
         trendList[i] = convertToTrend(jsonTrend);
         i = i + 1;
     }

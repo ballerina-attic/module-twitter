@@ -45,7 +45,7 @@ function testTweet() {
     var tweetResponse = twitterClient->tweet(status);
 
     if (tweetResponse is Status) {
-        tweetId = tweetResponse.id;
+        tweetId = untaint tweetResponse.id;
         test:assertTrue(tweetResponse.text.contains(status), msg = "Failed to call tweet()");
     } else {
         test:assertFail(msg = <string>tweetResponse.detail().message);
