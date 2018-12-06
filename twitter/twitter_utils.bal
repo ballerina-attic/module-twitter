@@ -21,8 +21,8 @@ import ballerina/http;
 import ballerina/crypto;
 import ballerina/system;
 
-string timeStamp;
-string nonceString;
+string timeStamp = "";
+string nonceString = "";
 
 function constructOAuthParams(string consumerKey, string accessToken) returns string {
     nonceString = system:uuid();
@@ -36,15 +36,9 @@ function constructOAuthParams(string consumerKey, string accessToken) returns st
 }
 
 function constructRequestHeaders(http:Request request, string httpMethod, string serviceEP, string consumerKey,
-                                 string consumerSecret, string accessToken, string accessTokenSecret, string paramStr) {
-    int index;
-    string key;
-    string value;
-    string serviceEndpoint;
-    string paramString;
-
-    serviceEndpoint = "https://api.twitter.com" + serviceEP;
-    paramString = paramStr.substring(0, paramStr.length() - 1);
+        string consumerSecret, string accessToken, string accessTokenSecret, string paramStr) returns error? {
+    string serviceEndpoint = "https://api.twitter.com" + serviceEP;
+    string paramString = paramStr.substring(0, paramStr.length() - 1);
     string encodedServiceEPValue = check http:encode(serviceEndpoint, "UTF-8");
     string encodedParamStrValue = check http:encode(paramString, "UTF-8");
     string encodedConsumerSecretValue = check http:encode(consumerSecret, "UTF-8");
@@ -62,11 +56,10 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
     request.setHeader("Authorization", oauthHeaderString.unescape());
+    return ();
 }
 
-function setResponseError(int statusCode, json jsonResponse) returns error {
-    error err = {};
-    err.message = jsonResponse.errors[0].message.toString();
-    err.statusCode = statusCode;
+function setResponseError(json jsonResponse) returns error {
+    error err = error(TWITTER_ERROR_CODE, { message: jsonResponse.errors[0].message.toString() });
     return err;
 }
