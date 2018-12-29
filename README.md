@@ -50,18 +50,21 @@ import ballerina/io;
 import wso2/twitter;
 
 public function main() {
-    twitter:Client twitterClient {
-        clientId:"",
-        clientSecret:"",
-        accessToken:"",
-        accessTokenSecret:""
-    };
+    twitter:Client twitterClient = new({
+        clientId: "",
+        clientSecret: "",
+        accessToken: "",
+        accessTokenSecret: ""
+    });
+
     string status = "Twitter endpoint test";
 
-    twitter:Status twitterStatus = check twitterClient->tweet(status);
-    string tweetId = <string>twitterStatus.id;
-    string text = twitterStatus.text;
-    io:println("Tweet ID: " + tweetId);
-    io:println("Tweet: " + text);
+    twitter:Status|error result = twitterClient->tweet(status);
+    if (result is twitter:Status) {    
+        io:println("Tweet ID: ", result.id);
+        io:println("Tweet: ", result.text);
+    } else {
+        io:println("Error occurred on tweet attempt: ", result);
+    }
 }
 ```
