@@ -20,6 +20,7 @@ import ballerina/time;
 import ballerina/http;
 import ballerina/crypto;
 import ballerina/system;
+import ballerina/encoding;
 
 string timeStamp = "";
 string nonceString = "";
@@ -45,8 +46,10 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string encodedAccessTokenSecretValue = check http:encode(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
+    byte[] baseStringByte = baseString.toByteArray("UTF-8");
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    string signature = crypto:hmac(baseString, keyStr, crypto:SHA1).base16ToBase64Encode();
+    byte[] keyArrByte = keyStr.toByteArray("UTF-8");
+    string signature = encoding:encodeBase64(crypto:hmacSha1(baseStringByte, keyArrByte));
 
     string encodedSignatureValue = check http:encode(signature, "UTF-8");
     string encodedaccessTokenValue = check http:encode(accessToken, "UTF-8");
