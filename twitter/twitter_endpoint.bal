@@ -109,7 +109,7 @@ public type TwitterConfiguration record {
     http:ClientEndpointConfig clientConfig = {};
 };
 
-remote function Client.tweet(string status, string... args) returns Status|error {
+public remote function Client.tweet(string status, string... args) returns Status|error {
     http:Client httpClient = self.twitterClient;
     http:Request request = new;
 
@@ -172,7 +172,7 @@ remote function Client.tweet(string status, string... args) returns Status|error
     }
 }
 
-remote function Client.retweet(int id) returns Status|error {
+public remote function Client.retweet(int id) returns Status|error {
     http:Client httpClient = self.twitterClient;
     http:Request request = new;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
@@ -208,7 +208,7 @@ remote function Client.retweet(int id) returns Status|error {
     }
 }
 
-remote function Client.unretweet(int id) returns Status|error {
+public remote function Client.unretweet(int id) returns Status|error {
     http:Client httpClient = self.twitterClient;
     http:Request request = new;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
@@ -244,7 +244,7 @@ remote function Client.unretweet(int id) returns Status|error {
     }
 }
 
-remote function Client.search(string queryStr, SearchRequest searchRequest) returns Status[]|error {
+public remote function Client.search(string queryStr, SearchRequest searchRequest) returns Status[]|error {
     http:Client httpClient = self.twitterClient;
     string tweetPath = SEARCH_ENDPOINT;
     string encodedQueryValue = check http:encode(queryStr, UTF_8);
@@ -294,7 +294,7 @@ remote function Client.search(string queryStr, SearchRequest searchRequest) retu
     }
 }
 
-remote function Client.showStatus(int id) returns Status|error {
+public remote function Client.showStatus(int id) returns Status|error {
     http:Client httpClient = self.twitterClient;
     http:Request request = new;
     string tweetPath = SHOW_STATUS_ENDPOINT;
@@ -332,7 +332,7 @@ remote function Client.showStatus(int id) returns Status|error {
     }
 }
 
-remote function Client.destroyStatus(int id) returns Status|error {
+public remote function Client.destroyStatus(int id) returns Status|error {
     http:Client httpClient = self.twitterClient;
     http:Request request = new;
     string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
@@ -368,7 +368,7 @@ remote function Client.destroyStatus(int id) returns Status|error {
     }
 }
 
-remote function Client.getClosestTrendLocations(float lat, float long) returns Location[]|error {
+public remote function Client.getClosestTrendLocations(float lat, float long) returns Location[]|error {
     http:Client httpClient = self.twitterClient;
     string tweetPath = TRENDS_ENDPOINT;
     string urlParams = LAT + lat + LONG + long;
@@ -407,7 +407,7 @@ remote function Client.getClosestTrendLocations(float lat, float long) returns L
     }
 }
 
-remote function Client.getTopTrendsByPlace(int locationId) returns Trends[]|error {
+public remote function Client.getTopTrendsByPlace(int locationId) returns Trends[]|error {
     http:Client httpClient = self.twitterClient;
     string tweetPath = TRENDS_PLACE_ENDPOINT;
     string urlParams = ID + locationId;
