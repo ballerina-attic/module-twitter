@@ -61,26 +61,24 @@ twitter:Client twitterClient = new(twitterConfig);
 
 The `tweet` function updates the current status. `status` is the text message of the status update.
 
-   `var tweetResponse = twitterClient->tweet("This is a sample text message");`
+   `var tweetResponse = twitterClient->tweet("This is a sample tweet");`
    
 If the status was updated successfully, the response from the `tweet` function is a `Status` object with the ID of the status, created time of status, etc. If the status update was unsuccessful, the response is a `error`.
 
 ```ballerina
-    string status = "This is a sample text";
-    var tweetResponse = twitterClient->tweet(status);
-    if (tweetResponse is twitter:Status) {
-        //If successful, returns the tweet message or ID of the status.
-        string tweetId = <string> tweetResponse.id;
-        string text = tweetResponse.text;
-        io:println("Tweet ID: " + tweetId);
-        io:println("Tweet: " + text);
+    string status = "Twitter endpoint test";
+    var result = twitterClient->tweet(status);
+    if (result is twitter:Status) {
+        // If successful, print the tweet ID and text.
+        io:println("Tweet ID: ", result.id);
+        io:println("Tweet: ", result.text);
     } else {
-        //Unsuccessful attempts return a Twitter error.
-        io:println(tweetResponse);
+        // If unsuccessful, print the error returned.
+        io:println("Error: ", result);
     }
 ```
 
-The `retweet` function retweets a tweet message. It returns a `Status` object if successful or `error` if unsuccessful.
+The `retweet` function retweets a tweet message. It returns a `Status` object if successful or an `error` if unsuccessful.
 
 ```ballerina
     int tweetId = 1093833789346861057;
@@ -88,11 +86,11 @@ The `retweet` function retweets a tweet message. It returns a `Status` object if
     if (tweetResponse is twitter:Status) {
         io:println("Retweeted: " + tweetResponse.retweeted);
     } else {
-        io:println(tweetResponse);
+        io:println("Error: ", tweetResponse);
     }
 ```
 
-The `search` function searches for tweets using a query string. It returns a `Status[]` object if successful or `error` when unsuccessful.
+The `search` function searches for tweets using a query string. It returns a `Status[]` object if successful or an `error` if unsuccessful.
 
 ```ballerina
     string queryStr = "twitter";
@@ -104,6 +102,6 @@ The `search` function searches for tweets using a query string. It returns a `St
         io:println("Search Result :");
         io:println(tweetResponse);
     } else {
-        io:println(tweetResponse);
+        io:println("Error: ", tweetResponse);
     }
 ```

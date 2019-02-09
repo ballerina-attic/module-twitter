@@ -62,12 +62,12 @@ public function main(string... args) {
     string status = "Twitter endpoint test";
     var result = twitterClient->tweet(status);
     if (result is twitter:Status) {
-        //If successful, returns the tweet message or ID of the status.
+        // If successful, print the tweet ID and text.
         io:println("Tweet ID: ", result.id);
         io:println("Tweet: ", result.text);
     } else {
-        //Unsuccessful attempts return a Twitter error.
-        io:println(result);
+        // If unsuccessful, print the error returned.
+        io:println("Error: ", result);
     }
 }
 ```
