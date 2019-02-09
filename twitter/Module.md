@@ -95,13 +95,12 @@ The `search` function searches for tweets using a query string. It returns a `St
 ```ballerina
     string queryStr = "twitter";
     twitter:SearchRequest request = {
-        tweetsCount:"100"
+        tweetsCount: "100"
     };
-    var tweetResponse = twitterClient->search(queryStr, request);
-    if (tweetResponse is twitter:Status[]) {
-        io:println("Search Result :");
-        io:println(tweetResponse);
+    var searchResponse = twitterClient->search(queryStr, request);
+    if (searchResponse is twitter:Status[]) {
+        io:println("Search Result: ", searchResponse);
     } else {
-        io:println("Error: ", tweetResponse);
+        io:println("Error: ", searchResponse);
     }
 ```
