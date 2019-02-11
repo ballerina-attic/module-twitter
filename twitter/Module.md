@@ -84,7 +84,7 @@ The `retweet` function retweets a tweet message. It returns a `Status` object if
     int tweetId = 1093833789346861057;
     var tweetResponse = twitterClient->retweet(tweetId);
     if (tweetResponse is twitter:Status) {
-        io:println("Retweeted: " + tweetResponse.retweeted);
+        io:println("Retweeted: ", tweetResponse.retweeted);
     } else {
         io:println("Error: ", tweetResponse);
     }
