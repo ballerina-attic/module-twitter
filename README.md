@@ -34,10 +34,10 @@ In order for you to use the Twitter Connector, first you need to create a Twitte
 
 ```ballerina
 twitter:TwitterConfiguration twitterConfig = {
-    clientId: testClientId,
-    clientSecret: testClientSecret,
-    accessToken: testAccessToken,
-    accessTokenSecret: testAccessTokenSecret
+    clientId: "<clientId>",
+    clientSecret: "<clientSecret>",
+    accessToken: "<accessToken>",
+    accessTokenSecret: "<accessTokenSecret>"
 };
 
 twitter:Client twitterClient = new(twitterConfig);
@@ -49,22 +49,25 @@ twitter:Client twitterClient = new(twitterConfig);
 import ballerina/io;
 import wso2/twitter;
 
-public function main() {
-    twitter:Client twitterClient = new({
-        clientId: "",
-        clientSecret: "",
-        accessToken: "",
-        accessTokenSecret: ""
-    });
+twitter:TwitterConfiguration twitterConfig = {
+    clientId: "<clientId>",
+    clientSecret: "<clientSecret>",
+    accessToken: "<accessToken>",
+    accessTokenSecret: "<accessTokenSecret>"
+};
 
+twitter:Client twitterClient = new(twitterConfig);
+
+public function main(string... args) {
     string status = "Twitter endpoint test";
-
-    twitter:Status|error result = twitterClient->tweet(status);
-    if (result is twitter:Status) {    
+    var result = twitterClient->tweet(status);
+    if (result is twitter:Status) {
+        // If successful, print the tweet ID and text.
         io:println("Tweet ID: ", result.id);
         io:println("Tweet: ", result.text);
     } else {
-        io:println("Error occurred on tweet attempt: ", result);
+        // If unsuccessful, print the error returned.
+        io:println("Error: ", result);
     }
 }
 ```
