@@ -1,73 +1,76 @@
 [![Build Status](https://travis-ci.org/wso2-ballerina/module-twitter.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-twitter)
 
-# Ballerina Twitter Connector
+# Ballerina Twitter Client
 
-The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
-It handles OAuth 2.0 authentication. You can also retrieve and destroy a status, retrieve closest trend locations,
-and top trends using the connector.
+The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve home timeline Tweets,
+and retrieve mentions for the user through the Twitter REST API. You can also retrieve followers for the specified user, retrieve closest trend locations,
+and top trends using this client.
+
 
 ## Compatibility
-| Ballerina Language Version | Twitter API version  |
-| -------------------------- | -------------------- |
-| 0.990.3                    | 1.1                  |
+|                    |    Version     |
+|:------------------:|:--------------:|
+| Ballerina Language |   0.991.0      |
+| Twitter API        |   1.1          |
 
 
-The following sections provide you with information on how to use the Ballerina Twitter connector.
+## Download and install
 
-- [Contribute To Develop](#contribute-to-develop)
-- [Working with Twitter Connector actions](#working-with-twitter-connector-actions)
-- [Example](#example)
+### Download the module
 
-### Contribute To develop
+You can pull the Twitter client from Ballerina Central:
 
-Clone the repository by running the following command 
 ```shell
-git clone https://github.com/wso2-ballerina/module-twitter.git
+$ ballerina pull wso2/twitter
 ```
 
-### Working with Twitter Connector actions
+### Install from source
 
-All the actions return valid response or error. If the action is a success, then the requested resource will 
-be returned. Else error will be returned.
+Alternatively, you can install Twitter client from the source using the following instructions.
 
-In order for you to use the Twitter Connector, first you need to create a Twitter Client endpoint.
+**Building the source**
 
-```ballerina
-twitter:TwitterConfiguration twitterConfig = {
-    clientId: "<clientId>",
-    clientSecret: "<clientSecret>",
-    accessToken: "<accessToken>",
-    accessTokenSecret: "<accessTokenSecret>"
-};
+1. Clone this repository using the following command:
 
-twitter:Client twitterClient = new(twitterConfig);
+    ```shell
+    $ git clone https://github.com/wso2-ballerina/module-twitter.git
+    ```
+
+2. Run this command from the `module-twitter` root directory:
+
+    ```shell
+    $ ballerina build twitter
+    ```
+
+**Installation**
+
+You can install `module-twitter` using:
+
+```shell
+$ ballerina install twitter
 ```
 
-##### Example
 
-```ballerina
-import ballerina/io;
-import wso2/twitter;
+## Running Tests
 
-twitter:TwitterConfiguration twitterConfig = {
-    clientId: "<clientId>",
-    clientSecret: "<clientSecret>",
-    accessToken: "<accessToken>",
-    accessTokenSecret: "<accessTokenSecret>"
-};
+1. Create `ballerina.conf` file in `module-twitter`, with following keys and provide values for the variables.
 
-twitter:Client twitterClient = new(twitterConfig);
+    ```.conf
+    CLIENT_ID=""
+    CLIENT_SECRET=""
+    ACCESS_TOKEN=""
+    ACCESS_TOKEN_SECRET=""
+    ```
+2. Navigate to the folder `module-twitter`
 
-public function main(string... args) {
-    string status = "Twitter endpoint test";
-    var result = twitterClient->tweet(status);
-    if (result is twitter:Status) {
-        // If successful, print the tweet ID and text.
-        io:println("Tweet ID: ", result.id);
-        io:println("Tweet: ", result.text);
-    } else {
-        // If unsuccessful, print the error returned.
-        io:println("Error: ", result);
-    }
-}
-```
+3. Run tests :
+
+    ```ballerina
+    ballerina init
+    ballerina test twitter --config ballerina.conf
+    ```
+
+
+## How you can contribute
+
+As an open source project, we welcome contributions from the community. Check the [issue tracker](https://github.com/wso2-ballerina/module-twitter/issues) for open issues that interest you. We look forward to receiving your contributions.

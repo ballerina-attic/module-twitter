@@ -14,17 +14,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/test;
-import ballerina/time;
-import ballerina/system;
 import ballerina/config;
 import ballerina/io;
+import ballerina/test;
+import ballerina/time;
 
 string testClientId = config:getAsString("CLIENT_ID");
 string testClientSecret = config:getAsString("CLIENT_SECRET");
 string testAccessToken = config:getAsString("ACCESS_TOKEN");
 string testAccessTokenSecret = config:getAsString("ACCESS_TOKEN_SECRET");
+
 int tweetId = 0;
+string userId = "4269258922";
+string currentTimeStamp = "";
+int[] mediaIds = [1111489293829226501, 1111489391845953536];
+int sinceId = 1108616819688927232;
+int maxId = 1110365503862833154;
 
 TwitterConfiguration twitterConfig = {
     clientId: testClientId,
@@ -33,120 +38,210 @@ TwitterConfiguration twitterConfig = {
     accessTokenSecret: testAccessTokenSecret
 };
 
-Client twitterClient = new(twitterConfig);
+TwitterClient twitterClient = new(twitterConfig);
+TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
+TwitterUserClient twitterUserClient = twitterClient.getUserClient();
+TwitterTrendsClient twitterTrendsClientWithConfig = new(twitterConfig);
+TwitterUserClient twitterUserClientWithConfig = new(twitterConfig);
+
+MediaParams mediaParams = {
+    media: "https://twitter.com/andypiper/status/903615884664725505",
+    //media:mediaIds,
+    possiblySensitive: false
+};
+
+LocationParams locationParams = {
+    placeInfo: (37.7821120598956, 122.400612831116),
+    //placeInfo:"df51dec6f4ee2b2c",
+    displayCoordinates: true
+};
+
+StatusReplyParams replyParams = {
+    inReplyToStatusId: tweetId,
+    autoPopulateReplyMetadata: true,
+    excludeReplyUserIds: userId
+};
 
 @test:Config
 function testTweet() {
     io:println("--------------Calling tweet----------------");
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    string currentTimeStamp = <string>(currentTimeMills / 1000);
-    string status = "Twitter connector test " + currentTimeStamp;
-    var tweetResponse = twitterClient->tweet(status);
+    currentTimeStamp = string.convert(currentTimeMills / 1000);
+    string status = "Sample Tweet " + currentTimeStamp;
 
-    if (tweetResponse is Status) {
-        tweetId = untaint tweetResponse.id;
+    var tweetResponse = twitterClient->tweet(status, trimUser = false, enableDmcommands = false, failDmcommands = true,
+        mediaParams = mediaParams, locationParams = locationParams);
+
+    if (tweetResponse is Tweet) {
+        tweetId = tweetResponse.id;
+        io:println("Tweet: ", tweetResponse);
         test:assertTrue(tweetResponse.text.contains(status), msg = "Failed to call tweet()");
     } else {
         test:assertFail(msg = <string>tweetResponse.detail().message);
     }
 }
 
-@test:Config {
-    dependsOn: ["testTweet"]
-}
-function testReTweet() {
-    io:println("--------------Calling retweet----------------");
-    var tweetResponse = twitterClient->retweet(tweetId);
-
-    if (tweetResponse is Status) {
-        test:assertTrue(tweetResponse.retweeted, msg = "Failed to call retweet()");
-    } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    }
-}
-
-@test:Config {
-    dependsOn: ["testReTweet"]
-}
-function testUnReTweet() {
-    io:println("--------------Calling unretweet----------------");
-    var tweetResponse = twitterClient->unretweet(tweetId);
-
-    if (tweetResponse is Status) {
-        test:assertEquals(tweetResponse.id, tweetId, msg = "Failed to call unretweet()");
-    } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    }
-}
-
-@test:Config
-function testSearch() {
-    io:println("--------------Calling search----------------");
-    string queryStr = "twitter";
-    SearchRequest request = {
-        tweetsCount:"100"
-    };
-    var tweetResponse = twitterClient->search(queryStr, request);
-
-    if (tweetResponse is error) {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    } else {
-        test:assertNotEquals(tweetResponse, null, msg = "Failed to call search()");
-    }
-}
-
-@test:Config {
-    dependsOn: ["testUnReTweet"]
-}
-function testShowStatus() {
-    io:println("--------------Calling showStatus----------------");
-    var tweetResponse = twitterClient->showStatus(tweetId);
-
-    if (tweetResponse is Status) {
-        test:assertEquals(tweetResponse.id, tweetId, msg = "Failed to call showStatus()");
-    } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    }
-}
-
-@test:Config {
-    dependsOn: ["testShowStatus"]
-}
-function testDestroyStatus() {
-    io:println("--------------Calling destroyStatus----------------");
-    var tweetResponse = twitterClient->destroyStatus(tweetId);
-
-    if (tweetResponse is Status) {
-        test:assertEquals(tweetResponse.id, tweetId, msg = "Failed to call destroyStatus()");
-    } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    }
-}
-
-@test:Config
-function testGetClosestTrendLocations() {
-    io:println("--------------Calling getClosestTrendLocations----------------");
-    float latitude = 34.0;
-    float longitude = 67.0;
-    var tweetResponse = twitterClient->getClosestTrendLocations(latitude, longitude);
-
-    if (tweetResponse is error) {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    } else {
-        test:assertNotEquals(tweetResponse, null, msg = "Failed to call getClosestTrendLocations()");
-    }
-}
-
-@test:Config
-function testGetTopTrendsByPlace() {
-    io:println("--------------Calling getTopTrendsByPlace----------------");
-    int locationId = 23424922;
-    var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);
-
-    if (tweetResponse is error) {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
-    } else {
-        test:assertNotEquals(tweetResponse, null, msg = "Failed to call getTopTrendsByPlace()");
-    }
-}
+//@test:Config {
+//    dependsOn: ["testTweet"]
+//}
+//function testReplyToTweet() {
+//    io:println("--------------Calling replyToTweet----------------");
+//    string status = "Sample Tweet Reply " + currentTimeStamp;
+//
+//    var replyToTweetResponse = twitterClient->replyToTweet(status, replyParams, trimUser = false,
+//        enableDmcommands = false, failDmcommands = true, mediaParams = mediaParams, locationParams = locationParams);
+//
+//    if (replyToTweetResponse is Tweet) {
+//        io:println("Tweet: ", replyToTweetResponse);
+//        test:assertTrue(replyToTweetResponse.text.contains(status), msg = "Failed to call replyToTweet()");
+//    } else {
+//        test:assertFail(msg = <string>replyToTweetResponse.detail().message);
+//    }
+//}
+//
+//@test:Config {
+//    dependsOn: ["testTweet"]
+//}
+//function testRetweet() {
+//    io:println("--------------Calling retweet----------------");
+//    var retweetResponse = twitterClient->retweet(tweetId, trimUser = false);
+//
+//    if (retweetResponse is Tweet) {
+//        io:println("Retweet: ", retweetResponse);
+//        test:assertTrue(retweetResponse.retweeted, msg = "Failed to call retweet()");
+//    } else {
+//        test:assertFail(msg = <string>retweetResponse.detail().message);
+//    }
+//}
+//
+//@test:Config {
+//    dependsOn: ["testTweet"]
+//}
+//function testCreateFavoriteTweet() {
+//    io:println("--------------Calling createFavoriteTweet----------------");
+//    var favoriteTweetResponse = twitterClient->createFavoriteTweet(tweetId, includeEntities = false);
+//
+//    if (favoriteTweetResponse is Tweet) {
+//        io:println("FavoriteTweet: ", favoriteTweetResponse);
+//        test:assertTrue(<boolean>favoriteTweetResponse.favorited, msg = "Failed to call createFavoriteTweet()");
+//    } else {
+//        test:assertFail(msg = <string>favoriteTweetResponse.detail().message);
+//    }
+//}
+//
+//@test:Config
+//function testSearch() {
+//    io:println("--------------Calling search----------------");
+//    string queryStr = "twitter";
+//
+//    var searchResponse = twitterClient->search(queryStr, count = 20, lang = "eu", includeEntities = false,
+//        sinceId = sinceId, maxId = 1108617435769241602, locale = "ja",
+//        geocode = "37.781157, -122.398720, '1mi'", until = "2019-03-19");
+//
+//    if (searchResponse is Search) {
+//        io:println("Search Result: ", searchResponse);
+//        test:assertNotEquals(searchResponse, (), msg = "Failed to call search()");
+//    } else {
+//        test:assertFail(msg = <string>searchResponse.detail().message);
+//    }
+//}
+//
+//@test:Config
+//function testGetHomeTimelineTweets() {
+//    io:println("--------------Calling getHomeTimelineTweets----------------");
+//    var homeTimelineResponse = twitterClient->getHomeTimelineTweets(count = 20, sinceId = sinceId,
+//        maxId = maxId, trimUser = false, excludeReplies = false, includeEntities = false);
+//
+//    if (homeTimelineResponse is Tweet[]) {
+//        io:println("HomeTimelineTweets: ", homeTimelineResponse);
+//        test:assertNotEquals(homeTimelineResponse, (), msg = "Failed to call getHomeTimelineTweets()");
+//    } else {
+//        test:assertFail(msg = <string>homeTimelineResponse.detail().message);
+//    }
+//}
+//
+//@test:Config
+//function testGetTweetMentions() {
+//    io:println("--------------Calling getTweetMentions----------------");
+//    var tweetMentionsResponse = twitterClient->getTweetMentions(count = 5, sinceId = sinceId,
+//        maxId = maxId, trimUser = false, includeEntities = false);
+//
+//    if (tweetMentionsResponse is Tweet[]) {
+//        io:println("Tweet Mentions: ", tweetMentionsResponse);
+//        test:assertNotEquals(tweetMentionsResponse, (), msg = "Failed to call getTweetMentions()");
+//    } else {
+//        test:assertFail(msg = <string>tweetMentionsResponse.detail().message);
+//    }
+//}
+//
+//@test:Config
+//function testGetFollowers() {
+//    io:println("--------------Calling getFollowers----------------");
+//
+//    var followersResponseWithConfig = twitterUserClientWithConfig->getFollowers(screenName = "WSO2",
+//        cursor = -1, count = 10, skipStatus = true, includeUserEntities = false);
+//
+//    if (followersResponseWithConfig is Followers) {
+//        io:println("Followers: ", followersResponseWithConfig);
+//        test:assertNotEquals(followersResponseWithConfig.users, (), msg = "Failed to call getFollowers()");
+//    } else {
+//        test:assertFail(msg = <string>followersResponseWithConfig.detail().message);
+//    }
+//
+//    var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+//        skipStatus = true, includeUserEntities = false);
+//
+//    if (followersResponse is Followers) {
+//        io:println("Followers: ", followersResponse);
+//        test:assertNotEquals(followersResponse.users, (), msg = "Failed to call getFollowers()");
+//    } else {
+//        test:assertFail(msg = <string>followersResponse.detail().message);
+//    }
+//}
+//
+//@test:Config
+//function testGetClosestTrendLocations() {
+//    io:println("--------------Calling getClosestTrendLocations----------------");
+//
+//    float latitude = 34.0;
+//    float longitude = 67.0;
+//
+//    var locationResponseWithConfig = twitterTrendsClientWithConfig->getClosestTrendLocations(latitude, longitude);
+//    if (locationResponseWithConfig is Location[]) {
+//        io:println("Locations: ", locationResponseWithConfig);
+//        test:assertNotEquals(locationResponseWithConfig, (), msg = "Failed to call getClosestTrendLocations()");
+//    } else {
+//        test:assertFail(msg = <string>locationResponseWithConfig.detail().message);
+//    }
+//
+//    var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
+//    if (locationResponse is Location[]) {
+//        io:println("Locations: ", locationResponse);
+//        test:assertNotEquals(locationResponse, (), msg = "Failed to call getClosestTrendLocations()");
+//    } else {
+//        test:assertFail(msg = <string>locationResponse.detail().message);
+//    }
+//}
+//
+//@test:Config
+//function testGetTrendsByPlace() {
+//    io:println("--------------Calling getTopTrendsByPlace----------------");
+//    int locationId = 23424922;
+//
+//    var trendsResponseWithConfig = twitterTrendsClientWithConfig->getTrendsByPlace(locationId);
+//    if (trendsResponseWithConfig is TrendsList[]) {
+//        io:println("Trends: ", trendsResponseWithConfig);
+//        test:assertNotEquals(trendsResponseWithConfig, (), msg = "Failed to call getTopTrendsByPlace()");
+//    } else {
+//        test:assertFail(msg = <string>trendsResponseWithConfig.detail().message);
+//    }
+//
+//    var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+//    if (trendsResponse is TrendsList[]) {
+//        io:println("Trends: ", trendsResponse);
+//        test:assertNotEquals(trendsResponse, (), msg = "Failed to call getTopTrendsByPlace()");
+//    } else {
+//        test:assertFail(msg = <string>trendsResponse.detail().message);
+//    }
+//}

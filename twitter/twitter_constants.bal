@@ -15,28 +15,31 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// Twitter API endpoint
-final string TWITTER_API_URL = "https://api.twitter.com";
-final string UPDATE_ENDPOINT = "/1.1/statuses/update.json";
-final string RETWEET_ENDPOINT = "/1.1/statuses/retweet/";
-final string UN_RETWEET_ENDPOINT = "/1.1/statuses/unretweet/";
-final string SEARCH_ENDPOINT = "/1.1/search/tweets.json";
-final string SHOW_STATUS_ENDPOINT = "/1.1/statuses/show.json";
-final string DESTROY_STATUS_ENDPOINT = "/1.1/statuses/destroy/";
-final string TRENDS_ENDPOINT = "/1.1/trends/closest.json";
-final string TRENDS_PLACE_ENDPOINT = "/1.1/trends/place.json";
+// Twitter API endpoints
+const string TWITTER_API_URL = "https://api.twitter.com";
+const string UPDATE_ENDPOINT = "/1.1/statuses/update.json";
+const string RETWEET_ENDPOINT = "/1.1/statuses/retweet/";
+const string UN_RETWEET_ENDPOINT = "/1.1/statuses/unretweet/";
+const string SEARCH_ENDPOINT = "/1.1/search/tweets.json";
+const string SHOW_STATUS_ENDPOINT = "/1.1/statuses/show.json";
+const string DESTROY_STATUS_ENDPOINT = "/1.1/statuses/destroy/";
+const string TRENDS_ENDPOINT = "/1.1/trends/closest.json";
+const string TRENDS_PLACE_ENDPOINT = "/1.1/trends/place.json";
+const string FAVORITE_ENDPOINT = "/1.1/favorites/create.json";
+const string FOLLOWERS_ENDPOINT = "/1.1/followers/list.json";
+const string HOME_TIMELINE_ENDPOINT = "/1.1/statuses/home_timeline.json";
+const string MENTIONS_ENDPOINT = "/1.1/statuses/mentions_timeline.json";
+const string FILTER_ENDPOINT = "/1.1/statuses/filter.json";
+const string VERIFY_CREDENTIALS_ENDPOINT = "/1.1/account/verify_credentials.json";
 
 // String constants
-final string UTF_8 = "UTF-8";
-final string STATUS = "status=";
-final string ATTACHMENT_URL = "attachment_url=";
-final string MEDIA_IDS = "media_ids=";
-final string ID = "id=";
-final string LAT = "&lat=";
-final string LONG = "&long=";
-final string POST = "POST";
-final string GET = "GET";
-final string JSON = ".json";
+const string UTF_8 = "UTF-8";
+const string POST = "POST";
+const string GET = "GET";
+const string JSON = ".json";
 
 // Error Codes
-final string TWITTER_ERROR_CODE = "(wso2/twitter)TwitterError";
+const string TWITTER_ERROR_CODE = "(wso2/twitter)TwitterError";
+const string ENCODING_ERROR_CODE = "(wso2/twitter)EncodingError";
+const string IO_ERROR_CODE = "(wso2/twitter)IOError";
+const string CONVERSION_ERROR_CODE = "(wso2/twitter)ConversionError";
