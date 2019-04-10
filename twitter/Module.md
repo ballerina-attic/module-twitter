@@ -106,7 +106,7 @@ TwitterConfiguration twitterConfig = {
     accessTokenSecret: config:getAsString("accessTokenSecret")
 };
 
-twitter:TwitterClient twitterClient = new(twitterConfig);
+twitter:TwitterClient|error twitterClient = new(twitterConfig);
 ```
 
 Here, we are creating an client object to connect with the Twitter service. The above configuration is used to configure the connectivity to the Twitter service.
@@ -135,18 +135,22 @@ TwitterConfiguration twitterConfig = {
     accessTokenSecret: config:getAsString("accessTokenSecret")
 };
 
-twitter:TwitterClient twitterClient = new(twitterConfig);
-
 public function main() {
-   string status = "This is a sample tweet";
-   twitter:Tweet|error tweetResponse = twitterClient->tweet(status);
-   if (tweetResponse is twitter:Tweet) {
-       // If successful, print the tweet ID and text.
-       io:println("Tweet ID: ", tweetResponse.id);
-       io:println("Tweet: ", tweetResponse.text);
+   twitter:TwitterClient|error twitterClient = new(twitterConfig);
+
+   if (twitterClient is twitter:TwitterClient) {
+       string status = "This is a sample tweet";
+       twitter:Tweet|error tweetResponse = twitterClient->tweet(status);
+       if (tweetResponse is twitter:Tweet) {
+           // If successful, print the tweet ID and text.
+           io:println("Tweet ID: ", tweetResponse.id);
+           io:println("Tweet: ", tweetResponse.text);
+       } else {
+           // If unsuccessful, print the error returned.
+           io:println("Error: ", tweetResponse);
+       }
    } else {
-       // If unsuccessful, print the error returned.
-       io:println("Error: ", tweetResponse);
+       io:println("Error: ", twitterClient);
    }
 }
 ```
@@ -167,7 +171,7 @@ The `retweet` remote function retweets a tweet message. It returns a `Tweet` obj
 ```ballerina
 int tweetId = 1093833789346861057;
 // Invoke retweet remote function using base/parent Twitter client.
-var tweetResponse = twitterClient->retweet(tweetId);
+var tweetResponse = twitterClient->retweet(tweetId, trimUser = false);
 if (tweetResponse is twitter:Tweet) {
     io:println("Retweeted: ", tweetResponse.retweeted);
 } else {
@@ -215,57 +219,95 @@ if (searchResponse is twitter:Search) {
 
 The `getFollowers` remote function retrieve a collection of user objects for users following the specified user. It returns a `Followers` object if successful or an `error` if unsuccessful.
 
-You can use one of the following ways to invoke `getFollowers` remote function:
+You can use one of the following samples to invoke `getFollowers` remote function:
 
-1. Get the sub client for User from the base/parent Twitter client to invoke user related functions.
+1. Get the sub client of User from the base/parent Twitter client to invoke user related functions.
 
     ```ballerina
-    // Get the User client from the base/parent Twitter client.
-    TwitterUserClient twitterUserClient = twitterClient.getUserClient();
+    // Get the `TwitterUserClient` object from the base/parent Twitter client.
+    twitter:TwitterUserClient? twitterUserClient = twitterClient.getUserClient();
 
-    var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-            skipStatus = true, includeUserEntities = false);
+    if (twitterUserClient is twitter:TwitterUserClient) {
+        var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+                skipStatus = true, includeUserEntities = false);
 
-    if (followersResponse is twitter:Followers) {
-        io:println("Followers: ", followersResponse.users);
-    } else {
-        io:println("Error: ", followersResponse);
+        if (followersResponse is twitter:Followers) {
+            io:println("Followers: ", followersResponse.users);
+        } else {
+            io:println("Error: ", followersResponse);
+        }
     }
     ```
 
-2. Create a new User client using the `twitterConfig` to invoke user related functions.
+2. Create a new `TwitterUserClient` object using the `twitterConfig` to invoke user related functions.
 
     ```ballerina
     // Create a new User client using `twitterConfig`.
-    TwitterUserClient twitterUserClientWithConfig = new(twitterConfig);
+    twitter:TwitterUserClient|error twitterUserClientWithConfig = new(twitterConfig);
 
-    var followersResponse = twitterUserClientWithConfig->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-                    skipStatus = true, includeUserEntities = false);
+    if (twitterUserClientWithConfig is twitter:TwitterUserClient) {
+        var followersResponse = twitterUserClientWithConfig->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+                        skipStatus = true, includeUserEntities = false);
 
-    if (followersResponse is twitter:Followers) {
-        io:println("Followers: ", followersResponse.users);
+        if (followersResponse is twitter:Followers) {
+            io:println("Followers: ", followersResponse.users);
+        } else {
+            io:println("Error: ", followersResponse);
+        }
     } else {
-        io:println("Error: ", followersResponse);
+        io:println("Error: ", twitterUserClientWithConfig);
     }
     ```
+
+3. Get the `TwitterClient` object from `TwitterTrendsClient` and then invoke User related functions: If you have already created `TwitterTrendsClient`
+   object and want to invoke User related functions, you can get the `TwitterClient` object from `TwitterTrendsClient` and then can invoke User related functions.
+
+   ```ballerina
+    // Create new Trends client using `twitterConfig`.
+    twitter:TwitterTrendsClient|error twitterTrendsClient = new(twitterConfig);
+    if (twitterTrendsClient is twitter:TwitterTrendsClient) {
+        // Get the TwitterClient object from TwitterTrendsClient.
+        twitter:TwitterClient? twitterClient = twitterTrendsClient.getTwitterClient();
+        if (twitterClient is twitter:TwitterClient) {
+            twitter:TwitterUserClient|error twitterUserClient = new(twitterClient);
+
+            if (twitterUserClient is twitter:TwitterUserClient) {
+                var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+                        skipStatus = true, includeUserEntities = false);
+
+                if (followersResponse is twitter:Followers) {
+                    io:println("Followers: ", followersResponse.users);
+                } else {
+                    io:println("Error: ", followersResponse);
+                }
+            } else {
+                io:println("Error: ", twitterUserClient);
+            }
+        }
+    } else {
+        io:println("Error: ", twitterTrendsClient);
+    }
+   ```
 
 **getTrendsByPlace**
 
 The `getTrendsByPlace` remote function allows to retrieve trending topics for a specific WOEID.
 
-You can use one of the following ways to invoke `getTrendsByPlace` remote function:
+You can use one of the following samples to invoke `getTrendsByPlace` remote function:
 
-1. Get the sub client for Trends from the base/parent Twitter client to invoke trend related functions.
+1. Get the sub client of Trends from the base/parent Twitter client to invoke trend related functions.
 
     ```ballerina
     // Get the Trends client from the base/parent Twitter client.
-    TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
+    twitter:TwitterTrendsClient? twitterTrendsClient = twitterClient.getTrendsClient();
     int locationId = 23424922;
-    var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
-    if (trendsResponse is twitter:TrendsList[]) {
-       io:println("Trends: ", trendsResponse);
-    } else {
-       io:println("Error: ", trendsResponse);
+    if (twitterTrendsClient is twitter:TwitterTrendsClient) {
+        var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+        if (trendsResponse is twitter:TrendsList[]) {
+           io:println("Trends: ", trendsResponse);
+        } else {
+           io:println("Error: ", trendsResponse);
+        }
     }
     ```
 
@@ -273,16 +315,48 @@ You can use one of the following ways to invoke `getTrendsByPlace` remote functi
 
     ```ballerina
     // Create new Trends client using `twitterConfig`.
-    TwitterTrendsClient twitterTrendsClientWithConfig = new(twitterConfig);
-    int locationId = 23424922;
-    var trendsResponse = twitterTrendsClientWithConfig->getTrendsByPlace(locationId);
-    if (trendsResponse is twitter:TrendsList[]) {
-       io:println("Trends: ", trendsResponse);
+    twitter:TwitterTrendsClient|error twitterTrendsClientWithConfig = new(twitterConfig);
+    if (twitterTrendsClientWithConfig is twitter:TwitterTrendsClient) {
+        int locationId = 23424922;
+        var trendsResponse = twitterTrendsClientWithConfig->getTrendsByPlace(locationId);
+        if (trendsResponse is twitter:TrendsList[]) {
+           io:println("Trends: ", trendsResponse);
+        } else {
+           io:println("Error: ", trendsResponse);
+        }
     } else {
-       io:println("Error: ", trendsResponse);
+        io:println("Error: ", twitterTrendsClientWithConfig);
     }
     ```
 
+3. Get the `TwitterClient` object from `TwitterUserClient` and then invoke Trends related functions: If you have already created `TwitterUserClient`
+      object and want to invoke Trends related functions, you can get the `TwitterClient` object from `TwitterUserClient` and then can invoke Trends related functions.
+
+    ```ballerina
+    // Create new User client using `twitterConfig`.
+    twitter:TwitterUserClient|error twitterUserClient = new(twitterConfig);
+    if (twitterUserClient is twitter:TwitterUserClient) {
+        // Get the TwitterClient object from TwitterUserClient.
+        twitter:TwitterClient? twitterClient = twitterUserClient.getTwitterClient();
+        if (twitterClient is twitter:TwitterClient) {
+            twitter:TwitterTrendsClient|error twitterTrendsClient = new(twitterClient);
+
+            if (twitterTrendsClient is twitter:TwitterTrendsClient) {
+                int locationId = 23424922;
+                var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+                if (trendsResponse is twitter:TrendsList[]) {
+                   io:println("Trends: ", trendsResponse);
+                } else {
+                   io:println("Error: ", trendsResponse);
+                }
+            } else {
+                io:println("Error: ", twitterTrendsClient);
+            }
+        }
+    } else {
+        io:println("Error: ", twitterUserClient);
+    }
+    ```
 
 ### Sample
 
@@ -303,8 +377,6 @@ twitter:TwitterConfiguration twitterConfig = {
     accessToken: testAccessToken,
     accessTokenSecret: testAccessTokenSecret
 };
-// Create Twitter client to invoke Tweet related functions.
-twitter:TwitterClient twitterClient = new(twitterConfig);
 
 int tweetId = 0;
 string currentTimeStamp = "";
@@ -327,146 +399,189 @@ twitter:LocationParams locationParams = {
 public function main(string... args) {
 
     io:println("--------------Calling tweet----------------");
-    time:Time time = time:currentTime();
-    int currentTimeMills = time.time;
-    currentTimeStamp = string.convert(currentTimeMills / 1000);
-    string status = "Sample Tweet " + currentTimeStamp;
 
-    var tweetResponse = twitterClient->tweet(status, trimUser = false, enableDmcommands = false, failDmcommands = true,
-        mediaParams = mediaParams, locationParams = locationParams);
+    // Create Twitter client to invoke Tweet related functions.
+    twitter:TwitterClient|error twitterClient = new(twitterConfig);
 
-    if (tweetResponse is twitter:Tweet) {
-        tweetId = untaint tweetResponse.id;
-        io:println("Tweet Text: ", tweetResponse.text);
+    if (twitterClient is twitter:TwitterClient) {
+        time:Time time = time:currentTime();
+        int currentTimeMills = time.time;
+        currentTimeStamp = string.convert(currentTimeMills / 1000);
+        string status = "Sample Tweet " + currentTimeStamp;
+
+        var tweetResponse = twitterClient->tweet(status, trimUser = false, enableDmcommands = false,
+            failDmcommands = true, mediaParams = mediaParams, locationParams = locationParams);
+
+        if (tweetResponse is twitter:Tweet) {
+            tweetId = untaint tweetResponse.id;
+            io:println("Tweet Text: ", tweetResponse.text);
+        } else {
+            io:println("Error: ", tweetResponse);
+        }
+
+        io:println("--------------Calling replyToTweet----------------");
+        twitter:StatusReplyParams replyParams = {
+            inReplyToStatusId: tweetId,
+            autoPopulateReplyMetadata: true,
+            excludeReplyUserIds: userId
+        };
+        string reply = "Sample Tweet Reply " + currentTimeStamp;
+
+        var replyToTweetResponse = twitterClient->replyToTweet(reply, replyParams, trimUser = false,
+            enableDmcommands = false, failDmcommands = true, mediaParams = mediaParams,
+            locationParams = locationParams);
+
+        if (replyToTweetResponse is twitter:Tweet) {
+            io:println("Tweet Reply Text: ", replyToTweetResponse.text);
+        } else {
+            io:println("Error: ", replyToTweetResponse);
+        }
+
+        io:println("--------------Calling retweet----------------");
+        var retweetResponse = twitterClient->retweet(tweetId, trimUser = false);
+        if (retweetResponse is twitter:Tweet) {
+            io:println("Retweeted: ", retweetResponse.retweeted);
+        } else {
+            io:println("Error: ", retweetResponse);
+        }
+
+        io:println("--------------Calling createFavoriteTweet----------------");
+        var favoriteTweetResponse = twitterClient->createFavoriteTweet(tweetId, includeEntities = false);
+
+        if (favoriteTweetResponse is twitter:Tweet) {
+            io:println("FavoritedTweet: ", favoriteTweetResponse.favorited);
+        } else {
+            io:println("Error: ", favoriteTweetResponse);
+        }
+
+        io:println("--------------Calling search----------------");
+        string queryStr = "twitter";
+        var searchResponse = twitterClient->search(queryStr, count = 20, lang = "eu", includeEntities = false,
+            sinceId = sinceId);
+
+        if (searchResponse is twitter:Search) {
+            io:println("Search Result: ", searchResponse);
+        } else {
+            io:println("Error: ", searchResponse);
+        }
+
+        io:println("--------------Calling getHomeTimelineTweets----------------");
+
+        var homeTimelineResponse = twitterClient->getHomeTimelineTweets(count = 20, sinceId = sinceId,
+            maxId = maxId, trimUser = false, excludeReplies = false, includeEntities = false);
+
+        if (homeTimelineResponse is twitter:Tweet[]) {
+            io:println("HomeTimelineTweets: ", homeTimelineResponse);
+        } else {
+            io:println("Error: ", homeTimelineResponse);
+        }
+
+        io:println("--------------Calling getTweetMentions----------------");
+        var tweetMentionsResponse = twitterClient->getTweetMentions(count = 5, sinceId = sinceId,
+            maxId = maxId, trimUser = false, includeEntities = false);
+
+        if (tweetMentionsResponse is twitter:Tweet[]) {
+            io:println("Tweet Mentions: ", tweetMentionsResponse);
+        } else {
+            io:println("Error: ", tweetMentionsResponse);
+        }
+
+        io:println("--------------Calling getFollowers----------------");
+        // Create a new User client using `twitterConfig`.
+        twitter:TwitterUserClient|error twitterUserClientWithConfig = new(twitterConfig);
+        if (twitterUserClientWithConfig is twitter:TwitterUserClient) {
+            var followersResponseWithConfig = twitterUserClientWithConfig->getFollowers(screenName = "WSO2",
+                cursor = -1, count = 10, skipStatus = true, includeUserEntities = false);
+
+            if (followersResponseWithConfig is twitter:Followers) {
+                io:println("Followers: ", followersResponseWithConfig.users);
+            } else {
+                io:println("Error: ", followersResponseWithConfig);
+            }
+        } else {
+            io:println("Error: ", twitterUserClientWithConfig);
+        }
+
+        // Or Get the User client from the base/parent Twitter client.
+        twitter:TwitterUserClient? twitterUserClient = twitterClient.getUserClient();
+        if (twitterUserClient is twitter:TwitterUserClient) {
+            var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+                skipStatus = true, includeUserEntities = false);
+
+            if (followersResponse is twitter:Followers) {
+                io:println("Followers: ", followersResponse.users);
+            } else {
+                io:println("Error: ", followersResponse);
+            }
+        }
+
+        io:println("--------------Calling getClosestTrendLocations----------------");
+        float latitude = 34.0;
+        float longitude = 67.0;
+        // Create new Trends client using `twitterConfig`.
+        twitter:TwitterTrendsClient|error twitterTrendsClientWithConfig = new(twitterConfig);
+        if (twitterTrendsClientWithConfig is twitter:TwitterTrendsClient) {
+            var locationResponseWithConfig = twitterTrendsClientWithConfig->getClosestTrendLocations(latitude,
+                longitude);
+            if (locationResponseWithConfig is twitter:Location[]) {
+                io:println("Locations: ", locationResponseWithConfig);
+            } else {
+                io:println("Error: ", locationResponseWithConfig);
+            }
+        } else {
+            io:println("Error: ", twitterTrendsClientWithConfig);
+        }
+
+        // Or Get the Trends client from the base/parent Twitter client.
+        twitter:TwitterTrendsClient? twitterTrendsClient = twitterClient.getTrendsClient();
+        if (twitterTrendsClient is twitter:TwitterTrendsClient) {
+            var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
+            if (locationResponse is twitter:Location[]) {
+                io:println("Locations: ", locationResponse);
+            } else {
+                io:println("Error: ", locationResponse);
+            }
+        }
+
+        // Get the `TwitterClient` object from twitterUserClient and then invoke Trends related functions.
+        if (twitterUserClient is twitter:TwitterUserClient) {
+            twitter:TwitterClient? twitterClient2 = twitterUserClient.getTwitterClient();
+            if (twitterClient2 is twitter:TwitterClient) {
+                twitter:TwitterTrendsClient|error twitterTrendsClient2 = new(twitterClient2);
+                if (twitterTrendsClient2 is twitter:TwitterTrendsClient) {
+                    var locationResponse2 = twitterTrendsClient2->getClosestTrendLocations(latitude, longitude);
+                    if (locationResponse2 is twitter:Location[]) {
+                        io:println("Locations: ", locationResponse2);
+                    } else {
+                        io:println("Error: ", locationResponse2);
+                    }
+                }
+            }
+        }
+
+        io:println("--------------Calling getTopTrendsByPlace----------------");
+        int locationId = 23424922;
+        if (twitterTrendsClientWithConfig is twitter:TwitterTrendsClient) {
+            var trendsResponseWithConfig = twitterTrendsClientWithConfig->getTrendsByPlace(locationId);
+            if (trendsResponseWithConfig is twitter:TrendsList[]) {
+                io:println("Trends: ", trendsResponseWithConfig);
+            } else {
+                io:println("Error: ", trendsResponseWithConfig);
+            }
+        } else {
+            io:println("Error: ", twitterTrendsClientWithConfig);
+        }
+
+        if (twitterTrendsClient is twitter:TwitterTrendsClient) {
+            var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+            if (trendsResponse is twitter:TrendsList[]) {
+                io:println("Trends: ", trendsResponse);
+            } else {
+                io:println("Error: ", trendsResponse);
+            }
+        }
     } else {
-        io:println("Error: ", tweetResponse);
-    }
-
-    io:println("--------------Calling replyToTweet----------------");
-    twitter:StatusReplyParams replyParams = {
-        inReplyToStatusId: tweetId,
-        autoPopulateReplyMetadata: true,
-        excludeReplyUserIds: userId
-    };
-    string reply = "Sample Tweet Reply " + currentTimeStamp;
-
-    var replyToTweetResponse = twitterClient->replyToTweet(reply, replyParams, trimUser = false,
-        enableDmcommands = false, failDmcommands = true, mediaParams = mediaParams, locationParams = locationParams);
-
-    if (replyToTweetResponse is twitter:Tweet) {
-        io:println("Tweet Reply Text: ", replyToTweetResponse.text);
-    } else {
-        io:println("Error: ", replyToTweetResponse);
-    }
-
-    io:println("--------------Calling retweet----------------");
-    var retweetResponse = twitterClient->retweet(tweetId, trimUser = false);
-
-    if (retweetResponse is twitter:Tweet) {
-        io:println("Retweeted: ", retweetResponse.retweeted);
-    } else {
-        io:println("Error: ", retweetResponse);
-    }
-
-    io:println("--------------Calling createFavoriteTweet----------------");
-    var favoriteTweetResponse = twitterClient->createFavoriteTweet(tweetId, includeEntities = false);
-
-    if (favoriteTweetResponse is twitter:Tweet) {
-        io:println("FavoritedTweet: ", favoriteTweetResponse.favorited);
-    } else {
-        io:println("Error: ", favoriteTweetResponse);
-    }
-
-    io:println("--------------Calling search----------------");
-    string queryStr = "twitter";
-    var searchResponse = twitterClient->search(queryStr, count = 20, lang = "eu", includeEntities = false,
-        sinceId = sinceId);
-
-    if (searchResponse is twitter:Search) {
-        io:println("Search Result: ", searchResponse);
-    } else {
-        io:println("Error: ", searchResponse);
-    }
-
-    io:println("--------------Calling getHomeTimelineTweets----------------");
-
-    var homeTimelineResponse = twitterClient->getHomeTimelineTweets(count = 20, sinceId = sinceId,
-        maxId = maxId, trimUser = false, excludeReplies = false, includeEntities = false);
-
-    if (homeTimelineResponse is twitter:Tweet[]) {
-        io:println("HomeTimelineTweets: ", homeTimelineResponse);
-    } else {
-        io:println("Error: ", homeTimelineResponse);
-    }
-
-    io:println("--------------Calling getTweetMentions----------------");
-    var tweetMentionsResponse = twitterClient->getTweetMentions(count = 5, sinceId = sinceId,
-        maxId = maxId, trimUser = false, includeEntities = false);
-
-    if (tweetMentionsResponse is twitter:Tweet[]) {
-        io:println("Tweet Mentions: ", tweetMentionsResponse);
-    } else {
-        io:println("Error: ", tweetMentionsResponse);
-    }
-
-    io:println("--------------Calling getFollowers----------------");
-    // Create a new User client using `twitterConfig`.
-    twitter:TwitterUserClient twitterUserClientWithConfig = new(twitterConfig);
-    var followersResponseWithConfig = twitterUserClientWithConfig->getFollowers(screenName = "WSO2",
-        cursor = -1, count = 10, skipStatus = true, includeUserEntities = false);
-
-    if (followersResponseWithConfig is twitter:Followers) {
-        io:println("Followers: ", followersResponseWithConfig.users);
-    } else {
-        io:println("Error: ", followersResponseWithConfig);
-    }
-
-    // Or Get the User client from the base/parent Twitter client.
-    twitter:TwitterUserClient twitterUserClient = twitterClient.getUserClient();
-    var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-        skipStatus = true, includeUserEntities = false);
-
-    if (followersResponse is twitter:Followers) {
-        io:println("Followers: ", followersResponse.users);
-    } else {
-        io:println("Error: ", followersResponse);
-    }
-
-    io:println("--------------Calling getClosestTrendLocations----------------");
-    float latitude = 34.0;
-    float longitude = 67.0;
-    // Create new Trends client using `twitterConfig`.
-    twitter:TwitterTrendsClient twitterTrendsClientWithConfig = new(twitterConfig);
-    var locationResponseWithConfig = twitterTrendsClientWithConfig->getClosestTrendLocations(latitude, longitude);
-    if (locationResponseWithConfig is twitter:Location[]) {
-        io:println("Locations: ", locationResponseWithConfig);
-    } else {
-        io:println("Error: ", locationResponseWithConfig);
-    }
-
-    // Or Get the Trends client from the base/parent Twitter client.
-    twitter:TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
-    var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
-    if (locationResponse is twitter:Location[]) {
-        io:println("Locations: ", locationResponse);
-    } else {
-        io:println("Error: ", locationResponse);
-    }
-
-    io:println("--------------Calling getTopTrendsByPlace----------------");
-    int locationId = 23424922;
-    var trendsResponseWithConfig = twitterTrendsClientWithConfig->getTrendsByPlace(locationId);
-    if (trendsResponseWithConfig is twitter:TrendsList[]) {
-        io:println("Trends: ", trendsResponseWithConfig);
-    } else {
-        io:println("Error: ", trendsResponseWithConfig);
-    }
-
-    var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
-    if (trendsResponse is twitter:TrendsList[]) {
-        io:println("Trends: ", trendsResponse);
-    } else {
-        io:println("Error: ", trendsResponse);
+        io:println("Error: ", twitterClient);
     }
 }
 ```

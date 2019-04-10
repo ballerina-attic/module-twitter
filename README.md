@@ -2,9 +2,7 @@
 
 # Ballerina Twitter Client
 
-The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve home timeline Tweets,
-and retrieve mentions for the user through the Twitter REST API. You can also retrieve followers for the specified user, retrieve closest trend locations,
-and top trends using this client.
+The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve home timeline Tweets, and retrieve mentions for the user through the Twitter REST API. You can also retrieve followers for the specified user, retrieve closest trend locations, and top trends using this client.
 
 
 ## Compatibility

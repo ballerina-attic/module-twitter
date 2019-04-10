@@ -26,24 +26,53 @@ string accessTokenSecretStr = "";
 
 # Twitter Client object.
 #
-# + twitterClient - HTTP Client.
+# + httpClient - HTTP Client.
 # + userClient - Twitter user client.
 # + trendsClient - Twitter trends client.
 public type TwitterClient client object {
 
     http:Client httpClient;
-    TwitterClient twitterClient;
-    TwitterUserClient userClient;
-    TwitterTrendsClient trendsClient;
+    TwitterUserClient|error userClient;
+    TwitterTrendsClient|error trendsClient;
 
-    public function __init(TwitterConfiguration twitterConfig) {
+    public function __init(TwitterConfiguration twitterConfig) returns error? {
         self.httpClient = new(TWITTER_API_URL, config = twitterConfig.clientConfig);
-        self.userClient = new(self.twitterClient);
-        self.trendsClient = new(self.twitterClient);
-        accessTokenStr = twitterConfig.accessToken;
-        accessTokenSecretStr = twitterConfig.accessTokenSecret;
-        clientIdStr = twitterConfig.clientId;
-        clientSecretStr = twitterConfig.clientSecret;
+        var isValid = verifyCredentials(self.httpClient, twitterConfig.clientId, twitterConfig.clientSecret,
+            twitterConfig.accessToken, twitterConfig.accessTokenSecret);
+        if (isValid is error) {
+            return isValid;
+        }
+        self.userClient = new(self);
+        self.trendsClient = new(self);
+    }
+
+    # Get the user client to invoke user related functions.
+    #
+    # + return - Returns `TwitterUserClient` object.
+    public function getUserClient() returns TwitterUserClient? {
+        TwitterUserClient|error userClient = self.userClient;
+        if (userClient is TwitterUserClient) {
+            return userClient;
+        }
+        return ();
+    }
+
+    # Get the trends client to invoke Trend related functions.
+    #
+    # + return - Returns `TwitterTrendsClient` object.
+    public function getTrendsClient() returns TwitterTrendsClient? {
+        TwitterTrendsClient|error trendClient = self.trendsClient;
+        if (trendClient is TwitterTrendsClient) {
+            return trendClient;
+        }
+        return ();
+    }
+
+    # Get the HTTP client object.
+    #
+    # + return - Returns HTTP client object.
+    function getHttpClient() returns http:Client {
+        return self.httpClient;
     }
 
     # Updates the authenticating user's current status, also known as Tweeting.
@@ -144,42 +173,40 @@ public type TwitterClient client object {
     # + return - Returns a collection of Tweet object when successful, else returns an error.
     public remote function getTweetMentions(int? count = (), int? sinceId = (), int? maxId = (), boolean? trimUser = (),
                                             boolean? includeEntities = ()) returns Tweet[]|error;
-
-    # Get the sub-connector of user to invoke user related functions.
-    #
-    # + return - Returns TwitterUserClient object.
-    public function getUserClient() returns TwitterUserClient {
-        return self.userClient;
-    }
-
-    # Get the sub-connector of Trends to invoke Trend related functions.
-    #
-    # + return - Returns TwitterTrendsClient object.
-    public function getTrendsClient() returns TwitterTrendsClient {
-        return self.trendsClient;
-    }
-
-    public function getHttpClient() returns http:Client {
-        return self.httpClient;
-    }
 };
 
 # Twitter User Client object.
 #
 # + httpClient - HTTP Client.
+# + twitterClient - Twitter Client.
 public type TwitterUserClient client object {
     http:Client httpClient;
+    TwitterClient|error twitterClient;
 
-    public function __init(TwitterClient|TwitterConfiguration config) {
+    public function __init(TwitterClient|TwitterConfiguration config) returns error? {
         if (config is TwitterClient) {
             self.httpClient = config.getHttpClient();
+            self.twitterClient = config;
         } else {
             self.httpClient = new(TWITTER_API_URL, config = config.clientConfig);
-            accessTokenStr = config.accessToken;
-            accessTokenSecretStr = config.accessTokenSecret;
-            clientIdStr = config.clientId;
-            clientSecretStr = config.clientSecret;
+            var isValid = verifyCredentials(self.httpClient, config.clientId, config.clientSecret, config.accessToken,
+                config.accessTokenSecret);
+            if (isValid is error) {
+                return isValid;
+            }
+            self.twitterClient = new(config);
         }
+    }
+
+    # Get the Twitter client to invoke tweet related functions.
+    #
+    # + return - Returns `TwitterClient` object.
+    public function getTwitterClient() returns TwitterClient? {
+        TwitterClient|error twitterClient = self.twitterClient;
+        if (twitterClient is TwitterClient) {
+            return twitterClient;
+        }
+        return ();
     }
 
     # Returns a cursored collection of user objects for users following the specified user.
@@ -200,19 +227,35 @@ public type TwitterUserClient client object {
 # Twitter Trends Client object.
 #
 # + httpClient - HTTP Client.
+# + twitterClient - Twitter Client.
 public type TwitterTrendsClient client object {
     http:Client httpClient;
+    TwitterClient|error twitterClient;
 
-    public function __init(TwitterClient|TwitterConfiguration twitterClient) {
-        if (twitterClient is TwitterClient) {
-            self.httpClient = twitterClient.getHttpClient();
+    public function __init(TwitterClient|TwitterConfiguration config) returns error?{
+        if (config is TwitterClient) {
+            self.httpClient = config.getHttpClient();
+            self.twitterClient = config;
         } else {
-            self.httpClient = new(TWITTER_API_URL, config = twitterClient.clientConfig);
-            accessTokenStr = twitterClient.accessToken;
-            accessTokenSecretStr = twitterClient.accessTokenSecret;
-            clientIdStr = twitterClient.clientId;
-            clientSecretStr = twitterClient.clientSecret;
+            self.httpClient = new(TWITTER_API_URL, config = config.clientConfig);
+            var isValid = verifyCredentials(self.httpClient, config.clientId, config.clientSecret, config.accessToken,
+                config.accessTokenSecret);
+            if (isValid is error) {
+                return isValid;
+            }
+            self.twitterClient = new(config);
         }
+    }
+
+    # Get the Twitter client to invoke tweet related functions.
+    #
+    # + return - Returns `TwitterClient` object.
+    public function getTwitterClient() returns TwitterClient? {
+        TwitterClient|error twitterClient = self.twitterClient;
+        if (twitterClient is TwitterClient) {
+            return twitterClient;
+        }
+        return ();
     }
 
     # Returns the top trending topics for a specific WOEID, if trending information is available for it.
@@ -235,7 +278,6 @@ public remote function TwitterClient.tweet(string status, string? cardUri = (), 
                                            MediaParams? mediaParams = (), LocationParams? locationParams = ())
                                          returns Tweet|error {
     http:Client httpClient = self.httpClient;
-var cc= verifyCredentials(httpClient);
     return updateStatus(httpClient, status, cardUri = cardUri, trimUser = trimUser, enableDmcommands = enableDmcommands,
         failDmcommands = failDmcommands, mediaParams = mediaParams, locationParams = locationParams);
 }
@@ -289,7 +331,7 @@ public remote function TwitterClient.retweet(int tweetId, boolean? trimUser = ()
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -345,7 +387,7 @@ public remote function TwitterClient.createFavoriteTweet(int tweetId,
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -442,7 +484,7 @@ public remote function TwitterClient.search(@sensitive string query, int? count 
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -525,7 +567,7 @@ public remote function TwitterClient.getHomeTimelineTweets(int? count = (), int?
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -601,7 +643,7 @@ public remote function TwitterClient.getTweetMentions(int? count = (), int? sinc
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -680,7 +722,7 @@ public remote function TwitterUserClient.getFollowers(int? userId = (), string? 
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -736,7 +778,7 @@ public remote function TwitterTrendsClient.getTrendsByPlace(int locationId,
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -789,7 +831,7 @@ public remote function TwitterTrendsClient.getClosestTrendLocations(float latitu
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -890,7 +932,7 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
             urlParams = string `${urlParams}&media_ids=${encodedMediaIds}`;
         }
 
-        boolean possiblySensitiveValue = mediaParams["possiblySensitive"] is boolean?
+        boolean possiblySensitiveValue = mediaParams["possiblySensitive"] is boolean ?
             <boolean>mediaParams["possiblySensitive"] : false;
         string encodedPossiblySensitive = check http:encode(string.convert(possiblySensitiveValue), UTF_8);
         parameters["possibly_sensitive"] = encodedPossiblySensitive;
@@ -947,7 +989,7 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
                     return setResponseError(jsonPayload);
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
+                error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
                     message: "Error occurred while accessing the JSON payload of the response" });
                 return err;
             }
@@ -959,48 +1001,57 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
     }
 }
 
-public function verifyCredentials(http:Client httpClient) returns error? {
-    http:Request request = new;
-    string tweetPath = VERIFY_CREDENTIALS_ENDPOINT;
+# Check supplied user credentials are valid or not.
+#
+# + httpClient - HTTP client object.
+# + clientId - The consumer key of the Twitter account.
+# + clientSecret - The consumer secret of the Twitter account.
+# + accessToken - The access token of the Twitter account.
+# + accessTokenSecret - The access token secret of the Twitter account.
+# + return - Returns an error object when the provided credentials are invalid.
+function verifyCredentials(http:Client httpClient, string clientId, string clientSecret, string accessToken,
+                                  string accessTokenSecret) returns error? {
 
-    var requestHeaders = constructRequestHeaders(request, GET, tweetPath, clientIdStr, clientSecretStr, accessTokenStr,
-        accessTokenSecretStr, {});
-    if (requestHeaders is error) {
-        error err = error(ENCODING_ERROR_CODE, { ^"cause": requestHeaders,
-            message: "Error occurred while encoding parameters when constructing request headers" });
+    if ((clientId == "") || (clientSecret == "") || (accessToken == "") || (accessTokenSecret == "")) {
+        error err = error(AUTH_ERROR_CODE, { message: "Empty values set for accessToken or accessTokenSecret
+        or clientId or clientSecret credential" });
         return err;
     } else {
-        //tweetPath = string `${tweetPath}?${urlParams}`;
+        http:Request request = new;
+        string tweetPath = VERIFY_CREDENTIALS_ENDPOINT;
 
-        var httpResponse = httpClient->get(tweetPath, message = request);
-        io:println("httpResponse---", httpResponse);
-        if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
-            var jsonPayload = httpResponse.getJsonPayload();
-            io:println("jsonPayload---", jsonPayload);
-            if (jsonPayload is json) {
-                if (statusCode == 200) {
-                    //Tweet|error tweetResponse = Tweet.convert(jsonPayload);
-                    //if (tweetResponse is Tweet) {
-                    //    return tweetResponse.freeze();
-                    //} else {
-                    //    error err = error(TWITTER_ERROR_CODE, { ^"cause": tweetResponse,
-                    //        message: "Error in json to Tweet record conversion" });
-                    //    return err;
-                    //}
+        var requestHeaders = constructRequestHeaders(request, GET, tweetPath, clientId, clientSecret, accessToken,
+            accessTokenSecret, {});
+        if (requestHeaders is error) {
+            error err = error(ENCODING_ERROR_CODE, { ^"cause": requestHeaders,
+                message: "Error occurred while encoding parameters when constructing request headers" });
+            return err;
+        } else {
+            var httpResponse = httpClient->get(tweetPath, message = request);
+            if (httpResponse is http:Response) {
+                int statusCode = httpResponse.statusCode;
+                var jsonPayload = httpResponse.getJsonPayload();
+                if (jsonPayload is json) {
+                    if (statusCode == 200) {
+                        accessTokenStr = accessToken;
+                        accessTokenSecretStr = accessTokenSecret;
+                        clientIdStr = clientId;
+                        clientSecretStr = clientSecret;
+                    } else {
+                        error err = error(AUTH_ERROR_CODE, { ^"cause": jsonPayload,
+                            message: "Invalid credentials provided" });
+                        return err;
+                    }
                 } else {
-                    return setResponseError(jsonPayload);
+                    error err = error(HTTP_ERROR_CODE, { ^"cause": jsonPayload,
+                        message: "Error occurred while accessing the JSON payload of the response" });
+                    return err;
                 }
             } else {
-                error err = error(IO_ERROR_CODE, { ^"cause": jsonPayload,
-                    message: "Error occurred while accessing the JSON payload of the response" });
+                error err = error(TWITTER_ERROR_CODE, { ^"cause": httpResponse,
+                    message: "Error occurred while invoking the Twitter REST API" });
                 return err;
             }
-        } else {
-            error err = error(TWITTER_ERROR_CODE, { ^"cause": httpResponse,
-                message: "Error occurred while invoking the Twitter REST API" });
-            return err;
         }
     }
-    return ();
 }

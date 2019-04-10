@@ -41,5 +41,6 @@ const string JSON = ".json";
 // Error Codes
 const string TWITTER_ERROR_CODE = "(wso2/twitter)TwitterError";
 const string ENCODING_ERROR_CODE = "(wso2/twitter)EncodingError";
-const string IO_ERROR_CODE = "(wso2/twitter)IOError";
+const string HTTP_ERROR_CODE = "(wso2/twitter)HTTPError";
 const string CONVERSION_ERROR_CODE = "(wso2/twitter)ConversionError";
+const string AUTH_ERROR_CODE = "(wso2/twitter)AuthError";
