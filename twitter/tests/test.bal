@@ -39,14 +39,16 @@ TwitterConfiguration twitterConfig = {
 };
 
 MediaParams mediaParams = {
+    // Here, you can pass media as attachment_url or media_ids
     media: "https://twitter.com/andypiper/status/903615884664725505",
-    //media:mediaIds,
+    //media: mediaIds,
     possiblySensitive: false
 };
 
 LocationParams locationParams = {
+    // Here, you can pass placeInfo as (latitude, longitude) or place_id.
     placeInfo: (37.7821120598956, 122.400612831116),
-    //placeInfo:"df51dec6f4ee2b2c",
+    //placeInfo: "df51dec6f4ee2b2c",
     displayCoordinates: true
 };
 
@@ -231,17 +233,15 @@ function testGetFollowers() {
 
     TwitterClient|error twitterClient = new(twitterConfig);
     if (twitterClient is TwitterClient) {
-        TwitterUserClient? twitterUserClient = twitterClient.getUserClient();
-        if (twitterUserClient is TwitterUserClient) {
-            var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-                skipStatus = true, includeUserEntities = false);
+        TwitterUserClient twitterUserClient = twitterClient.getUserClient();
+        var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+            skipStatus = true, includeUserEntities = false);
 
-            if (followersResponse is Followers) {
-                io:println("Followers: ", followersResponse);
-                test:assertNotEquals(followersResponse.users, (), msg = "Failed to call getFollowers()");
-            } else {
-                test:assertFail(msg = <string>followersResponse.detail().message);
-            }
+        if (followersResponse is Followers) {
+            io:println("Followers: ", followersResponse);
+            test:assertNotEquals(followersResponse.users, (), msg = "Failed to call getFollowers()");
+        } else {
+            test:assertFail(msg = <string>followersResponse.detail().message);
         }
     } else {
         test:assertFail(msg = <string>twitterClient.detail().message);
@@ -269,15 +269,13 @@ function testGetClosestTrendLocations() {
 
     TwitterClient|error twitterClient = new(twitterConfig);
     if (twitterClient is TwitterClient) {
-        TwitterTrendsClient? twitterTrendsClient = twitterClient.getTrendsClient();
-        if (twitterTrendsClient is TwitterTrendsClient) {
-            var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
-            if (locationResponse is Location[]) {
-                io:println("Locations: ", locationResponse);
-                test:assertNotEquals(locationResponse, (), msg = "Failed to call getClosestTrendLocations()");
-            } else {
-                test:assertFail(msg = <string>locationResponse.detail().message);
-            }
+        TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
+        var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
+        if (locationResponse is Location[]) {
+            io:println("Locations: ", locationResponse);
+            test:assertNotEquals(locationResponse, (), msg = "Failed to call getClosestTrendLocations()");
+        } else {
+            test:assertFail(msg = <string>locationResponse.detail().message);
         }
     } else {
         test:assertFail(msg = <string>twitterClient.detail().message);
@@ -304,15 +302,13 @@ function testGetTrendsByPlace() {
 
     TwitterClient|error twitterClient = new(twitterConfig);
     if (twitterClient is TwitterClient) {
-        TwitterTrendsClient? twitterTrendsClient = twitterClient.getTrendsClient();
-        if (twitterTrendsClient is TwitterTrendsClient) {
-            var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
-            if (trendsResponse is TrendsList[]) {
-                io:println("Trends: ", trendsResponse);
-                test:assertNotEquals(trendsResponse, (), msg = "Failed to call getTopTrendsByPlace()");
-            } else {
-                test:assertFail(msg = <string>trendsResponse.detail().message);
-            }
+        TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
+        var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+        if (trendsResponse is TrendsList[]) {
+            io:println("Trends: ", trendsResponse);
+            test:assertNotEquals(trendsResponse, (), msg = "Failed to call getTopTrendsByPlace()");
+        } else {
+            test:assertFail(msg = <string>trendsResponse.detail().message);
         }
     } else {
         test:assertFail(msg = <string>twitterClient.detail().message);

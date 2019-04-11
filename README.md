@@ -2,7 +2,7 @@
 
 # Ballerina Twitter Client
 
-The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve home timeline Tweets, and retrieve mentions for the user through the Twitter REST API. You can also retrieve followers for the specified user, retrieve closest trend locations, and top trends using this client.
+The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve timeline Tweets, and retrieve mentions for the user through the Twitter REST API. You can also retrieve followers for the specified user, retrieve closest trend locations, and top trends using this client.
 
 
 ## Compatibility
@@ -51,15 +51,16 @@ $ ballerina install twitter
 
 ## Running Tests
 
-1. Create `ballerina.conf` file in `module-twitter`, with following keys and provide values for the variables.
+1. Create `ballerina.conf` file in `module-twitter` with following configurations and provide appropriate value.
 
-    ```.conf
+    ```
     CLIENT_ID=""
     CLIENT_SECRET=""
     ACCESS_TOKEN=""
     ACCESS_TOKEN_SECRET=""
     ```
-2. Navigate to the folder `module-twitter`
+
+2. Navigate to the `module-twitter` directory.
 
 3. Run tests :
 

@@ -2,7 +2,7 @@ Connects to Twitter from Ballerina.
 
 # Module Overview
 
-The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve home timeline Tweets,
+The Twitter client allows you to create Tweets, reply to a Tweet, Retweets, Likes a Tweet, search Tweets, retrieve timeline Tweets,
 and retrieve mentions for the user through the Twitter REST API. You can also retrieve followers for the specified user, retrieve closest trend locations, and top trends using this twitter client.
 
 **Tweet Operations**
@@ -125,6 +125,7 @@ The completed source code will look similar to the following:
 
 ```ballerina
 import wso2/twitter;
+
 import ballerina/config;
 import ballerina/io;
 
@@ -225,17 +226,15 @@ You can use one of the following samples to invoke `getFollowers` remote functio
 
     ```ballerina
     // Get the `TwitterUserClient` object from the base/parent Twitter client.
-    twitter:TwitterUserClient? twitterUserClient = twitterClient.getUserClient();
+    twitter:TwitterUserClient twitterUserClient = twitterClient.getUserClient();
 
-    if (twitterUserClient is twitter:TwitterUserClient) {
-        var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-                skipStatus = true, includeUserEntities = false);
+    var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+            skipStatus = true, includeUserEntities = false);
 
-        if (followersResponse is twitter:Followers) {
-            io:println("Followers: ", followersResponse.users);
-        } else {
-            io:println("Error: ", followersResponse);
-        }
+    if (followersResponse is twitter:Followers) {
+        io:println("Followers: ", followersResponse.users);
+    } else {
+        io:println("Error: ", followersResponse);
     }
     ```
 
@@ -267,22 +266,20 @@ You can use one of the following samples to invoke `getFollowers` remote functio
     twitter:TwitterTrendsClient|error twitterTrendsClient = new(twitterConfig);
     if (twitterTrendsClient is twitter:TwitterTrendsClient) {
         // Get the TwitterClient object from TwitterTrendsClient.
-        twitter:TwitterClient? twitterClient = twitterTrendsClient.getTwitterClient();
-        if (twitterClient is twitter:TwitterClient) {
-            twitter:TwitterUserClient|error twitterUserClient = new(twitterClient);
+        twitter:TwitterClient twitterClient = twitterTrendsClient.getTwitterClient();
+        twitter:TwitterUserClient|error twitterUserClient = new(twitterClient);
 
-            if (twitterUserClient is twitter:TwitterUserClient) {
-                var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-                        skipStatus = true, includeUserEntities = false);
+        if (twitterUserClient is twitter:TwitterUserClient) {
+            var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+                    skipStatus = true, includeUserEntities = false);
 
-                if (followersResponse is twitter:Followers) {
-                    io:println("Followers: ", followersResponse.users);
-                } else {
-                    io:println("Error: ", followersResponse);
-                }
+            if (followersResponse is twitter:Followers) {
+                io:println("Followers: ", followersResponse.users);
             } else {
-                io:println("Error: ", twitterUserClient);
+                io:println("Error: ", followersResponse);
             }
+        } else {
+            io:println("Error: ", twitterUserClient);
         }
     } else {
         io:println("Error: ", twitterTrendsClient);
@@ -299,15 +296,13 @@ You can use one of the following samples to invoke `getTrendsByPlace` remote fun
 
     ```ballerina
     // Get the Trends client from the base/parent Twitter client.
-    twitter:TwitterTrendsClient? twitterTrendsClient = twitterClient.getTrendsClient();
+    twitter:TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
     int locationId = 23424922;
-    if (twitterTrendsClient is twitter:TwitterTrendsClient) {
-        var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
-        if (trendsResponse is twitter:TrendsList[]) {
-           io:println("Trends: ", trendsResponse);
-        } else {
-           io:println("Error: ", trendsResponse);
-        }
+    var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+    if (trendsResponse is twitter:TrendsList[]) {
+       io:println("Trends: ", trendsResponse);
+    } else {
+       io:println("Error: ", trendsResponse);
     }
     ```
 
@@ -337,21 +332,19 @@ You can use one of the following samples to invoke `getTrendsByPlace` remote fun
     twitter:TwitterUserClient|error twitterUserClient = new(twitterConfig);
     if (twitterUserClient is twitter:TwitterUserClient) {
         // Get the TwitterClient object from TwitterUserClient.
-        twitter:TwitterClient? twitterClient = twitterUserClient.getTwitterClient();
-        if (twitterClient is twitter:TwitterClient) {
-            twitter:TwitterTrendsClient|error twitterTrendsClient = new(twitterClient);
+        twitter:TwitterClient twitterClient = twitterUserClient.getTwitterClient();
+        twitter:TwitterTrendsClient|error twitterTrendsClient = new(twitterClient);
 
-            if (twitterTrendsClient is twitter:TwitterTrendsClient) {
-                int locationId = 23424922;
-                var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
-                if (trendsResponse is twitter:TrendsList[]) {
-                   io:println("Trends: ", trendsResponse);
-                } else {
-                   io:println("Error: ", trendsResponse);
-                }
+        if (twitterTrendsClient is twitter:TwitterTrendsClient) {
+            int locationId = 23424922;
+            var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+            if (trendsResponse is twitter:TrendsList[]) {
+               io:println("Trends: ", trendsResponse);
             } else {
-                io:println("Error: ", twitterTrendsClient);
+               io:println("Error: ", trendsResponse);
             }
+        } else {
+            io:println("Error: ", twitterTrendsClient);
         }
     } else {
         io:println("Error: ", twitterUserClient);
@@ -362,6 +355,7 @@ You can use one of the following samples to invoke `getTrendsByPlace` remote fun
 
 ```ballerina
 import wso2/twitter;
+
 import ballerina/config;
 import ballerina/io;
 import ballerina/time;
@@ -385,14 +379,16 @@ int sinceId = 1108616819688927232;
 int maxId = 1110365503862833154;
 
 twitter:MediaParams mediaParams = {
+    // Here, you can pass media as attachment_url or media_ids
     media: "https://twitter.com/andypiper/status/903615884664725505",
-    //media:mediaIds,
+    //media: mediaIds,
     possiblySensitive: false
 };
 
 twitter:LocationParams locationParams = {
+    // Here, you can pass placeInfo as (latitude, longitude) or place_id.
     placeInfo: (37.7821120598956, 122.400612831116),
-    //placeInfo:"df51dec6f4ee2b2c",
+    //placeInfo: "df51dec6f4ee2b2c",
     displayCoordinates: true
 };
 
@@ -503,16 +499,14 @@ public function main(string... args) {
         }
 
         // Or Get the User client from the base/parent Twitter client.
-        twitter:TwitterUserClient? twitterUserClient = twitterClient.getUserClient();
-        if (twitterUserClient is twitter:TwitterUserClient) {
-            var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
-                skipStatus = true, includeUserEntities = false);
+        twitter:TwitterUserClient twitterUserClient = twitterClient.getUserClient();
+        var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
+            skipStatus = true, includeUserEntities = false);
 
-            if (followersResponse is twitter:Followers) {
-                io:println("Followers: ", followersResponse.users);
-            } else {
-                io:println("Error: ", followersResponse);
-            }
+        if (followersResponse is twitter:Followers) {
+            io:println("Followers: ", followersResponse.users);
+        } else {
+            io:println("Error: ", followersResponse);
         }
 
         io:println("--------------Calling getClosestTrendLocations----------------");
@@ -533,30 +527,26 @@ public function main(string... args) {
         }
 
         // Or Get the Trends client from the base/parent Twitter client.
-        twitter:TwitterTrendsClient? twitterTrendsClient = twitterClient.getTrendsClient();
-        if (twitterTrendsClient is twitter:TwitterTrendsClient) {
-            var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
-            if (locationResponse is twitter:Location[]) {
-                io:println("Locations: ", locationResponse);
-            } else {
-                io:println("Error: ", locationResponse);
-            }
+        twitter:TwitterTrendsClient twitterTrendsClient = twitterClient.getTrendsClient();
+        var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
+        if (locationResponse is twitter:Location[]) {
+            io:println("Locations: ", locationResponse);
+        } else {
+            io:println("Error: ", locationResponse);
         }
 
         // Get the `TwitterClient` object from twitterUserClient and then invoke Trends related functions.
-        if (twitterUserClient is twitter:TwitterUserClient) {
-            twitter:TwitterClient? twitterClient2 = twitterUserClient.getTwitterClient();
-            if (twitterClient2 is twitter:TwitterClient) {
-                twitter:TwitterTrendsClient|error twitterTrendsClient2 = new(twitterClient2);
-                if (twitterTrendsClient2 is twitter:TwitterTrendsClient) {
-                    var locationResponse2 = twitterTrendsClient2->getClosestTrendLocations(latitude, longitude);
-                    if (locationResponse2 is twitter:Location[]) {
-                        io:println("Locations: ", locationResponse2);
-                    } else {
-                        io:println("Error: ", locationResponse2);
-                    }
-                }
+        twitter:TwitterClient twitterClient2 = twitterUserClient.getTwitterClient();
+        twitter:TwitterTrendsClient|error twitterTrendsClient2 = new(twitterClient2);
+        if (twitterTrendsClient2 is twitter:TwitterTrendsClient) {
+            var locationResponse2 = twitterTrendsClient2->getClosestTrendLocations(latitude, longitude);
+            if (locationResponse2 is twitter:Location[]) {
+                io:println("Locations: ", locationResponse2);
+            } else {
+                io:println("Error: ", locationResponse2);
             }
+        } else {
+            io:println("Error: ", twitterTrendsClient2);
         }
 
         io:println("--------------Calling getTopTrendsByPlace----------------");
@@ -572,13 +562,11 @@ public function main(string... args) {
             io:println("Error: ", twitterTrendsClientWithConfig);
         }
 
-        if (twitterTrendsClient is twitter:TwitterTrendsClient) {
-            var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
-            if (trendsResponse is twitter:TrendsList[]) {
-                io:println("Trends: ", trendsResponse);
-            } else {
-                io:println("Error: ", trendsResponse);
-            }
+        var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
+        if (trendsResponse is twitter:TrendsList[]) {
+            io:println("Trends: ", trendsResponse);
+        } else {
+            io:println("Error: ", trendsResponse);
         }
     } else {
         io:println("Error: ", twitterClient);

@@ -84,10 +84,9 @@ public function constructRequestHeaders(http:Request request, string httpMethod,
         "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
     request.setHeader("Authorization", oauthHeaderString.unescape());
-    return ();
 }
 
 function setResponseError(json jsonResponse) returns error {
-    error err = error(TWITTER_ERROR_CODE, { ^"cause": jsonResponse, message: jsonResponse.errors[0].message });
+    error err = error(TWITTER_ERROR_CODE, { cause: jsonResponse, message: jsonResponse.errors[0].message });
     return err;
 }
