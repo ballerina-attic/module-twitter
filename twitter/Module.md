@@ -402,7 +402,7 @@ public function main(string... args) {
     if (twitterClient is twitter:TwitterClient) {
         time:Time time = time:currentTime();
         int currentTimeMills = time.time;
-        currentTimeStamp = string.convert(currentTimeMills / 1000);
+        currentTimeStamp = io:sprintf("%s", currentTimeMills / 1000);
         string status = "Sample Tweet " + currentTimeStamp;
 
         var tweetResponse = twitterClient->tweet(status, trimUser = false, enableDmcommands = false,

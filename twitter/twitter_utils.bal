@@ -19,6 +19,7 @@
 import ballerina/encoding;
 import ballerina/crypto;
 import ballerina/http;
+import ballerina/io;
 import ballerina/system;
 import ballerina/time;
 
@@ -44,7 +45,7 @@ public function constructRequestHeaders(http:Request request, string httpMethod,
     string nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    string timeStamp = string.convert(currentTimeMills / 1000);
+    string timeStamp = io:sprintf("%s", currentTimeMills / 1000);
 
     string serviceEndpoint = TWITTER_API_URL + serviceEP;
 

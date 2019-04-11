@@ -268,7 +268,7 @@ public remote function TwitterClient.retweet(int tweetId, boolean? trimUser = ()
     string urlParams = "";
 
     boolean trimUserValue = trimUser is boolean ? trimUser : false;
-    string encodedTrimUserValue = check http:encode(string.convert(trimUserValue), UTF_8);
+    string encodedTrimUserValue = check http:encode(io:sprintf("%s", trimUserValue), UTF_8);
     urlParams = string `${urlParams}trim_user=${encodedTrimUserValue}`;
     parameters["trim_user"] = encodedTrimUserValue;
 
@@ -318,12 +318,12 @@ public remote function TwitterClient.createFavoriteTweet(int tweetId,
     http:Request request = new;
     string tweetPath = FAVORITE_ENDPOINT;
 
-    string encodedTweetId = check http:encode(string.convert(tweetId), UTF_8);
+    string encodedTweetId = check http:encode(io:sprintf("%s", tweetId), UTF_8);
     string urlParams = string `id=${encodedTweetId}`;
     parameters["id"] = encodedTweetId;
 
     if (includeEntities is boolean) {
-        string encodedIncludeEntities = check http:encode(string.convert(includeEntities), UTF_8);
+        string encodedIncludeEntities = check http:encode(io:sprintf("%s", includeEntities), UTF_8);
         parameters["include_entities"] = encodedIncludeEntities;
         urlParams = string `${urlParams}&include_entities=${encodedIncludeEntities}`;
     }
@@ -380,7 +380,7 @@ public remote function TwitterClient.search(@sensitive string query, int? count 
     parameters["q"] = encodedQuery;
 
     if (count is int) {
-        string encodedCount = check http:encode(string.convert(count), UTF_8);
+        string encodedCount = check http:encode(io:sprintf("%s", count), UTF_8);
         parameters["count"] = encodedCount;
         urlParams = string `${urlParams}&count=${encodedCount}`;
     }
@@ -390,17 +390,17 @@ public remote function TwitterClient.search(@sensitive string query, int? count 
         urlParams = string `${urlParams}&lang=${encodedLang}`;
     }
     if (includeEntities is boolean) {
-        string encodedIncludeEntities = check http:encode(string.convert(includeEntities), UTF_8);
+        string encodedIncludeEntities = check http:encode(io:sprintf("%s", includeEntities), UTF_8);
         parameters["include_entities"] = encodedIncludeEntities;
         urlParams = string `${urlParams}&include_entities=${encodedIncludeEntities}`;
     }
     if (sinceId is int) {
-        string encodedSinceId = check http:encode(string.convert(sinceId), UTF_8);
+        string encodedSinceId = check http:encode(io:sprintf("%s", sinceId), UTF_8);
         parameters["since_id"] = encodedSinceId;
         urlParams = string `${urlParams}&since_id=${encodedSinceId}`;
     }
     if (maxId is int) {
-        string encodedMaxId = check http:encode(string.convert(maxId), UTF_8);
+        string encodedMaxId = check http:encode(io:sprintf("%s", maxId), UTF_8);
         parameters["max_id"] = encodedMaxId;
         urlParams = string `${urlParams}&max_id=${encodedMaxId}`;
     }
@@ -474,34 +474,34 @@ public remote function TwitterClient.getHomeTimelineTweets(int? count = (), int?
     string urlParams = "";
 
     if (count is int) {
-        string encodedCount = check http:encode(string.convert(count), UTF_8);
+        string encodedCount = check http:encode(io:sprintf("%s", count), UTF_8);
         parameters["count"] = encodedCount;
         urlParams = string `${urlParams}&count=${encodedCount}`;
     }
     if (sinceId is int ) {
-        string encodedSinceId = check http:encode(string.convert(sinceId), UTF_8);
+        string encodedSinceId = check http:encode(io:sprintf("%s", sinceId), UTF_8);
         parameters["since_id"] = encodedSinceId;
         urlParams = string `${urlParams}&since_id=${encodedSinceId}`;
     }
     if (maxId is int ) {
-        string encodedMaxId = check http:encode(string.convert(maxId), UTF_8);
+        string encodedMaxId = check http:encode(io:sprintf("%s", maxId), UTF_8);
         parameters["max_id"] = encodedMaxId;
         urlParams = string `${urlParams}&max_id=${encodedMaxId}`;
     }
     if (trimUser is boolean) {
-        string encodedTrimUser = check http:encode(string.convert(trimUser), UTF_8);
+        string encodedTrimUser = check http:encode(io:sprintf("%s", trimUser), UTF_8);
         parameters["trim_user"] = encodedTrimUser;
         urlParams = string `${urlParams}&trim_user=${encodedTrimUser}`;
 
     }
     if (excludeReplies is boolean) {
-        string encodedExcludeReplies = check http:encode(string.convert(excludeReplies), UTF_8);
+        string encodedExcludeReplies = check http:encode(io:sprintf("%s", excludeReplies), UTF_8);
         parameters["exclude_replies"] = encodedExcludeReplies;
         urlParams = string `${urlParams}&exclude_replies=${encodedExcludeReplies}`;
 
     }
     if (includeEntities is boolean) {
-        string encodedIncludeEntities = check http:encode(string.convert(includeEntities), UTF_8);
+        string encodedIncludeEntities = check http:encode(io:sprintf("%s", includeEntities), UTF_8);
         parameters["include_entities"] = encodedIncludeEntities;
         urlParams = string `${urlParams}&include_entities=${encodedIncludeEntities}`;
     }
@@ -557,27 +557,27 @@ public remote function TwitterClient.getTweetMentions(int? count = (), int? sinc
     string urlParams = "";
 
     if (count is int) {
-        string encodedCount = check http:encode(string.convert(count), UTF_8);
+        string encodedCount = check http:encode(io:sprintf("%s", count), UTF_8);
         parameters["count"] = encodedCount;
         urlParams = string `${urlParams}&count=${encodedCount}`;
     }
     if (sinceId is int) {
-        string encodedSinceId = check http:encode(string.convert(sinceId), UTF_8);
+        string encodedSinceId = check http:encode(io:sprintf("%s", sinceId), UTF_8);
         parameters["since_id"] = encodedSinceId;
         urlParams = string `${urlParams}&since_id=${encodedSinceId}`;
     }
     if (maxId is int) {
-        string encodedMaxId = check http:encode(string.convert(maxId), UTF_8);
+        string encodedMaxId = check http:encode(io:sprintf("%s", maxId), UTF_8);
         parameters["max_id"] = encodedMaxId;
         urlParams = string `${urlParams}&max_id=${encodedMaxId}`;
     }
     if (trimUser is boolean) {
-        string encodedTrimUser = check http:encode(string.convert(trimUser), UTF_8);
+        string encodedTrimUser = check http:encode(io:sprintf("%s", trimUser), UTF_8);
         parameters["trim_user"] = encodedTrimUser;
         urlParams = string `${urlParams}&trim_user=${encodedTrimUser}`;
     }
     if (includeEntities is boolean) {
-        string encodedIncludeEntities = check http:encode(string.convert(includeEntities), UTF_8);
+        string encodedIncludeEntities = check http:encode(io:sprintf("%s", includeEntities), UTF_8);
         parameters["include_entities"] = encodedIncludeEntities;
         urlParams = string `${urlParams}&include_entities=${encodedIncludeEntities}`;
     }
@@ -633,7 +633,7 @@ public remote function TwitterUserClient.getFollowers(int? userId = (), string? 
     string urlParams = "";
 
     if (userId is int) {
-        string encodedUserId = check http:encode(string.convert(userId), UTF_8);
+        string encodedUserId = check http:encode(io:sprintf("%s", userId), UTF_8);
         parameters["user_id"] = encodedUserId;
         urlParams = string `${urlParams}&user_id=${encodedUserId}`;
     }
@@ -643,23 +643,23 @@ public remote function TwitterUserClient.getFollowers(int? userId = (), string? 
         urlParams = string `${urlParams}&screen_name=${encodedScreenName}`;
     }
     if (cursor is int) {
-        string encodedCursor = check http:encode(string.convert(cursor), UTF_8);
+        string encodedCursor = check http:encode(io:sprintf("%s", cursor), UTF_8);
         parameters["cursor"] = encodedCursor;
         urlParams = string `${urlParams}&cursor=${encodedCursor}`;
     }
     if (count is int) {
-        string encodedCount = check http:encode(string.convert(count), UTF_8);
+        string encodedCount = check http:encode(io:sprintf("%s", count), UTF_8);
         parameters["count"] = encodedCount;
         urlParams = string `${urlParams}&count=${encodedCount}`;
     }
 
     boolean skipStatusValue = skipStatus is boolean ? skipStatus : false;
-    string encodedSkipStatus = check http:encode(string.convert(skipStatusValue), UTF_8);
+    string encodedSkipStatus = check http:encode(io:sprintf("%s", skipStatusValue), UTF_8);
     parameters["skip_status"] = encodedSkipStatus;
     urlParams = string `${urlParams}&skip_status=${encodedSkipStatus}`;
 
     boolean includeUserEntitiesValue = includeUserEntities is boolean ? includeUserEntities : true;
-    string encodedIncludeUserEntities = check http:encode(string.convert(includeUserEntitiesValue), UTF_8);
+    string encodedIncludeUserEntities = check http:encode(io:sprintf("%s", includeUserEntitiesValue), UTF_8);
     parameters["include_user_entities"] = encodedIncludeUserEntities;
     urlParams = string `${urlParams}&include_user_entities=${encodedIncludeUserEntities}`;
 
@@ -708,7 +708,7 @@ public remote function TwitterTrendsClient.getTrendsByPlace(int locationId,
     map<anydata> parameters = {};
     string tweetPath = TRENDS_PLACE_ENDPOINT;
 
-    string encodedLocationId = check http:encode(string.convert(locationId), UTF_8);
+    string encodedLocationId = check http:encode(io:sprintf("%s", locationId), UTF_8);
     string urlParams = string `id=${encodedLocationId}`;
     parameters["id"] = encodedLocationId;
 
@@ -764,8 +764,8 @@ public remote function TwitterTrendsClient.getClosestTrendLocations(float latitu
     map<anydata> parameters = {};
     string tweetPath = TRENDS_ENDPOINT;
 
-    string encodedLatitude = check http:encode(string.convert(latitude), UTF_8);
-    string encodedLongitude = check http:encode(string.convert(longitude), UTF_8);
+    string encodedLatitude = check http:encode(io:sprintf("%s", latitude), UTF_8);
+    string encodedLongitude = check http:encode(io:sprintf("%s", longitude), UTF_8);
     parameters["lat"] = encodedLatitude;
     parameters["long"] = encodedLongitude;
     string urlParams = string `lat=${encodedLatitude}&long=${encodedLongitude}`;
@@ -847,22 +847,23 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
     }
 
     boolean trimUserValue = trimUser is boolean ? trimUser : false;
-    string encodedTrimUser = check http:encode(string.convert(trimUserValue), UTF_8);
+    string encodedTrimUser = check http:encode(io:sprintf("%s", trimUserValue), UTF_8);
     parameters["trim_user"] = encodedTrimUser;
     urlParams = string `${urlParams}&trim_user=${encodedTrimUser}`;
 
     boolean enableDmcommandsValue = enableDmcommands is boolean ? enableDmcommands : false;
-    string encodedEnableDmcommands = check http:encode(string.convert(enableDmcommandsValue), UTF_8);
+    string encodedEnableDmcommands = check http:encode(io:sprintf("%s", enableDmcommandsValue), UTF_8);
     parameters["enable_dmcommands"] = encodedEnableDmcommands;
     urlParams = string `${urlParams}&enable_dmcommands=${encodedEnableDmcommands}`;
 
     boolean failDmcommandsValue = failDmcommands is boolean ? failDmcommands : true;
-    string encodedFailDmcommands = check http:encode(string.convert(failDmcommandsValue), UTF_8);
+    string encodedFailDmcommands = check http:encode(io:sprintf("%s", failDmcommandsValue), UTF_8);
     parameters["fail_dmcommands"] = encodedFailDmcommands;
     urlParams = string `${urlParams}&fail_dmcommands=${encodedFailDmcommands}`;
 
     if (replyParams is StatusReplyParams) {
-        string encodedReplyToStatusId = check http:encode(string.convert(<int>replyParams["inReplyToStatusId"]), UTF_8);
+        string encodedReplyToStatusId = check http:encode(io:sprintf("%s", <int>replyParams["inReplyToStatusId"]),
+                                                          UTF_8);
         parameters["in_reply_to_status_id"] = encodedReplyToStatusId;
         urlParams = string `${urlParams}&in_reply_to_status_id=${encodedReplyToStatusId}`;
 
@@ -876,7 +877,7 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
         boolean autoPopulateReplyMetadataValue = autoPopulateReplyMetadata is boolean ? autoPopulateReplyMetadata
                                                                                       : false;
         string encodedAutoPopulateReplyMetadata = check http:encode(
-                                                            string.convert(autoPopulateReplyMetadataValue), UTF_8);
+                                                            io:sprintf("%s", autoPopulateReplyMetadataValue), UTF_8);
         parameters["auto_populate_reply_metadata"] = encodedAutoPopulateReplyMetadata;
         urlParams = string `${urlParams}&auto_populate_reply_metadata=${encodedAutoPopulateReplyMetadata}`;
     }
@@ -902,7 +903,7 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
 
         boolean possiblySensitiveValue = mediaParams["possiblySensitive"] is boolean ?
             <boolean>mediaParams["possiblySensitive"] : false;
-        string encodedPossiblySensitive = check http:encode(string.convert(possiblySensitiveValue), UTF_8);
+        string encodedPossiblySensitive = check http:encode(io:sprintf("%s", possiblySensitiveValue), UTF_8);
         parameters["possibly_sensitive"] = encodedPossiblySensitive;
         urlParams = string `${urlParams}&possibly_sensitive=${encodedPossiblySensitive}`;
     }
@@ -911,8 +912,8 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
         (float, float)|string? place = locationParams["placeInfo"];
         if (place is (float, float)) {
             var (lat, long) = place;
-            string encodedLat = check http:encode(string.convert(lat), UTF_8);
-            string encodedLong = check http:encode(string.convert(long), UTF_8);
+            string encodedLat = check http:encode(io:sprintf("%s", lat), UTF_8);
+            string encodedLong = check http:encode(io:sprintf("%s", long), UTF_8);
             parameters["lat"] = encodedLat;
             parameters["long"] = encodedLong;
             urlParams = string `${urlParams}&lat=${encodedLat}&long=${encodedLong}`;
@@ -924,7 +925,7 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
         }
         boolean? displayCoordinates = locationParams["displayCoordinates"];
         if (displayCoordinates is boolean) {
-            string encodedDisplayCoordinates = check http:encode(string.convert(displayCoordinates), UTF_8);
+            string encodedDisplayCoordinates = check http:encode(io:sprintf("%s", displayCoordinates), UTF_8);
             parameters["display_coordinates"] = encodedDisplayCoordinates;
             urlParams = string `${urlParams}&display_coordinates=${encodedDisplayCoordinates}`;
         }
