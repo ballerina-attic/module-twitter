@@ -163,7 +163,7 @@ function testSearch() {
 
         if (searchResponse is Search) {
             io:println("Search Result: ", searchResponse);
-            test:assertNotEquals(searchResponse, (), msg = "Failed to call search()");
+            test:assertTrue(searchResponse.search_metadata.query.contains(queryStr), msg = "Failed to call search()");
         } else {
             test:assertFail(msg = <string>searchResponse.detail().message);
         }
@@ -183,7 +183,7 @@ function testGetHomeTimelineTweets() {
 
         if (homeTimelineResponse is Tweet[]) {
             io:println("HomeTimelineTweets: ", homeTimelineResponse);
-            test:assertNotEquals(homeTimelineResponse, (), msg = "Failed to call getHomeTimelineTweets()");
+            test:assertTrue(homeTimelineResponse.length() > 0, msg = "Failed to call getHomeTimelineTweets()");
         } else {
             test:assertFail(msg = <string>homeTimelineResponse.detail().message);
         }
@@ -198,12 +198,12 @@ function testGetTweetMentions() {
 
     TwitterClient|error twitterClient = new(twitterConfig);
     if (twitterClient is TwitterClient) {
-        var tweetMentionsResponse = twitterClient->getTweetMentions(count = 5, sinceId = sinceId,
-            maxId = maxId, trimUser = false, includeEntities = false);
+        var tweetMentionsResponse = twitterClient->getTweetMentions(count = 5,
+            trimUser = false, includeEntities = false);
 
         if (tweetMentionsResponse is Tweet[]) {
             io:println("Tweet Mentions: ", tweetMentionsResponse);
-            test:assertNotEquals(tweetMentionsResponse, (), msg = "Failed to call getTweetMentions()");
+            test:assertTrue(tweetMentionsResponse.length() > 0, msg = "Failed to call getTweetMentions()");
         } else {
             test:assertFail(msg = <string>tweetMentionsResponse.detail().message);
         }
@@ -221,9 +221,22 @@ function testGetFollowers() {
         var followersResponseWithConfig = twitterUserClientWithConfig->getFollowers(screenName = "WSO2",
             cursor = -1, count = 10, skipStatus = true, includeUserEntities = false);
 
+        int followersCount = 0;
         if (followersResponseWithConfig is Followers) {
-            io:println("Followers: ", followersResponseWithConfig);
-            test:assertNotEquals(followersResponseWithConfig.users, (), msg = "Failed to call getFollowers()");
+            TruncatedUser[]|User[] users = followersResponseWithConfig.users;
+            if (users is User[]) {
+                User[]|error userList = User[].convert(users);
+                if (userList is User[]) {
+                    followersCount = userList.length();
+                }
+            } else {
+                TruncatedUser[]|error userList = TruncatedUser[].convert(users);
+                if (userList is TruncatedUser[]) {
+                    followersCount = userList.length();
+                }
+            }
+            io:println("Followers Count: ", followersCount);
+            test:assertTrue(followersCount > 0, msg = "Failed to call getFollowers()");
         } else {
             test:assertFail(msg = <string>followersResponseWithConfig.detail().message);
         }
@@ -236,10 +249,23 @@ function testGetFollowers() {
         TwitterUserClient twitterUserClient = twitterClient.getUserClient();
         var followersResponse = twitterUserClient->getFollowers(screenName = "WSO2", cursor = -1, count = 10,
             skipStatus = true, includeUserEntities = false);
-
+        
+        int followersCount = 0;
         if (followersResponse is Followers) {
-            io:println("Followers: ", followersResponse);
-            test:assertNotEquals(followersResponse.users, (), msg = "Failed to call getFollowers()");
+            TruncatedUser[]|User[] users = followersResponse.users;
+            if (users is User[]) {
+                User[]|error userList = User[].convert(users);
+                if (userList is User[]) {
+                    followersCount = userList.length();
+                }
+            } else {
+                TruncatedUser[]|error userList = TruncatedUser[].convert(users);
+                if (userList is TruncatedUser[]) {
+                    followersCount = userList.length();
+                }
+            }
+            io:println("Followers Count: ", followersCount);
+            test:assertTrue(followersCount > 0, msg = "Failed to call getFollowers()");
         } else {
             test:assertFail(msg = <string>followersResponse.detail().message);
         }
@@ -259,7 +285,7 @@ function testGetClosestTrendLocations() {
         var locationResponseWithConfig = twitterTrendsClientWithConfig->getClosestTrendLocations(latitude, longitude);
         if (locationResponseWithConfig is Location[]) {
             io:println("Locations: ", locationResponseWithConfig);
-            test:assertNotEquals(locationResponseWithConfig, (), msg = "Failed to call getClosestTrendLocations()");
+            test:assertTrue(locationResponseWithConfig.length() > 0, msg = "Failed to call getClosestTrendLocations()");
         } else {
             test:assertFail(msg = <string>locationResponseWithConfig.detail().message);
         }
@@ -273,7 +299,7 @@ function testGetClosestTrendLocations() {
         var locationResponse = twitterTrendsClient->getClosestTrendLocations(latitude, longitude);
         if (locationResponse is Location[]) {
             io:println("Locations: ", locationResponse);
-            test:assertNotEquals(locationResponse, (), msg = "Failed to call getClosestTrendLocations()");
+            test:assertTrue(locationResponse.length() > 0, msg = "Failed to call getClosestTrendLocations()");
         } else {
             test:assertFail(msg = <string>locationResponse.detail().message);
         }
@@ -292,7 +318,7 @@ function testGetTrendsByPlace() {
         var trendsResponseWithConfig = twitterTrendsClientWithConfig->getTrendsByPlace(locationId);
         if (trendsResponseWithConfig is TrendsList[]) {
             io:println("Trends: ", trendsResponseWithConfig);
-            test:assertNotEquals(trendsResponseWithConfig, (), msg = "Failed to call getTopTrendsByPlace()");
+            test:assertTrue(trendsResponseWithConfig.length() > 0, msg = "Failed to call getTopTrendsByPlace()");
         } else {
             test:assertFail(msg = <string>trendsResponseWithConfig.detail().message);
         }
@@ -306,7 +332,7 @@ function testGetTrendsByPlace() {
         var trendsResponse = twitterTrendsClient->getTrendsByPlace(locationId);
         if (trendsResponse is TrendsList[]) {
             io:println("Trends: ", trendsResponse);
-            test:assertNotEquals(trendsResponse, (), msg = "Failed to call getTopTrendsByPlace()");
+            test:assertTrue(trendsResponse.length() > 0, msg = "Failed to call getTopTrendsByPlace()");
         } else {
             test:assertFail(msg = <string>trendsResponse.detail().message);
         }

@@ -16,7 +16,7 @@
 
 import ballerina/http;
 
-public type SearchResultType "mixed"|"recent"|"popular";
+public type SearchResultType RESULT_TYPE_MIXED|RESULT_TYPE_RECENT|RESULT_TYPE_POPULAR;
 
 public const RESULT_TYPE_MIXED = "mixed";
 public const RESULT_TYPE_RECENT = "recent";

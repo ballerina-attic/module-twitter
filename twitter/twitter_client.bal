@@ -132,7 +132,7 @@ public type TwitterClient client object {
     # + return - Returns the Search object when successful, else returns an error
     public remote function search(string query, int? count = (), string? lang = (), boolean? includeEntities = (),
                                   int? sinceId = (), int? maxId = (), string? locale = (), string? geocode = (),
-                                  string? until = (), SearchResultType? resultType = ()) returns Search|error;
+                                  string? until = (), string? resultType = ()) returns Search|error;
 
     # Returns a collection of the most recent Tweets and Retweets posted by the authenticating user and
     # the users they follow.
@@ -283,10 +283,9 @@ public remote function TwitterClient.retweet(int tweetId, boolean? trimUser = ()
 
         var httpResponse = httpClient->post(tweetPath, request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Tweet|error retweetResponse = Tweet.convert(jsonPayload);
                     if (retweetResponse is Tweet) {
                         return retweetResponse.freeze();
@@ -339,10 +338,9 @@ public remote function TwitterClient.createFavoriteTweet(int tweetId,
 
         var httpResponse = httpClient->post(tweetPath, request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Tweet|error favoriteTweetResponse = Tweet.convert(jsonPayload);
                     if (favoriteTweetResponse is Tweet) {
                         return favoriteTweetResponse.freeze();
@@ -370,7 +368,7 @@ public remote function TwitterClient.createFavoriteTweet(int tweetId,
 public remote function TwitterClient.search(@sensitive string query, int? count = (), string? lang = (),
                                      boolean? includeEntities = (), int? sinceId = (), int? maxId = (),
                                      string? locale = (), string? geocode = (), string? until = (),
-                                     SearchResultType? resultType = ()) returns Search|error {
+                                     string? resultType = ()) returns Search|error {
     http:Client httpClient = self.httpClient;
     map<anydata> parameters = {};
     string tweetPath = SEARCH_ENDPOINT;
@@ -419,9 +417,9 @@ public remote function TwitterClient.search(@sensitive string query, int? count 
         parameters["until"] = encodedUntil;
         urlParams = string `${urlParams}&until=${encodedUntil}`;
     }
-    if (resultType is SearchResultType) {
+    if (resultType is string) {
         parameters["result_type"] = resultType;
-        urlParams = string `${urlParams}&result_type=${<string>resultType}`;
+        urlParams = string `${urlParams}&result_type=${resultType}`;
     }
 
     http:Request request = new;
@@ -436,10 +434,9 @@ public remote function TwitterClient.search(@sensitive string query, int? count 
 
         var httpResponse = httpClient->get(tweetPath, message = request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Search|error searchResponse = Search.convert(jsonPayload);
                     if (searchResponse is Search) {
                         return searchResponse.freeze();
@@ -519,10 +516,9 @@ public remote function TwitterClient.getHomeTimelineTweets(int? count = (), int?
 
         var httpResponse = httpClient->get(tweetPath, message = request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Tweet[]|error homeTimelineResponse = Tweet[].convert(jsonPayload);
                     if (homeTimelineResponse is Tweet[]) {
                         return homeTimelineResponse.freeze();
@@ -595,10 +591,9 @@ public remote function TwitterClient.getTweetMentions(int? count = (), int? sinc
 
         var httpResponse = httpClient->get(tweetPath, message = request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Tweet[]|error tweetMentionsResponse = Tweet[].convert(jsonPayload);
                     if (tweetMentionsResponse is Tweet[]) {
                         return tweetMentionsResponse.freeze();
@@ -674,10 +669,9 @@ public remote function TwitterUserClient.getFollowers(int? userId = (), string? 
 
         var httpResponse = httpClient->get(tweetPath, message = request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Followers|error followersResponse = Followers.convert(jsonPayload);
                     if (followersResponse is Followers) {
                         return followersResponse.freeze();
@@ -730,10 +724,9 @@ public remote function TwitterTrendsClient.getTrendsByPlace(int locationId,
 
         var httpResponse = httpClient->get(tweetPath, message = request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     TrendsList[]|error trendResponse = TrendsList[].convert(jsonPayload);
                     if (trendResponse is TrendsList[]) {
                         return trendResponse.freeze();
@@ -783,10 +776,9 @@ public remote function TwitterTrendsClient.getClosestTrendLocations(float latitu
 
         var httpResponse = httpClient->get(tweetPath, message = request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Location[]|error locations = Location[].convert(jsonPayload);
                     if (locations is Location[]) {
                         return locations.freeze();
@@ -942,10 +934,9 @@ function updateStatus(http:Client httpClient, string status, StatusReplyParams? 
 
         var httpResponse = httpClient->post(tweetPath, request);
         if (httpResponse is http:Response) {
-            int statusCode = httpResponse.statusCode;
             var jsonPayload = httpResponse.getJsonPayload();
             if (jsonPayload is json) {
-                if (statusCode == 200) {
+                if (httpResponse.statusCode == http:OK_200) {
                     Tweet|error tweetResponse = Tweet.convert(jsonPayload);
                     if (tweetResponse is Tweet) {
                         return tweetResponse.freeze();
@@ -998,10 +989,9 @@ function verifyCredentials(http:Client httpClient, string clientId, string clien
         } else {
             var httpResponse = httpClient->get(tweetPath, message = request);
             if (httpResponse is http:Response) {
-                int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == 200) {
+                    if (httpResponse.statusCode == http:OK_200) {
                         accessTokenStr = accessToken;
                         accessTokenSecretStr = accessTokenSecret;
                         clientIdStr = clientId;
