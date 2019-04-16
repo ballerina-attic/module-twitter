@@ -16,11 +16,12 @@
 // under the License.
 //
 
-import ballerina/time;
-import ballerina/http;
 import ballerina/crypto;
-import ballerina/system;
 import ballerina/encoding;
+import ballerina/http;
+import ballerina/io;
+import ballerina/system;
+import ballerina/time;
 
 string timeStamp = "";
 string nonceString = "";
@@ -29,7 +30,7 @@ function constructOAuthParams(string consumerKey, string accessToken) returns st
     nonceString = system:uuid();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    timeStamp = <string>(currentTimeMills / 1000);
+    timeStamp = io:sprintf("%s", currentTimeMills / 1000);
     string paramStr = "oauth_consumer_key=" + consumerKey + "&oauth_nonce=" + nonceString +
         "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timeStamp + "&oauth_token=" + accessToken
         + "&oauth_version=1.0&";

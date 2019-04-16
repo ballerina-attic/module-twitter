@@ -40,7 +40,7 @@ function testTweet() {
     io:println("--------------Calling tweet----------------");
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
-    string currentTimeStamp = <string>(currentTimeMills / 1000);
+    string currentTimeStamp = io:sprintf("%s", currentTimeMills / 1000);
     string status = "Twitter connector test " + currentTimeStamp;
     var tweetResponse = twitterClient->tweet(status);
 
@@ -92,7 +92,7 @@ function testSearch() {
     if (tweetResponse is error) {
         test:assertFail(msg = <string>tweetResponse.detail().message);
     } else {
-        test:assertNotEquals(tweetResponse, null, msg = "Failed to call search()");
+        test:assertTrue(tweetResponse.length() > 0, msg = "Failed to call search()");
     }
 }
 
@@ -134,7 +134,7 @@ function testGetClosestTrendLocations() {
     if (tweetResponse is error) {
         test:assertFail(msg = <string>tweetResponse.detail().message);
     } else {
-        test:assertNotEquals(tweetResponse, null, msg = "Failed to call getClosestTrendLocations()");
+        test:assertTrue(tweetResponse.length() > 0, msg = "Failed to call getClosestTrendLocations()");
     }
 }
 
@@ -147,6 +147,6 @@ function testGetTopTrendsByPlace() {
     if (tweetResponse is error) {
         test:assertFail(msg = <string>tweetResponse.detail().message);
     } else {
-        test:assertNotEquals(tweetResponse, null, msg = "Failed to call getTopTrendsByPlace()");
+        test:assertTrue(tweetResponse.length() > 0, msg = "Failed to call getTopTrendsByPlace()");
     }
 }
