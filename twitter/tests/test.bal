@@ -19,6 +19,7 @@ import ballerina/time;
 import ballerina/system;
 import ballerina/config;
 import ballerina/io;
+import ballerina/internal;
 
 string testClientId = config:getAsString("CLIENT_ID");
 string testClientSecret = config:getAsString("CLIENT_SECRET");
@@ -35,7 +36,7 @@ TwitterConfiguration twitterConfig = {
 
 Client twitterClient = new(twitterConfig);
 
-@test:Config
+@test:Config {}
 function testTweet() {
     io:println("--------------Calling tweet----------------");
     time:Time time = time:currentTime();
@@ -45,10 +46,10 @@ function testTweet() {
     var tweetResponse = twitterClient->tweet(status);
 
     if (tweetResponse is Status) {
-        tweetId = untaint tweetResponse.id;
-        test:assertTrue(tweetResponse.text.contains(status), msg = "Failed to call tweet()");
+        tweetId = <@untainted> tweetResponse.id;
+        test:assertTrue(internal:contains(tweetResponse.text, status), "Failed to call tweet()");
     } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     }
 }
 
@@ -60,9 +61,9 @@ function testReTweet() {
     var tweetResponse = twitterClient->retweet(tweetId);
 
     if (tweetResponse is Status) {
-        test:assertTrue(tweetResponse.retweeted, msg = "Failed to call retweet()");
+        test:assertTrue(tweetResponse.retweeted, "Failed to call retweet()");
     } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     }
 }
 
@@ -74,13 +75,13 @@ function testUnReTweet() {
     var tweetResponse = twitterClient->unretweet(tweetId);
 
     if (tweetResponse is Status) {
-        test:assertEquals(tweetResponse.id, tweetId, msg = "Failed to call unretweet()");
+        test:assertEquals(tweetResponse.id, tweetId, "Failed to call unretweet()");
     } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     }
 }
 
-@test:Config
+@test:Config {}
 function testSearch() {
     io:println("--------------Calling search----------------");
     string queryStr = "twitter";
@@ -90,9 +91,9 @@ function testSearch() {
     var tweetResponse = twitterClient->search(queryStr, request);
 
     if (tweetResponse is error) {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     } else {
-        test:assertTrue(tweetResponse.length() > 0, msg = "Failed to call search()");
+        test:assertTrue(tweetResponse.length() > 0, "Failed to call search()");
     }
 }
 
@@ -104,9 +105,9 @@ function testShowStatus() {
     var tweetResponse = twitterClient->showStatus(tweetId);
 
     if (tweetResponse is Status) {
-        test:assertEquals(tweetResponse.id, tweetId, msg = "Failed to call showStatus()");
+        test:assertEquals(tweetResponse.id, tweetId, "Failed to call showStatus()");
     } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     }
 }
 
@@ -118,13 +119,13 @@ function testDestroyStatus() {
     var tweetResponse = twitterClient->destroyStatus(tweetId);
 
     if (tweetResponse is Status) {
-        test:assertEquals(tweetResponse.id, tweetId, msg = "Failed to call destroyStatus()");
+        test:assertEquals(tweetResponse.id, tweetId, "Failed to call destroyStatus()");
     } else {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     }
 }
 
-@test:Config
+@test:Config {}
 function testGetClosestTrendLocations() {
     io:println("--------------Calling getClosestTrendLocations----------------");
     float latitude = 34.0;
@@ -132,21 +133,21 @@ function testGetClosestTrendLocations() {
     var tweetResponse = twitterClient->getClosestTrendLocations(latitude, longitude);
 
     if (tweetResponse is error) {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     } else {
-        test:assertTrue(tweetResponse.length() > 0, msg = "Failed to call getClosestTrendLocations()");
+        test:assertTrue(tweetResponse.length() > 0, "Failed to call getClosestTrendLocations()");
     }
 }
 
-@test:Config
+@test:Config {}
 function testGetTopTrendsByPlace() {
     io:println("--------------Calling getTopTrendsByPlace----------------");
     int locationId = 23424922;
     var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);
 
     if (tweetResponse is error) {
-        test:assertFail(msg = <string>tweetResponse.detail().message);
+        test:assertFail(<string>tweetResponse.detail()["message"]);
     } else {
-        test:assertTrue(tweetResponse.length() > 0, msg = "Failed to call getTopTrendsByPlace()");
+        test:assertTrue(tweetResponse.length() > 0, "Failed to call getTopTrendsByPlace()");
     }
 }

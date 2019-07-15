@@ -22,6 +22,7 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/system;
 import ballerina/time;
+import ballerina/internal;
 
 string timeStamp = "";
 string nonceString = "";
@@ -47,9 +48,9 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string encodedAccessTokenSecretValue = check http:encode(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
-    byte[] baseStringByte = baseString.toByteArray("UTF-8");
+    byte[] baseStringByte = internal:toByteArray(baseString, "UTF-8");
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    byte[] keyArrByte = keyStr.toByteArray("UTF-8");
+    byte[] keyArrByte = internal:toByteArray(keyStr, "UTF-8");
     string signature = encoding:encodeBase64(crypto:hmacSha1(baseStringByte, keyArrByte));
 
     string encodedSignatureValue = check http:encode(signature, "UTF-8");
@@ -59,11 +60,19 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
         "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
-    request.setHeader("Authorization", oauthHeaderString.unescape());
+    request.setHeader("Authorization", internal:unescape(oauthHeaderString));
     return ();
 }
 
 function setResponseError(json jsonResponse) returns error {
-    error err = error(TWITTER_ERROR_CODE, { message: jsonResponse.errors[0].message.toString() });
+    json|error errors = check jsonResponse.errors;
+    error err;
+    if (errors is json[]) {
+        err = error(TWITTER_ERROR_CODE, message = errors[0].message.toString());
+    } else if (errors is error) {
+        err = errors;
+    } else {
+        err = error(TWITTER_ERROR_CODE);
+    }
     return err;
 }

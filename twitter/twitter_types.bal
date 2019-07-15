@@ -33,7 +33,7 @@ public type Status record {
     string createdAt = "";
     int id = 0;
     string text = "";
-    string source = "";
+    string 'source = "";
     boolean truncated = false;
     int inReplyToStatusId = 0;
     GeoLocation geo = {};
