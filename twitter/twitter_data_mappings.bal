@@ -14,132 +14,217 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function convertToStatus(json jsonStatus) returns Status|error {
+function convertToStatus(json jsonStatus) returns Status {
     Status status = {};
-    status.createdAt = jsonStatus.created_at != null ? jsonStatus.created_at.toString() : "";
-    status.id = jsonStatus.id != null ? convertToInt(check jsonStatus.id) : 0;
-    status.text = jsonStatus.text != null ? jsonStatus.text.toString() : "";
-    status.'source = jsonStatus.'source != null ? jsonStatus.'source.toString() : "";
-    status.truncated = jsonStatus.truncated != null ? check convertToBoolean(check jsonStatus.truncated) : false;
-    status.inReplyToStatusId = jsonStatus.in_reply_to_status_id != null
-                                    ? convertToInt(check jsonStatus.in_reply_to_status_id) : 0;
-    status.favorited = jsonStatus.favorited != null ? check convertToBoolean(check jsonStatus.favorited) : false;
-    status.retweeted = jsonStatus.retweeted != null ? check convertToBoolean(check jsonStatus.retweeted) : false;
-    status.favouritesCount = jsonStatus.favourites_count != null ? convertToInt(check jsonStatus.favourites_count) : 0;
-    status.retweetCount = jsonStatus.retweet_count != null ? convertToInt(check jsonStatus.retweet_count) : 0;
-    status.lang = jsonStatus.lang != null ? jsonStatus.lang.toString() : "";
-    status.geo = jsonStatus.geo != null ? check convertToGeoLocation(check jsonStatus.geo) : {};
+    var createdAt = jsonStatus.created_at;
+    if (createdAt is json) {
+        status.createdAt = createdAt != null ? createdAt.toString() : "";
+    }
+    var id = jsonStatus.id;
+    if (id is json) {
+        status.id = id != null ? convertToInt(id) : 0;
+    }
+    var text = jsonStatus.text;
+    if (text is json) {
+        status.text = text != null ? text.toString() : "";
+    }
+    var sourceOut = jsonStatus.'source;
+    if (sourceOut is json) {
+        status.'source = sourceOut != null ? sourceOut.toString() : "";
+    }
+    var truncated = jsonStatus.truncated;
+    if (truncated is json) {
+        status.truncated = truncated != null ? convertToBoolean(truncated) : false;
+    }
+    var inReplyToStatusId = jsonStatus.in_reply_to_status_id;
+    if (inReplyToStatusId is json) {
+        status.inReplyToStatusId = inReplyToStatusId != null ? convertToInt(inReplyToStatusId) : 0;
+    }
+    var favorited = jsonStatus.favorited;
+    if (favorited is json) {
+        status.favorited = favorited != null ? convertToBoolean(favorited) : false;
+    }
+    var retweeted = jsonStatus.retweeted;
+    if (retweeted is json) {
+        status.retweeted = retweeted != null ? convertToBoolean(retweeted) : false;
+    }
+    var favouritesCount = jsonStatus.favourites_count;
+    if (favouritesCount is json) {
+        status.favouritesCount = favouritesCount != null ? convertToInt(favouritesCount) : 0;
+    }
+    var retweetCount = jsonStatus.retweet_count;
+    if (retweetCount is json) {
+        status.retweetCount = retweetCount != null ? convertToInt(retweetCount) : 0;
+    }
+    var lang = jsonStatus.lang;
+    if (lang is json) {
+        status.lang = lang != null ? lang.toString() : "";
+    }
+    var geo = jsonStatus.geo;
+    if (geo is json) {
+        status.geo = geo != null ? convertToGeoLocation(geo) : {};
+    }
     return status;
 }
 
 function convertToInt(json jsonVal) returns int {
-    string stringVal = jsonVal.toString();
-    if (stringVal != "") {
-        var intVal = typedesc<int>.constructFrom(stringVal);
-        if (intVal is int) {
-            return intVal;
-        } else {
-            error err = error(TWITTER_ERROR_CODE, message = "Error occurred when converting " + stringVal + " to int");
-            panic err;
-        }
+    var intVal = typedesc<int>.constructFrom(jsonVal);
+    if (intVal is int) {
+        return intVal;
     } else {
-        return 0;
-    }
-}
-
-function convertToBoolean(json jsonVal) returns boolean|error {
-    string stringVal = jsonVal.toString();
-    return check typedesc<boolean>.constructFrom(stringVal);
-}
-
-function convertToFloat(json jsonVal) returns float {
-    string stringVal = jsonVal.toString();
-    var floatVal = typedesc<float>.constructFrom(stringVal);
-    if (floatVal is float) {
-        return floatVal;
-    } else {
-        error err = error(TWITTER_ERROR_CODE, message = "Error occurred when converting " + stringVal + " to float");
+        error err = error(TWITTER_ERROR_CODE,
+                          message = "Error occurred when converting " + jsonVal.toString() + " to int");
         panic err;
     }
 }
 
-function convertToGeoLocation(json jsonStatus) returns GeoLocation|error {
+function convertToBoolean(json jsonVal) returns boolean {
+    var booleanVal = typedesc<boolean>.constructFrom(jsonVal);
+    if (booleanVal is boolean) {
+        return booleanVal;
+    } else {
+        error err = error(TWITTER_ERROR_CODE,
+                         message = "Error occurred when converting " + jsonVal.toString() + " to boolean");
+        panic err;
+    }
+}
+
+function convertToFloat(json jsonVal) returns float {
+    var floatVal = typedesc<float>.constructFrom(jsonVal);
+    if (floatVal is float) {
+        return floatVal;
+    } else {
+        error err = error(TWITTER_ERROR_CODE,
+                          message = "Error occurred when converting " + jsonVal.toString() + " to float");
+        panic err;
+    }
+}
+
+function convertToGeoLocation(json jsonStatus) returns GeoLocation {
     GeoLocation geoLocation = {};
-    geoLocation.latitude = jsonStatus.geo.latitude != null ? convertToFloat(check jsonStatus.geo.latitude) : 0.0;
-    geoLocation.longitude = jsonStatus.geo.longitude != null ? convertToFloat(check jsonStatus.geo.longitude) : 0.0;
+    var latitude = jsonStatus.geo.latitude;
+    if (latitude is json) {
+        geoLocation.latitude = latitude != null ? convertToFloat(latitude) : 0.0;
+    }
+    var longitude = jsonStatus.geo.longitude;
+    if (longitude is json) {
+        geoLocation.longitude = longitude != null ? convertToFloat(longitude) : 0.0;
+    }
     return geoLocation;
 }
 
-function convertToStatuses(json[] jsonStatuses) returns Status[]|error {
+function convertToStatuses(json[] jsonStatuses) returns Status[] {
     Status[] statuses = [];
     int i = 0;
     foreach json jsonStatus in jsonStatuses {
-        statuses[i] = check convertToStatus(jsonStatus);
+        statuses[i] = convertToStatus(jsonStatus);
         i = i + 1;
     }
     return statuses;
 }
 
-function convertToLocations(json[] jsonLocations) returns Location[]|error {
+function convertToLocations(json[] jsonLocations) returns Location[] {
     Location[] locations = [];
     int i = 0;
     foreach json jsonLocation in jsonLocations {
-        locations[i] = check convertToLocation(jsonLocation);
+        locations[i] = convertToLocation(jsonLocation);
         i = i + 1;
     }
     return locations;
 }
 
-function convertToLocation(json jsonLocation) returns Location|error {
+function convertToLocation(json jsonLocation) returns Location {
     Location location = {};
-    location.countryName = jsonLocation.country != null ? jsonLocation.country.toString() : "";
-    location.countryCode = jsonLocation.countryCode != null ? jsonLocation.countryCode.toString() : "";
-    location.name = jsonLocation.name != null ? jsonLocation.name.toString() : "";
-    location.placeType = jsonLocation.placeType != null ? check convertToPlaceType(check jsonLocation.placeType) : {};
-    location.url = jsonLocation.url != null ? jsonLocation.url.toString() : "";
-    location.woeid = jsonLocation.woeid != null ? convertToInt(check jsonLocation.woeid) : 0;
+    var countryName = jsonLocation.country;
+    if (countryName is json) {
+       location.countryName = countryName != null ? countryName.toString() : "";
+    }
+    var countryCode = jsonLocation.countryCode;
+    if (countryCode is json) {
+       location.countryCode = countryCode != null ? countryCode.toString() : "";
+    }
+    var name = jsonLocation.name;
+    if (name is json) {
+       location.name = name != null ? name.toString() : "";
+    }
+    var placeType = jsonLocation.placeType;
+    if (placeType is json) {
+       location.placeType = placeType != null ? convertToPlaceType(placeType) : {};
+    }
+    var url = jsonLocation.url;
+    if (url is json) {
+       location.url = url != null ? url.toString() : "";
+    }
+    var woeid = jsonLocation.woeid;
+    if (woeid is json) {
+       location.woeid = woeid != null ? convertToInt(woeid) : 0;
+    }
     return location;
 }
 
-function convertToPlaceType(json jsonPlaceType) returns PlaceType|error {
+function convertToPlaceType(json jsonPlaceType) returns PlaceType {
     PlaceType placeType = {};
-    placeType.code = jsonPlaceType.code != null ? convertToInt(check jsonPlaceType.code) : 0;
-    placeType.name = jsonPlaceType.name != null ? jsonPlaceType.name.toString() : "";
+    var code = jsonPlaceType.code;
+    if (code is json) {
+       placeType.code = code != null ? convertToInt(code) : 0;
+    }
+    var name = jsonPlaceType.name;
+    if (name is json) {
+       placeType.name = name != null ? name.toString() : "";
+    }
     return placeType;
 }
 
-function convertTrends(json jsonTrends) returns Trends[]|error {
+function convertTrends(json jsonTrends) returns Trends[] {
     Trends[] trends = [];
     if (jsonTrends is json[]) {
-        trends[0] = check convertToTrends(jsonTrends[0]);
+        trends[0] = convertToTrends(jsonTrends[0]);
     }
     return trends;
 }
 
-function convertToTrends(json jsonTrends) returns Trends|error {
+function convertToTrends(json jsonTrends) returns Trends {
     Trends trendList = {};
-    trendList.trends = check convertTrendList(<json[]>jsonTrends.trends);
-    trendList.location = check convertToLocations(<json[]>jsonTrends.locations);
-    trendList.createdAt = jsonTrends.created_at != null ? jsonTrends.created_at.toString() : "";
+    trendList.trends = convertTrendList(<json[]>jsonTrends.trends);
+    trendList.location = convertToLocations(<json[]>jsonTrends.locations);
+    var createdAt = jsonTrends.created_at;
+    if (createdAt is json) {
+       trendList.createdAt = createdAt != null ? createdAt.toString() : "";
+    }
     return trendList;
 }
 
-function convertTrendList(json[] jsonTrends) returns Trend[]|error {
+function convertTrendList(json[] jsonTrends) returns Trend[] {
     Trend[] trendList = [];
     int i = 0;
     foreach json jsonTrend in jsonTrends {
-        trendList[i] = check convertToTrend(jsonTrend);
+        trendList[i] = convertToTrend(jsonTrend);
         i = i + 1;
     }
     return trendList;
 }
 
-function convertToTrend(json jsonTrend) returns Trend|error {
+function convertToTrend(json jsonTrend) returns Trend {
     Trend trend = {};
-    trend.name = jsonTrend.name != null ? jsonTrend.name.toString() : "";
-    trend.url = jsonTrend.url != null ? jsonTrend.url.toString() : "";
-    trend.promotedContent = jsonTrend.promoted_content != null ? jsonTrend.promoted_content.toString() : "";
-    trend.trendQuery = jsonTrend.query != null ? jsonTrend.query.toString() : "";
-    trend.tweetVolume = jsonTrend.tweet_volume != null ? convertToInt(check jsonTrend.tweet_volume) : 0;
+    var name = jsonTrend.name;
+    if (name is json) {
+       trend.name = name != null ? name.toString() : "";
+    }
+    var url = jsonTrend.url;
+    if (url is json) {
+       trend.url = url != null ? url.toString() : "";
+    }
+    var promotedContent = jsonTrend.promoted_content;
+    if (promotedContent is json) {
+       trend.promotedContent = promotedContent != null ? promotedContent.toString() : "";
+    }
+    var trendQuery = jsonTrend.query;
+    if (trendQuery is json) {
+       trend.trendQuery = trendQuery != null ? trendQuery.toString() : "";
+    }
+    var tweetVolume = jsonTrend.tweet_volume;
+    if (tweetVolume is json) {
+       trend.tweetVolume = tweetVolume != null ? convertToInt(tweetVolume) : 0;
+    }
     return trend;
 }

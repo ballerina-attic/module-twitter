@@ -92,14 +92,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Status|error twitterResponse = convertToStatus(jsonPayload);
-                        if (twitterResponse is Status) {
-                            return twitterResponse;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -138,14 +131,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Status|error twitterResponse = convertToStatus(jsonPayload);
-                        if (twitterResponse is Status) {
-                            return twitterResponse;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -183,14 +169,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Status|error twitterResponse = convertToStatus(jsonPayload);
-                        if (twitterResponse is Status) {
-                            return twitterResponse;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -240,18 +219,11 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        if (jsonPayload.statuses != null) {
-                            Status[]|error searchResponse = convertToStatuses(<json[]>jsonPayload.statuses);
-                            if (searchResponse is Status[]) {
-                                return searchResponse;
-                            } else {
-                                error err = error(TWITTER_ERROR_CODE,
-                                                    message = "Error occurred while doing json conversion");
-                                return err;
-                            }
-                        } else {
-                            return [];
+                        Status[] searchResponse = [];
+                        if (jsonPayload.statuses is json) {
+                            searchResponse = convertToStatuses(<json[]>jsonPayload.statuses);
                         }
+                        return searchResponse;
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -291,14 +263,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Status|error twitterResponse = convertToStatus(jsonPayload);
-                        if (twitterResponse is Status) {
-                            return twitterResponse;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -336,14 +301,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Status|error twitterResponse = convertToStatus(jsonPayload);
-                        if (twitterResponse is Status) {
-                            return twitterResponse;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -385,14 +343,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Location[]|error locations = convertToLocations(<json[]>jsonPayload);
-                        if (locations is Location[]) {
-                            return locations;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertToLocations(<json[]>jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
@@ -433,14 +384,7 @@ public type Client client object {
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
                     if (statusCode == http:OK_200) {
-                        Trends[]|error trends = convertTrends(jsonPayload);
-                        if (trends is Trends[]) {
-                            return trends;
-                        } else {
-                            error err = error(TWITTER_ERROR_CODE,
-                                                message = "Error occurred while doing json conversion");
-                            return err;
-                        }
+                        return convertTrends(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
                     }
