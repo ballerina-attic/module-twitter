@@ -16,6 +16,7 @@
 // under the License.
 //
 
+import ballerina/encoding;
 import ballerina/http;
 
 # Twitter Client object.
@@ -61,18 +62,18 @@ public type Client client object {
         }
 
         string tweetPath = UPDATE_ENDPOINT;
-        string encodedStatusValue = check http:encode(status, UTF_8);
+        string encodedStatusValue = check encoding:encodeUriComponent(status, UTF_8);
         string urlParams = STATUS + encodedStatusValue + "&";
         string oauthStr = "";
 
         if (attachmentUrl != "") {
-            string encodedAttachmentValue = check http:encode(attachmentUrl, UTF_8);
+            string encodedAttachmentValue = check encoding:encodeUriComponent(attachmentUrl, UTF_8);
             urlParams = urlParams + ATTACHMENT_URL + encodedAttachmentValue + "&";
             oauthStr = ATTACHMENT_URL + encodedAttachmentValue + "&";
         }
 
         if (mediaIds != "") {
-            string encodedMediaValue = check http:encode(mediaIds, UTF_8);
+            string encodedMediaValue = check encoding:encodeUriComponent(mediaIds, UTF_8);
             urlParams = urlParams + MEDIA_IDS + encodedMediaValue + "&";
             oauthStr = oauthStr + MEDIA_IDS + encodedMediaValue + "&";
         }
@@ -91,7 +92,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
@@ -117,7 +118,7 @@ public type Client client object {
         http:Request request = new;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
-        string tweetPath = RETWEET_ENDPOINT + id + JSON;
+        string tweetPath = RETWEET_ENDPOINT + id.toString() + JSON;
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
@@ -130,7 +131,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
@@ -155,7 +156,7 @@ public type Client client object {
         http:Request request = new;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
-        string tweetPath = UN_RETWEET_ENDPOINT + id + JSON;
+        string tweetPath = UN_RETWEET_ENDPOINT + id.toString() + JSON;
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
@@ -168,7 +169,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
@@ -192,7 +193,7 @@ public type Client client object {
     # + return - If success, Status[] object, else returns error
     public remote function search(string queryStr, SearchRequest searchRequest) returns @tainted Status[]|error {
         string tweetPath = SEARCH_ENDPOINT;
-        string encodedQueryValue = check http:encode(queryStr, UTF_8);
+        string encodedQueryValue = check encoding:encodeUriComponent(queryStr, UTF_8);
         string urlParams = "q=" + encodedQueryValue + "&";
         string count = searchRequest.tweetsCount;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken) + urlParams;
@@ -218,7 +219,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         Status[] searchResponse = [];
                         if (jsonPayload.statuses is json) {
                             searchResponse = convertToStatuses(<json[]>jsonPayload.statuses);
@@ -246,7 +247,7 @@ public type Client client object {
     public remote function showStatus(int id) returns @tainted Status|error {
         http:Request request = new;
         string tweetPath = SHOW_STATUS_ENDPOINT;
-        string urlParams = ID + id;
+        string urlParams = ID + id.toString();
         string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
         var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
@@ -262,7 +263,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
@@ -287,7 +288,7 @@ public type Client client object {
         http:Request request = new;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
-        string tweetPath = DESTROY_STATUS_ENDPOINT + id + JSON;
+        string tweetPath = DESTROY_STATUS_ENDPOINT + id.toString() + JSON;
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
@@ -300,7 +301,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertToStatus(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
@@ -324,7 +325,7 @@ public type Client client object {
     # + return - If success, returns Location[] object, else returns error
     public remote function getClosestTrendLocations(float lat, float long) returns @tainted Location[]|error {
         string tweetPath = TRENDS_ENDPOINT;
-        string urlParams = LAT + lat + LONG + long;
+        string urlParams = LAT + lat.toString() + LONG + long.toString();
         string oauthStr = urlParams.substring(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
                 self.accessToken);
         http:Request request = new;
@@ -342,7 +343,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertToLocations(<json[]>jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);
@@ -365,7 +366,7 @@ public type Client client object {
     # + return - If success, returns Trends[] object, else returns error
     public remote function getTopTrendsByPlace(int locationId) returns @tainted Trends[]|error {
         string tweetPath = TRENDS_PLACE_ENDPOINT;
-        string urlParams = ID + locationId;
+        string urlParams = ID + locationId.toString();
         string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
 
         http:Request request = new;
@@ -383,7 +384,7 @@ public type Client client object {
                 int statusCode = httpResponse.statusCode;
                 var jsonPayload = httpResponse.getJsonPayload();
                 if (jsonPayload is json) {
-                    if (statusCode == http:OK_200) {
+                    if (statusCode == http:STATUS_OK) {
                         return convertTrends(jsonPayload);
                     } else {
                         return setResponseError(jsonPayload);

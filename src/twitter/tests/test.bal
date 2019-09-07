@@ -14,12 +14,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/test;
-import ballerina/time;
-import ballerina/system;
 import ballerina/config;
 import ballerina/io;
 import ballerina/internal;
+import ballerina/test;
+import ballerina/time;
 
 string testClientId = config:getAsString("CLIENT_ID");
 string testClientSecret = config:getAsString("CLIENT_SECRET");
@@ -31,7 +30,14 @@ TwitterConfiguration twitterConfig = {
     clientId: testClientId,
     clientSecret: testClientSecret,
     accessToken: testAccessToken,
-    accessTokenSecret: testAccessTokenSecret
+    accessTokenSecret: testAccessTokenSecret,
+    clientConfig: { secureSocket: {
+                        trustStore: {
+                                path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
+                                password: "ballerina"
+                            }
+                        }
+                    }
 };
 
 Client twitterClient = new(twitterConfig);

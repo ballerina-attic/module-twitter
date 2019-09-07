@@ -22,7 +22,7 @@ The `wso2/twitter` module contains operations that retrieve closest trend locati
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |   0.991.0      |
+| Ballerina Language |   1.0.0-beta   |
 | Twitter API        |   1.1          |
 
 
@@ -53,7 +53,14 @@ twitter:TwitterConfiguration twitterConfig = {
     clientId: testClientId,
     clientSecret: testClientSecret,
     accessToken: testAccessToken,
-    accessTokenSecret: testAccessTokenSecret
+    accessTokenSecret: testAccessTokenSecret,
+    clientConfig: { secureSocket: {
+                        trustStore: {
+                            path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
+                            password: "ballerina"
+                        }
+                    }
+                  }
 };
 
 twitter:Client twitterClient = new(twitterConfig);

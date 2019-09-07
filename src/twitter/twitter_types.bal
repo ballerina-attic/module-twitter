@@ -14,8 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
-
 # Define the status.
 # + createdAt - Created time of the status
 # + id - Id of the status

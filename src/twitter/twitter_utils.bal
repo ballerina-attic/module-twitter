@@ -42,19 +42,19 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         string consumerSecret, string accessToken, string accessTokenSecret, string paramStr) returns error? {
     string serviceEndpoint = "https://api.twitter.com" + serviceEP;
     string paramString = paramStr.substring(0, paramStr.length() - 1);
-    string encodedServiceEPValue = check http:encode(serviceEndpoint, "UTF-8");
-    string encodedParamStrValue = check http:encode(paramString, "UTF-8");
-    string encodedConsumerSecretValue = check http:encode(consumerSecret, "UTF-8");
-    string encodedAccessTokenSecretValue = check http:encode(accessTokenSecret, "UTF-8");
+    string encodedServiceEPValue = check encoding:encodeUriComponent(serviceEndpoint, "UTF-8");
+    string encodedParamStrValue = check encoding:encodeUriComponent(paramString, "UTF-8");
+    string encodedConsumerSecretValue = check encoding:encodeUriComponent(consumerSecret, "UTF-8");
+    string encodedAccessTokenSecretValue = check encoding:encodeUriComponent(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
     byte[] baseStringByte = internal:toByteArray(baseString, "UTF-8");
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
     byte[] keyArrByte = internal:toByteArray(keyStr, "UTF-8");
-    string signature = encoding:encodeBase64(crypto:hmacSha1(baseStringByte, keyArrByte));
+    string signature = crypto:hmacSha1(baseStringByte, keyArrByte).toBase64();
 
-    string encodedSignatureValue = check http:encode(signature, "UTF-8");
-    string encodedaccessTokenValue = check http:encode(accessToken, "UTF-8");
+    string encodedSignatureValue = check encoding:encodeUriComponent(signature, "UTF-8");
+    string encodedaccessTokenValue = check encoding:encodeUriComponent(accessToken, "UTF-8");
 
     string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
         "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +

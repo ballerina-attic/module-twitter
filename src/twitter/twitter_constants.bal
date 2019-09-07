@@ -25,6 +25,7 @@ final string SHOW_STATUS_ENDPOINT = "/1.1/statuses/show.json";
 final string DESTROY_STATUS_ENDPOINT = "/1.1/statuses/destroy/";
 final string TRENDS_ENDPOINT = "/1.1/trends/closest.json";
 final string TRENDS_PLACE_ENDPOINT = "/1.1/trends/place.json";
+final int OK_200 = 200;
 
 // String constants
 final string UTF_8 = "UTF-8";
