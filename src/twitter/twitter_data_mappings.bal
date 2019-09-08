@@ -68,36 +68,24 @@ function convertToStatus(json jsonStatus) returns Status {
 }
 
 function convertToInt(json jsonVal) returns int {
-    var intVal = typedesc<int>.constructFrom(jsonVal);
-    if (intVal is int) {
-        return intVal;
-    } else {
-        error err = error(TWITTER_ERROR_CODE,
-                          message = "Error occurred when converting " + jsonVal.toString() + " to int");
-        panic err;
+    if (jsonVal is int) {
+        return jsonVal;
     }
+    panic error("Error occurred when converting " + jsonVal.toString() + " to int");
 }
 
 function convertToBoolean(json jsonVal) returns boolean {
-    var booleanVal = typedesc<boolean>.constructFrom(jsonVal);
-    if (booleanVal is boolean) {
-        return booleanVal;
-    } else {
-        error err = error(TWITTER_ERROR_CODE,
-                         message = "Error occurred when converting " + jsonVal.toString() + " to boolean");
-        panic err;
+    if (jsonVal is boolean) {
+        return jsonVal;
     }
+    panic error("Error occurred when converting " + jsonVal.toString() + " to boolean");
 }
 
 function convertToFloat(json jsonVal) returns float {
-    var floatVal = typedesc<float>.constructFrom(jsonVal);
-    if (floatVal is float) {
-        return floatVal;
-    } else {
-        error err = error(TWITTER_ERROR_CODE,
-                          message = "Error occurred when converting " + jsonVal.toString() + " to float");
-        panic err;
+    if (jsonVal is float) {
+        return jsonVal;
     }
+    panic error("Error occurred when converting " + jsonVal.toString() + " to float");
 }
 
 function convertToGeoLocation(json jsonStatus) returns GeoLocation {
