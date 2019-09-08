@@ -50,7 +50,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
     byte[] baseStringByte = internal:toByteArray(baseString, "UTF-8");
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    byte[] keyArrByte = internal:toByteArray(keyStr, "UTF-8");
+    byte[] keyArrByte = keyStr.toBytes();
     string signature = crypto:hmacSha1(baseStringByte, keyArrByte).toBase64();
 
     string encodedSignatureValue = check encoding:encodeUriComponent(signature, "UTF-8");
