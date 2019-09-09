@@ -414,5 +414,5 @@ public type TwitterConfiguration record {
     string accessTokenSecret;
     string clientId;
     string clientSecret;
-    http:ClientEndpointConfig clientConfig = {};
+    http:ClientConfiguration clientConfig = {};
 };

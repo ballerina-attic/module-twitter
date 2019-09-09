@@ -16,9 +16,9 @@
 
 import ballerina/config;
 import ballerina/io;
-import ballerina/internal;
 import ballerina/test;
 import ballerina/time;
+import ballerina/stringutils;
 
 string testClientId = config:getAsString("CLIENT_ID");
 string testClientSecret = config:getAsString("CLIENT_SECRET");
@@ -53,7 +53,7 @@ function testTweet() {
 
     if (tweetResponse is Status) {
         tweetId = <@untainted> tweetResponse.id;
-        test:assertTrue(internal:contains(tweetResponse.text, status), "Failed to call tweet()");
+        test:assertTrue(stringutils:contains(tweetResponse.text, status), "Failed to call tweet()");
     } else {
         test:assertFail(<string>tweetResponse.detail()["message"]);
     }

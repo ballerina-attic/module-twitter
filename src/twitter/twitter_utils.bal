@@ -22,7 +22,7 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/system;
 import ballerina/time;
-import ballerina/internal;
+import ballerina/stringutils;
 
 string timeStamp = "";
 string nonceString = "";
@@ -48,7 +48,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     string encodedAccessTokenSecretValue = check encoding:encodeUriComponent(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
-    byte[] baseStringByte = internal:toByteArray(baseString, "UTF-8");
+    byte[] baseStringByte = baseString.toBytes();
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
     byte[] keyArrByte = keyStr.toBytes();
     string signature = crypto:hmacSha1(baseStringByte, keyArrByte).toBase64();
@@ -60,7 +60,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
         "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
-    request.setHeader("Authorization", internal:unescape(oauthHeaderString));
+    request.setHeader("Authorization", stringutils:replaceAll(oauthHeaderString, "\\\\", ""));
     return ();
 }
 
