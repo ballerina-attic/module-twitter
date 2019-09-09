@@ -53,14 +53,7 @@ twitter:TwitterConfiguration twitterConfig = {
     clientId: testClientId,
     clientSecret: testClientSecret,
     accessToken: testAccessToken,
-    accessTokenSecret: testAccessTokenSecret,
-    clientConfig: { secureSocket: {
-                        trustStore: {
-                            path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
-                            password: "ballerina"
-                        }
-                    }
-                  }
+    accessTokenSecret: testAccessTokenSecret
 };
 
 twitter:Client twitterClient = new(twitterConfig);
