@@ -7,7 +7,7 @@ and top trends using the connector.
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 0.991.0                    | 1.1                  |
+| 1.0.0                      | 1.1                  |
 
 
 ###### Running tests

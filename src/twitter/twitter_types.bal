@@ -14,8 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
-
 # Define the status.
 # + createdAt - Created time of the status
 # + id - Id of the status
@@ -33,7 +31,7 @@ public type Status record {
     string createdAt = "";
     int id = 0;
     string text = "";
-    string source = "";
+    string 'source = "";
     boolean truncated = false;
     int inReplyToStatusId = 0;
     GeoLocation geo = {};

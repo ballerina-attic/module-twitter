@@ -22,6 +22,7 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/system;
 import ballerina/time;
+import ballerina/stringutils;
 
 string timeStamp = "";
 string nonceString = "";
@@ -41,29 +42,37 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         string consumerSecret, string accessToken, string accessTokenSecret, string paramStr) returns error? {
     string serviceEndpoint = "https://api.twitter.com" + serviceEP;
     string paramString = paramStr.substring(0, paramStr.length() - 1);
-    string encodedServiceEPValue = check http:encode(serviceEndpoint, "UTF-8");
-    string encodedParamStrValue = check http:encode(paramString, "UTF-8");
-    string encodedConsumerSecretValue = check http:encode(consumerSecret, "UTF-8");
-    string encodedAccessTokenSecretValue = check http:encode(accessTokenSecret, "UTF-8");
+    string encodedServiceEPValue = check encoding:encodeUriComponent(serviceEndpoint, "UTF-8");
+    string encodedParamStrValue = check encoding:encodeUriComponent(paramString, "UTF-8");
+    string encodedConsumerSecretValue = check encoding:encodeUriComponent(consumerSecret, "UTF-8");
+    string encodedAccessTokenSecretValue = check encoding:encodeUriComponent(accessTokenSecret, "UTF-8");
 
     string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
-    byte[] baseStringByte = baseString.toByteArray("UTF-8");
+    byte[] baseStringByte = baseString.toBytes();
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    byte[] keyArrByte = keyStr.toByteArray("UTF-8");
-    string signature = encoding:encodeBase64(crypto:hmacSha1(baseStringByte, keyArrByte));
+    byte[] keyArrByte = keyStr.toBytes();
+    string signature = crypto:hmacSha1(baseStringByte, keyArrByte).toBase64();
 
-    string encodedSignatureValue = check http:encode(signature, "UTF-8");
-    string encodedaccessTokenValue = check http:encode(accessToken, "UTF-8");
+    string encodedSignatureValue = check encoding:encodeUriComponent(signature, "UTF-8");
+    string encodedaccessTokenValue = check encoding:encodeUriComponent(accessToken, "UTF-8");
 
     string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
         "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
         "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
-    request.setHeader("Authorization", oauthHeaderString.unescape());
+    request.setHeader("Authorization", stringutils:replaceAll(oauthHeaderString, "\\\\", ""));
     return ();
 }
 
 function setResponseError(json jsonResponse) returns error {
-    error err = error(TWITTER_ERROR_CODE, { message: jsonResponse.errors[0].message.toString() });
+    json|error errors = check jsonResponse.errors;
+    error err;
+    if (errors is json[]) {
+        err = error(TWITTER_ERROR_CODE, message = errors[0].message.toString());
+    } else if (errors is error) {
+        err = errors;
+    } else {
+        err = error(TWITTER_ERROR_CODE);
+    }
     return err;
 }
