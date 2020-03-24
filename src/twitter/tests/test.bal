@@ -37,7 +37,6 @@ Client twitterClient = new(twitterConfig);
 
 @test:Config {}
 function testTweet() {
-    io:println("--------------Calling tweet----------------");
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
     string currentTimeStamp = io:sprintf("%s", currentTimeMills / 1000);
@@ -56,9 +55,7 @@ function testTweet() {
     dependsOn: ["testTweet"]
 }
 function testReTweet() {
-    io:println("--------------Calling retweet----------------");
     var tweetResponse = twitterClient->retweet(tweetId);
-
     if (tweetResponse is Status) {
         test:assertTrue(tweetResponse.retweeted, "Failed to call retweet()");
     } else {
@@ -70,9 +67,7 @@ function testReTweet() {
     dependsOn: ["testReTweet"]
 }
 function testUnReTweet() {
-    io:println("--------------Calling unretweet----------------");
     var tweetResponse = twitterClient->unretweet(tweetId);
-
     if (tweetResponse is Status) {
         test:assertEquals(tweetResponse.id, tweetId, "Failed to call unretweet()");
     } else {
@@ -82,7 +77,6 @@ function testUnReTweet() {
 
 @test:Config {}
 function testSearch() {
-    io:println("--------------Calling search----------------");
     string queryStr = "twitter";
     SearchRequest request = {
         tweetsCount:"100"
@@ -100,9 +94,7 @@ function testSearch() {
     dependsOn: ["testUnReTweet"]
 }
 function testShowStatus() {
-    io:println("--------------Calling showStatus----------------");
     var tweetResponse = twitterClient->showStatus(tweetId);
-
     if (tweetResponse is Status) {
         test:assertEquals(tweetResponse.id, tweetId, "Failed to call showStatus()");
     } else {
@@ -114,9 +106,7 @@ function testShowStatus() {
     dependsOn: ["testShowStatus"]
 }
 function testDestroyStatus() {
-    io:println("--------------Calling destroyStatus----------------");
     var tweetResponse = twitterClient->destroyStatus(tweetId);
-
     if (tweetResponse is Status) {
         test:assertEquals(tweetResponse.id, tweetId, "Failed to call destroyStatus()");
     } else {
@@ -126,11 +116,9 @@ function testDestroyStatus() {
 
 @test:Config {}
 function testGetClosestTrendLocations() {
-    io:println("--------------Calling getClosestTrendLocations----------------");
     float latitude = 34.0;
     float longitude = 67.0;
     var tweetResponse = twitterClient->getClosestTrendLocations(latitude, longitude);
-
     if (tweetResponse is error) {
         test:assertFail(<string>tweetResponse.detail()["message"]);
     } else {
@@ -140,10 +128,8 @@ function testGetClosestTrendLocations() {
 
 @test:Config {}
 function testGetTopTrendsByPlace() {
-    io:println("--------------Calling getTopTrendsByPlace----------------");
     int locationId = 23424922;
     var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);
-
     if (tweetResponse is error) {
         test:assertFail(<string>tweetResponse.detail()["message"]);
     } else {
