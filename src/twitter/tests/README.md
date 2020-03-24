@@ -1,13 +1,13 @@
 # Ballerina Twitter Connector Test
 
 The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
-It handles OAuth 2.0 authentication. You can also retrieve and destroy a status, retrieve closest trend locations,
+It handles OAuth 1.0a authentication. You can also retrieve and destroy a status, retrieve closest trend locations,
 and top trends using the connector.
 
 ## Compatibility
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
-| 1.0.0                      | 1.1                  |
+| 1.2.0                      | 1.1                  |
 
 
 ###### Running tests

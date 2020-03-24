@@ -22,7 +22,7 @@ The `wso2/twitter` module contains operations that retrieve closest trend locati
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |   1.0.0        |
+| Ballerina Language |   1.2.0        |
 | Twitter API        |   1.1          |
 
 
