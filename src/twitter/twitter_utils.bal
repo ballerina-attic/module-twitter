@@ -19,6 +19,7 @@ import ballerina/crypto;
 import ballerina/encoding;
 import ballerina/http;
 import ballerina/io;
+import ballerina/log;
 import ballerina/system;
 import ballerina/time;
 import ballerina/stringutils;
@@ -74,4 +75,10 @@ function setResponseError(json jsonResponse) returns error {
         err = error(TWITTER_ERROR_CODE);
     }
     return err;
+}
+
+function prepareError(string message) returns Error {
+    log:printError(message, err);
+    Error twitterError = error(TWITTER_ERROR_CODE, message = message);
+    return twitterError;
 }

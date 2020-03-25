@@ -81,9 +81,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             tweetPath = tweetPath + "?" + urlParams;
             var httpResponse = self.twitterClient->post(tweetPath, request);
@@ -97,14 +95,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE,
-                                  message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -121,9 +115,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             var httpResponse = self.twitterClient->post(tweetPath, request);
             if (httpResponse is http:Response) {
@@ -136,13 +128,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -159,9 +148,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             var httpResponse = self.twitterClient->post(tweetPath, request);
             if (httpResponse is http:Response) {
@@ -174,13 +161,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -204,9 +188,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret, self.accessToken,
             self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             tweetPath = tweetPath + "?" + urlParams;
             if (count != "") {
@@ -228,13 +210,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -252,9 +231,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             tweetPath = tweetPath + "?" + urlParams;
             var httpResponse = self.twitterClient->get(tweetPath, request);
@@ -268,13 +245,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -291,9 +265,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, POST, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             var httpResponse = self.twitterClient->post(tweetPath, request);
             if (httpResponse is http:Response) {
@@ -306,13 +278,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -331,9 +300,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             tweetPath = tweetPath + "?" + urlParams.substring(1, urlParams.length());
 
@@ -348,13 +315,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
@@ -372,9 +336,7 @@ public type Client client object {
         var requestHeaders = constructRequestHeaders(request, GET, tweetPath, self.clientId, self.clientSecret,
             self.accessToken, self.accessTokenSecret, oauthStr);
         if (requestHeaders is error) {
-            error err = error(TWITTER_ERROR_CODE,
-                              message = "Error occurred while encoding parameters when constructing request headers");
-            return err;
+            return prepareError("Error occurred while encoding parameters when constructing request headers.");
         } else {
             tweetPath = tweetPath + "?" + urlParams;
 
@@ -389,13 +351,10 @@ public type Client client object {
                         return setResponseError(jsonPayload);
                     }
                 } else {
-                    error err = error(TWITTER_ERROR_CODE,
-                                      message = "Error occurred while accessing the JSON payload of the response");
-                    return err;
+                    return prepareError("Error occurred while accessing the JSON payload of the response.");
                 }
             } else {
-                error err = error(TWITTER_ERROR_CODE, message = "Error occurred while invoking the REST API");
-                return err;
+                return prepareError("Error occurred while invoking the REST API.");
             }
         }
     }
