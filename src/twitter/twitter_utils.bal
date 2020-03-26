@@ -17,68 +17,52 @@
 
 import ballerina/crypto;
 import ballerina/encoding;
-import ballerina/http;
-import ballerina/io;
 import ballerina/log;
 import ballerina/system;
 import ballerina/time;
-import ballerina/stringutils;
 
-string timeStamp = "";
-string nonceString = "";
+function generateAuthorizationHeader(string httpMethod, string serviceEP, string urlParams,
+                                     TwitterCredential twitterCredential) returns string|error {
+    string nonce = system:uuid();
+    int timeInSeconds = time:currentTime().time / 1000;
+    string timeStamp = timeInSeconds.toString();
 
-function constructOAuthParams(string consumerKey, string accessToken) returns string {
-    nonceString = system:uuid();
-    time:Time time = time:currentTime();
-    int currentTimeMills = time.time;
-    timeStamp = io:sprintf("%s", currentTimeMills / 1000);
-    string paramStr = "oauth_consumer_key=" + consumerKey + "&oauth_nonce=" + nonceString +
-        "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timeStamp + "&oauth_token=" + accessToken
-        + "&oauth_version=1.0&";
-    return paramStr;
+    string requestParameters = "oauth_consumer_key=" + twitterCredential.consumerKey + "&oauth_nonce=" + nonce +
+                                "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timeStamp + "&oauth_token=" +
+                                twitterCredential.accessToken + "&oauth_version=1.0&" + urlParams;
+    string encodedRequestParameters = check encoding:encodeUriComponent(requestParameters, UTF_8);
+    string encodedServiceEP = check encoding:encodeUriComponent(TWITTER_API_URL + serviceEP, UTF_8);
+    string encodedConsumerSecret = check encoding:encodeUriComponent(twitterCredential.consumerSecret, UTF_8);
+    string encodedAccessTokenSecret = check encoding:encodeUriComponent(twitterCredential.accessTokenSecret, UTF_8);
+
+    string baseString = httpMethod + "&" + encodedServiceEP + "&" + encodedRequestParameters;
+    string key = encodedConsumerSecret + "&" + encodedAccessTokenSecret;
+
+    string signature = crypto:hmacSha1(baseString.toBytes(), key.toBytes()).toBase64();
+
+    string encodedSignature = check encoding:encodeUriComponent(signature, UTF_8);
+    string encodedaccessToken = check encoding:encodeUriComponent(twitterCredential.accessToken, UTF_8);
+
+    string header = "OAuth oauth_consumer_key=\"" + twitterCredential.consumerKey +
+                    "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
+                    "\",oauth_nonce=\"" + nonce + "\",oauth_version=\"1.0\",oauth_signature=\"" + encodedSignature +
+                    "\",oauth_token=\"" + encodedaccessToken + "\"";
+    return header;
 }
 
-function constructRequestHeaders(http:Request request, string httpMethod, string serviceEP, string consumerKey,
-        string consumerSecret, string accessToken, string accessTokenSecret, string paramStr) returns error? {
-    string serviceEndpoint = "https://api.twitter.com" + serviceEP;
-    string paramString = paramStr.substring(0, paramStr.length() - 1);
-    string encodedServiceEPValue = check encoding:encodeUriComponent(serviceEndpoint, "UTF-8");
-    string encodedParamStrValue = check encoding:encodeUriComponent(paramString, "UTF-8");
-    string encodedConsumerSecretValue = check encoding:encodeUriComponent(consumerSecret, "UTF-8");
-    string encodedAccessTokenSecretValue = check encoding:encodeUriComponent(accessTokenSecret, "UTF-8");
-
-    string baseString = httpMethod + "&" + encodedServiceEPValue + "&" + encodedParamStrValue;
-    byte[] baseStringByte = baseString.toBytes();
-    string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
-    byte[] keyArrByte = keyStr.toBytes();
-    string signature = crypto:hmacSha1(baseStringByte, keyArrByte).toBase64();
-
-    string encodedSignatureValue = check encoding:encodeUriComponent(signature, "UTF-8");
-    string encodedaccessTokenValue = check encoding:encodeUriComponent(accessToken, "UTF-8");
-
-    string oauthHeaderString = "OAuth oauth_consumer_key=\"" + consumerKey +
-        "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
-        "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
-        encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
-    request.setHeader("Authorization", stringutils:replaceAll(oauthHeaderString, "\\\\", ""));
-    return ();
-}
-
-function setResponseError(json jsonResponse) returns error {
-    json|error errors = check jsonResponse.errors;
-    error err;
+function prepareErrorResponse(json response) returns error {
+    json|error errors = response.errors;
     if (errors is json[]) {
-        err = error(TWITTER_ERROR_CODE, message = errors[0].message.toString());
-    } else if (errors is error) {
-        err = errors;
+        return prepareError(errors[0].message.toString());
+    } else if (errors is json) {
+        return prepareError(errors.message.toString());
     } else {
-        err = error(TWITTER_ERROR_CODE);
+        return prepareError("Error occurred while accessing the JSON payload of the error response.");
     }
-    return err;
 }
 
-function prepareError(string message) returns Error {
-    log:printError(message, err);
-    Error twitterError = error(TWITTER_ERROR_CODE, message = message);
+function prepareError(string message) returns error {
+    log:printError(message);
+    error twitterError = error(TWITTER_ERROR_CODE, message = message);
     return twitterError;
 }
