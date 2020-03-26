@@ -1,7 +1,7 @@
 [project]
-org-name = "wso2"
-version = "0.10.0"
+org-name = "ldclakmal"
+version = "1.0.0"
 license = ["Apache-2.0"]
-authors = ["WSO2"]
-repository = "https://github.com/wso2-ballerina/module-twitter"
-keywords = ["ballerina", "Twitter", "endpoint", "connector"]
+authors = ["Chanaka Lakmal"]
+repository = "https://github.com/ldclakmal/module-twitter"
+keywords = ["ballerina", "twitter", "endpoint", "connector"]

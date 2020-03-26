@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/module-twitter.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-twitter)
+[![Build Status](https://travis-ci.org/ldclakmal/module-twitter.svg?branch=master)](https://travis-ci.org/ldclakmal/module-twitter)
 
 # Ballerina Twitter Connector
 
@@ -9,11 +9,11 @@ You can also retrieve and destroy a status.
 
 **Status Operations**
 
-The `wso2/twitter` module contains operations that work with statuses. You can update the current status, retweet a tweet, untweet a retweeted status, retrieve a status, and destroy a status.
+The `ldclakmal/twitter` module contains operations that work with statuses. You can update the current status, retweet a tweet, untweet a retweeted status, retrieve a status, and destroy a status.
 
 **Search Operations**
 
-The `wso2/twitter` module contains operations that search for tweets.
+The `ldclakmal/twitter` module contains operations that search for tweets.
 
 
 ## Compatibility
@@ -25,10 +25,10 @@ The `wso2/twitter` module contains operations that search for tweets.
 
 ## Samples
 
-First, import the `wso2/twitter` module into the Ballerina project.
+First, import the `ldclakmal/twitter` module into the Ballerina project.
 
 ```ballerina
-import wso2/twitter;
+import ldclakmal/twitter;
 ```
 
 The Twitter connector can be instantiated using the Consumer Key (API key), Consumer Secret (API secret key), Access Token, and Access Token Secret in the Twitter configuration.
@@ -143,7 +143,7 @@ if (result is twitter:Status[]) {
 
 ```ballerina
 import ballerina/io;
-import wso2/twitter;
+import ldclakmal/twitter;
 
 twitter:TwitterConfiguration twitterConfig = {
     consumerKey: config:getAsString("CONSUMER_KEY"),

@@ -19,13 +19,13 @@ The output will be similar to following:
 
 ```bash
 Compiling source
-        wso2/twitter:0.10.0
+        ldclakmal/twitter:0.10.0
 
 Creating balos
         target/balo/twitter-2020r1-any-0.10.0.balo
 
 Running Tests
-        wso2/twitter:0.10.0
+        ldclakmal/twitter:0.10.0
 
         [pass] testTweet
         [pass] testRetweet
