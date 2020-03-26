@@ -43,88 +43,61 @@ function testTweet() {
     }
 }
 
-//@test:Config {
-//    dependsOn: ["testTweet"]
-//}
-//function testReTweet() {
-//    var tweetResponse = twitterClient->retweet(tweetId);
-//    if (tweetResponse is Status) {
-//        test:assertTrue(tweetResponse.retweeted, "Failed to call retweet()");
-//    } else {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    }
-//}
-//
-//@test:Config {
-//    dependsOn: ["testReTweet"]
-//}
-//function testUnReTweet() {
-//    var tweetResponse = twitterClient->unretweet(tweetId);
-//    if (tweetResponse is Status) {
-//        test:assertEquals(tweetResponse.id, tweetId, "Failed to call unretweet()");
-//    } else {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    }
-//}
-//
-//@test:Config {}
-//function testSearch() {
-//    string queryStr = "twitter";
-//    SearchRequest request = {
-//        tweetsCount:"100"
-//    };
-//    var tweetResponse = twitterClient->search(queryStr, request);
-//
-//    if (tweetResponse is error) {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    } else {
-//        test:assertTrue(tweetResponse.length() > 0, "Failed to call search()");
-//    }
-//}
-//
-//@test:Config {
-//    dependsOn: ["testUnReTweet"]
-//}
-//function testShowStatus() {
-//    var tweetResponse = twitterClient->showStatus(tweetId);
-//    if (tweetResponse is Status) {
-//        test:assertEquals(tweetResponse.id, tweetId, "Failed to call showStatus()");
-//    } else {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    }
-//}
-//
-//@test:Config {
-//    dependsOn: ["testShowStatus"]
-//}
-//function testDestroyStatus() {
-//    var tweetResponse = twitterClient->destroyStatus(tweetId);
-//    if (tweetResponse is Status) {
-//        test:assertEquals(tweetResponse.id, tweetId, "Failed to call destroyStatus()");
-//    } else {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    }
-//}
-//
-//@test:Config {}
-//function testGetClosestTrendLocations() {
-//    float latitude = 34.0;
-//    float longitude = 67.0;
-//    var tweetResponse = twitterClient->getClosestTrendLocations(latitude, longitude);
-//    if (tweetResponse is error) {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    } else {
-//        test:assertTrue(tweetResponse.length() > 0, "Failed to call getClosestTrendLocations()");
-//    }
-//}
-//
-//@test:Config {}
-//function testGetTopTrendsByPlace() {
-//    int locationId = 23424922;
-//    var tweetResponse = twitterClient->getTopTrendsByPlace (locationId);
-//    if (tweetResponse is error) {
-//        test:assertFail(<string>tweetResponse.detail()["message"]);
-//    } else {
-//        test:assertTrue(tweetResponse.length() > 0, "Failed to call getTopTrendsByPlace()");
-//    }
-//}
+@test:Config {
+    dependsOn: ["testTweet"]
+}
+function testRetweet() {
+    var tweetResponse = twitterClient->retweet(tweetId);
+    if (tweetResponse is Status) {
+        test:assertTrue(tweetResponse.retweeted, "Failed to call retweet()");
+    } else {
+        test:assertFail(<string>tweetResponse.detail()["message"]);
+    }
+}
+
+@test:Config {
+    dependsOn: ["testRetweet"]
+}
+function testUnretweet() {
+    var tweetResponse = twitterClient->unretweet(tweetId);
+    if (tweetResponse is Status) {
+        test:assertEquals(tweetResponse.id, tweetId, "Failed to call unretweet()");
+    } else {
+        test:assertFail(<string>tweetResponse.detail()["message"]);
+    }
+}
+
+@test:Config {
+    dependsOn: ["testUnretweet"]
+}
+function testGetTweet() {
+    var tweetResponse = twitterClient->getTweet(tweetId);
+    if (tweetResponse is Status) {
+        test:assertEquals(tweetResponse.id, tweetId, "Failed to call getTweet()");
+    } else {
+        test:assertFail(<string>tweetResponse.detail()["message"]);
+    }
+}
+
+@test:Config {
+    dependsOn: ["testGetTweet"]
+}
+function testDeleteTweet() {
+    var tweetResponse = twitterClient->deleteTweet(tweetId);
+    if (tweetResponse is Status) {
+        test:assertEquals(tweetResponse.id, tweetId, "Failed to call deleteTweet()");
+    } else {
+        test:assertFail(<string>tweetResponse.detail()["message"]);
+    }
+}
+
+@test:Config {}
+function testSearch() {
+    string query = "#ballerina";
+    var tweetResponse = twitterClient->search(query);
+    if (tweetResponse is Status[]) {
+        test:assertTrue(tweetResponse.length() > 0, "Failed to call search()");
+    } else {
+        test:assertFail(<string>tweetResponse.detail()["message"]);
+    }
+}
