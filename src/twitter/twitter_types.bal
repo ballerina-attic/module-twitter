@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Define the status.
+# Define the status, AKA Tweet.
 #
 # + createdAt - Created time of the status
 # + id - Id of the status
@@ -23,9 +23,9 @@
 # + truncated - Whether the status is truncated or not
 # + favorited - Whether the status is favorited or not
 # + retweeted - Whether the status is retweeted or not
-# + favoriteCount - Count of the favourites
-# + retweetCount - Count of the retweeted status
-# + lang - Language
+# + favoriteCount - Favourite count of the status
+# + retweetCount - Retweet count of the status
+# + lang - Language of the status
 public type Status record {
     string createdAt = "";
     int id = 0;
@@ -39,70 +39,31 @@ public type Status record {
     string lang = "";
 };
 
-//# Define the geo location details.
-//#
-//# + latitude - Latitude of the location
-//# + longitude - Longitude of the location
-//public type GeoLocation record {
-//    float latitude = 0.0;
-//    float longitude = 0.0;
-//};
-//
-//# Define the location details.
-//#
-//# + woeid - Where On Earth IDentifier
-//# + countryName - Country name
-//# + countryCode - Country code
-//# + name - Name of the location
-//# + placeType - Longitude of the location
-//# + url - Location URL
-//public type Location record {
-//    int woeid = 0;
-//    string countryName = "";
-//    string countryCode = "";
-//    string name = "";
-//    PlaceType placeType = {};
-//    string url = "";
-//};
-//
-//# Define the place type.
-//#
-//# + name - Name of the place
-//# + code - Location code of the place
-//public type PlaceType record {
-//    string name = "";
-//    int code = 0;
-//};
-//
-//# Define the trends type.
-//#
-//# + trends - List of Trending object
-//# + location - List of Locations object
-//# + createdAt - Created time
-//public type Trends record {
-//    Trend[] trends = [];
-//    Location[] location = [];
-//    string createdAt = "";
-//};
-//
-//# Define the trend type.
-//#
-//# + name - Name of trend object
-//# + url - URL of trend object
-//# + trendQuery - Query of the trend object
-//# + promotedContent - Promoted content
-//# + tweetVolume - Volume of the tweet
-//public type Trend record {
-//    string name = "";
-//    string url = "";
-//    string trendQuery = "";
-//    string promotedContent = "";
-//    int tweetVolume = 0;
-//};
-//
-//# Define the search request.
-//#
-//# + tweetsCount - The number of tweets to return per page, up to a maximum of 100
-//public type SearchRequest record {
-//    string tweetsCount = "";
-//};
+# Define the advanced search parameters.
+#
+# + geocode - The parameter value is specified by "latitude,longitude,radius", where radius units must be specified as
+#             either "mi" (miles) or "km" (kilometers)
+# + lang - The language, given by an ISO 639-1 code
+# + locale - The language of the query
+# + resultType - Specifies what type of search results prefer to receive. The current default is "mixed"
+#                Valid values include:
+#                "mixed" : Include both popular and real time results in the response
+#                "recent" : return only the most recent results in the response
+#                "popular" : return only the most popular results in the response
+# + count - The number of tweets to return per page, up to a maximum of 100. Defaults to 15
+# + until - Returns tweets created before the given date. Date should be formatted as YYYY-MM-DD.
+#           The search index has a 7-day limit. In other words, no tweets will be found for a date older than one week
+# + sinceId - Returns results with an ID greater than (that is, more recent than) the specified ID
+# + maxId - Returns results with an ID less than (that is, older than) or equal to the specified ID
+# + includeEntities - The entities node will not be included when set to false
+public type AdvancedSearch record {|
+    string geocode?;
+    string lang?;
+    string locale?;
+    string resultType?;
+    string count?;
+    string until?;
+    int sinceId?;
+    int maxId?;
+    boolean includeEntities?;
+|};

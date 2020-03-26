@@ -17,25 +17,38 @@
 
 import ballerina/crypto;
 import ballerina/encoding;
+import ballerina/lang.'string as strings;
 import ballerina/log;
 import ballerina/system;
 import ballerina/time;
 
-function generateAuthorizationHeader(string httpMethod, string serviceEP, string urlParams,
-                                     TwitterCredential twitterCredential) returns string|error {
+function generateAuthorizationHeader(TwitterCredential twitterCredential, string httpMethod, string serviceEP,
+                                     string? urlParams = ()) returns string|error {
     string nonce = system:uuid();
     int timeInSeconds = time:currentTime().time / 1000;
     string timeStamp = timeInSeconds.toString();
 
-    string requestParameters = "oauth_consumer_key=" + twitterCredential.consumerKey + "&oauth_nonce=" + nonce +
+    string requestParams = "oauth_consumer_key=" + twitterCredential.consumerKey + "&oauth_nonce=" + nonce +
                                 "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timeStamp + "&oauth_token=" +
-                                twitterCredential.accessToken + "&oauth_version=1.0&" + urlParams;
-    string encodedRequestParameters = check encoding:encodeUriComponent(requestParameters, UTF_8);
+                                twitterCredential.accessToken + "&oauth_version=1.0";
+
+    if (urlParams is string) {
+        int comparision = strings:codePointCompare(requestParams, urlParams);
+        match (comparision) {
+            -1 => {
+                requestParams += "&" + urlParams;
+            }
+            _ => {
+                requestParams = urlParams + "&" + requestParams;
+            }
+        }
+    }
+    string encodedRequestParams = check encoding:encodeUriComponent(requestParams, UTF_8);
     string encodedServiceEP = check encoding:encodeUriComponent(TWITTER_API_URL + serviceEP, UTF_8);
     string encodedConsumerSecret = check encoding:encodeUriComponent(twitterCredential.consumerSecret, UTF_8);
     string encodedAccessTokenSecret = check encoding:encodeUriComponent(twitterCredential.accessTokenSecret, UTF_8);
 
-    string baseString = httpMethod + "&" + encodedServiceEP + "&" + encodedRequestParameters;
+    string baseString = httpMethod + "&" + encodedServiceEP + "&" + encodedRequestParams;
     string key = encodedConsumerSecret + "&" + encodedAccessTokenSecret;
 
     string signature = crypto:hmacSha1(baseString.toBytes(), key.toBytes()).toBase64();
