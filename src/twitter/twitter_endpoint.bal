@@ -26,7 +26,7 @@ import ballerina/http;
 # + clientId - The consumer key of the Twitter account
 # + clientSecret - The consumer secret of the Twitter account
 # + twitterClient - HTTP Client endpoint
-public type Client client object {
+public client class Client {
 
     string accessToken;
     string accessTokenSecret;
@@ -34,7 +34,7 @@ public type Client client object {
     string clientSecret;
     http:Client twitterClient;
 
-    public function __init(TwitterConfiguration twitterConfig) {
+    public function init(TwitterConfiguration twitterConfig) {
         self.twitterClient = new(TWITTER_API_URL, twitterConfig.clientConfig);
         self.accessToken = twitterConfig.accessToken;
         self.accessTokenSecret = twitterConfig.accessTokenSecret;
